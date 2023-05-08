@@ -31,7 +31,7 @@ function Product({ product  , cart}) {
 
       <div className="product--btns">
                       {cart.find((item) => item.id == product.id) ? (
-                <Link to='/cart' className="product__btn">
+                <Link to='/cart' className="product__btn--cart">
                   <button className="product__btn">
                     Check Cart
                   </button>{" "}

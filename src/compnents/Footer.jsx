@@ -80,7 +80,7 @@ function Footer() {
           <div className="footer--newsletter">
             <h5>Sign up for our newsletter</h5>
             <form action="">
-              <input type="email" name="email" />
+              <input type="email" placeholder="enter your email" name="email" />
               <input type="submit" value="Submit" />
             </form>
           </div>

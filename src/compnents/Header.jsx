@@ -1,10 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 
 function Header({products}) {
 
   const [checked , setChecked] = useState(1)
+  const [imgUrl , setImgUrl] = useState("")
+
+  useEffect(() => {
+    if(checked === 1){
+      setImgUrl("https://cdn.discordapp.com/attachments/1088531111942037534/1105220070856196146/IMG_1498.png")
+    }else if(checked === 2){
+      setImgUrl("https://cdn.discordapp.com/attachments/1088531111942037534/1105214825249919107/unnamed_2-removebg-preview.png")
+    }else if(checked === 3){
+      setImgUrl("https://cdn.discordapp.com/attachments/1088531111942037534/1105215051968823386/Untitled_design_16-removebg-preview.png")
+    }
+  },[checked])
+
   let product = null
 
   if(products !== null){
@@ -45,7 +57,7 @@ function Header({products}) {
           </Link>
         </div>
         <div className="buy--img">
-          <img src="https://cdn.discordapp.com/attachments/1088531111942037534/1093574216592408676/IMG_1457_1.png" />
+          <img src={imgUrl} />
         </div>
       </div>
           </div>
