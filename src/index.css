@@ -688,11 +688,28 @@ width: max-content;
   padding: 10px;
 }
 
+@media(min-width:1000px){
+  .product--subscription:nth-child(2){
+    height: 98%;
+    position: relative;
+    bottom: 20px;
+  }
+}
+
 .product--subscription__info{
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-bottom: 18px;
+}
+
+.subscription-selected{
+  background-color: #f7f7f7;
+}
+
+.info--btn__selected{
+  cursor: not-allowed;
+  background-color: #3b3bff;
 }
 
 .subscription__info--title{
@@ -1226,6 +1243,7 @@ input[type="submit"]:hover {
   .product--small-img {
     display: block;
     width: 80vw;
+    max-width: 350px;
     margin-bottom: 50px;
   }
 
@@ -1253,11 +1271,6 @@ input[type="submit"]:hover {
 
   .subscription__list--item{
     margin-bottom: 10px;
-  }
-
-  .info--btn__selected{
-    cursor: not-allowed;
-    background-color: #3b3bff;
   }
 
   .secondary__button {

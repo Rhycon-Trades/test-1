@@ -110,30 +110,7 @@ function AboutProduct({ products, cart }) {
         ) : (
           <div className="product--subscriptions">
             <div className="subscriptions-wrap">
-              <div className="product--subscription">
-                <div className="product--subscription__info">
-                  <h5 className="subscription__info--title">tier 1</h5>
-                  <div className="subscription__info--price">7.99</div>
-                  <button onClick={() => setBadgePrice(7.99)} className={`subscription__info--btn ${badgePrice === 7.99 && "info--btn__selected"}`}>
-                    choose plan
-                  </button>
-                </div>
-                <ul className="product--subscription__list">
-                  <li className="subscription__list--item">
-                    Full access to the indicator
-                  </li>
-                  <li className="subscription__list--item">
-                    Rhycon trading manual
-                  </li>
-                  <li className="subscription__list--item">
-                    Tier 1 Trader rank
-                  </li>
-                  <li className="subscription__list--item">
-                    Access to BlueBadge tier 1 channel
-                  </li>
-                </ul>
-              </div>
-              <div className="product--subscription">
+            <div className={`product--subscription ${badgePrice === 12.99 && "subscription-selected"}`}>
                 <div className="product--subscription__info">
                   <h5 className="subscription__info--title">tier 2</h5>
                   <div className="subscription__info--price">12.99</div>
@@ -159,9 +136,9 @@ function AboutProduct({ products, cart }) {
                   </li>
                 </ul>
               </div>
-              <div className="product--subscription">
+              <div className={`product--subscription ${badgePrice === 14.99 && "subscription-selected"}`}>
                 <div className="product--subscription__info">
-                  <h5 className="subscription__info--title">tier 1</h5>
+                  <h5 className="subscription__info--title">tier 3</h5>
                   <div className="subscription__info--price">14.99</div>
                   <button onClick={() => setBadgePrice(14.99)} className={`subscription__info--btn ${badgePrice === 14.99 && "info--btn__selected"}`}>
                     choose plan
@@ -191,6 +168,29 @@ function AboutProduct({ products, cart }) {
                   </li>
                   <li className="subscription__list--item">
                   Information about Government Contracts
+                  </li>
+                </ul>
+              </div>
+              <div className={`product--subscription ${badgePrice === 7.99 && "subscription-selected"}`}>
+                <div className="product--subscription__info">
+                  <h5 className="subscription__info--title">tier 1</h5>
+                  <div className="subscription__info--price">7.99</div>
+                  <button onClick={() => setBadgePrice(7.99)} className={`subscription__info--btn ${badgePrice === 7.99 && "info--btn__selected"}`}>
+                    choose plan
+                  </button>
+                </div>
+                <ul className="product--subscription__list">
+                  <li className="subscription__list--item">
+                    Full access to the indicator
+                  </li>
+                  <li className="subscription__list--item">
+                    Rhycon trading manual
+                  </li>
+                  <li className="subscription__list--item">
+                    Tier 1 Trader rank
+                  </li>
+                  <li className="subscription__list--item">
+                    Access to BlueBadge tier 1 channel
                   </li>
                 </ul>
               </div>
