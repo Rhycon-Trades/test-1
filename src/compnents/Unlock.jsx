@@ -20,13 +20,13 @@ function Unlock() {
         </div>
         <ul className="unlock--content">
             <li onClick={() => checkButton(1)} className={`unlock--content__item ${checked != 1 && "low-lighted-list"}`}>
-                <p className="content--item__para">gain execlusive access to live calls with expert mentors who specilize in helping you start trading in just few days</p>
+                <p className="content--item__para">Gain execlusive access to live calls with expert mentors who specilize in helping you start trading in just few days</p>
             </li>
             <li onClick={() => checkButton(2)} className={`unlock--content__item ${checked != 2 && "low-lighted-list"}`}>
-                <p className="content--item__para">giving you knowledge and crucial tools so you can start making money ASAP</p>
+                <p className="content--item__para">Giving you knowledge and crucial tools so you can start making money ASAP</p>
             </li>
             <li onClick={() => checkButton(3)}className={`unlock--content__item ${checked != 3 && "low-lighted-list"}`}>
-                <p className="content--item__para">rhycon trades students have taken the risk and are now enjoying the reward. you have so much to gain by joining and practicly nothing to lose</p>
+                <p className="content--item__para">Rhycon trades students have taken the risk and are now enjoying the reward. you have so much to gain by joining and practicly nothing to lose</p>
             </li>
         </ul>
       </div>

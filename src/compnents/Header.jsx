@@ -48,7 +48,32 @@ function Header({products}) {
             </div>
             <div className="buy__table--content">
             {
-              product !== null && product.description
+              (product !== null && checked !== 3) && product.description
+            }
+            {
+              checked === 3 && (
+                <>
+                <p>Unlock the Rhycon Signals exclusive trading room for unparalleled access to Crypto, Forex, and Stock signals.</p>
+                <ul className="buy--list">
+                  <li className="buy--list__item">
+                    Our expert analysts will help you… 
+                  </li>
+                  <li className="buy--list__item">
+                     Maximize your returns.
+                  </li>
+                  <li className="buy--list__item">
+                    Offer real-time market analysis share cutting-edge strategies.
+                  </li>
+                  <li className="buy--list__item">
+                  Access a community of like minded people 
+                  </li>
+                  <li className="buy--list__item">
+                  Join us and embark on a journey towards unlimited potential.
+                  </li>
+                </ul>
+                <p>join us and embark on a journey towards unlimited potential</p>
+                </>
+              )
             }
             </div>
           </div>
