@@ -8,10 +8,10 @@ function Signals({product , cart , getProduct}) {
         <div className="signals">
             <div className="signals--main">
                 <p className="purple signals--main__sub-header">
-                    about our signals
+                    About our signals
                 </p>
                 <h3 className="signals--main__header">
-                    all you need to know about the signals
+                    All you need to know about the signals
                 </h3>
                 <div className="signals__features">
                     <div className="signals__feature">

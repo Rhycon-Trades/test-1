@@ -54,6 +54,7 @@ function AboutProduct({ products, cart }) {
               <img src={product.ImgUrl} />
             </figure>
             <h2 className="product--about__header">{product.title}</h2>
+            <p className="product--about__description">{product.description}</p>
             <div className="product--secondary-info">
               <h3 className="product--secondary__price">
                 {product &&
@@ -118,7 +119,7 @@ function AboutProduct({ products, cart }) {
             <div className="subscriptions-wrap">
             <div className={`product--subscription ${badgePrice === 12.99 && "subscription-selected"}`}>
                 <div className="product--subscription__info">
-                  <h5 className="subscription__info--title">tier 2</h5>
+                  <h5 className="subscription__info--title">Tier 2</h5>
                   <div className="subscription__info--price">12.99</div>
                   <button onClick={() => setBadgePrice(12.99)} className={`subscription__info--btn ${badgePrice === 12.99 && "info--btn__selected"}`}>
                     choose plan
@@ -144,7 +145,7 @@ function AboutProduct({ products, cart }) {
               </div>
               <div className={`product--subscription ${badgePrice === 14.99 && "subscription-selected"}`}>
                 <div className="product--subscription__info">
-                  <h5 className="subscription__info--title">tier 3</h5>
+                  <h5 className="subscription__info--title">Tier 3</h5>
                   <div className="subscription__info--price">14.99</div>
                   <button onClick={() => setBadgePrice(14.99)} className={`subscription__info--btn ${badgePrice === 14.99 && "info--btn__selected"}`}>
                     choose plan
@@ -179,7 +180,7 @@ function AboutProduct({ products, cart }) {
               </div>
               <div className={`product--subscription ${badgePrice === 7.99 && "subscription-selected"}`}>
                 <div className="product--subscription__info">
-                  <h5 className="subscription__info--title">tier 1</h5>
+                  <h5 className="subscription__info--title">Tier 1</h5>
                   <div className="subscription__info--price">7.99</div>
                   <button onClick={() => setBadgePrice(7.99)} className={`subscription__info--btn ${badgePrice === 7.99 && "info--btn__selected"}`}>
                     choose plan

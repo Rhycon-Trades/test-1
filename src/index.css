@@ -854,9 +854,6 @@ width: max-content;
   margin-top: 100px;
   display: grid;
   grid-template-columns: repeat(2, 50%);
-  position: relative;
-  bottom: 230px;
-  background-color: #ffffff;
 }
 
 .product__feature {
@@ -933,6 +930,7 @@ width: max-content;
 
 .signals--sec__img{
   max-height: 450px;
+  margin-bottom: 20px;
 }
 
 .signals--sec__img img{
@@ -948,6 +946,12 @@ width: max-content;
 
 .signals--sec__price::before{
   content: '$';
+  font-size: 16px;
+}
+
+.signals--sec__price::after{
+  content: '/week';
+  align-self: center;
   font-size: 16px;
 }
 
@@ -1366,10 +1370,6 @@ input[type="submit"]:hover {
     min-width: 250px;
     max-width: 300px;
   }
-
-  .product--table{
-    position: unset;
-  }
 }
 
 @media (max-width: 580px) {
@@ -1552,10 +1552,6 @@ input[type="submit"]:hover {
 
   .signals__features{
     max-width: 100%;
-  }
-
-  .signals__feature{
-    margin: 0 1px;
   }
 }
 
