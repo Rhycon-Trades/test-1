@@ -1540,6 +1540,23 @@ input[type="submit"]:hover {
   .table--bar__btn{
     font-size: 18px;
   }
+
+  .signals{
+    flex-direction: column;
+  }
+
+  .signals--main{
+    max-width: 100%;
+    margin-bottom: 50px;
+  }
+
+  .signals__features{
+    max-width: 100%;
+  }
+
+  .signals__feature{
+    margin: 0 1px;
+  }
 }
 
 /*

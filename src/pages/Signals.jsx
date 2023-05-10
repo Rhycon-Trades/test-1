@@ -40,7 +40,7 @@ function Signals({product , cart , getProduct}) {
                 <figure className='signals--sec__img'>
                     <img src="https://cdn.discordapp.com/attachments/1088531111942037534/1105913068766122086/IMG_1517.png" alt="" />
                 </figure>
-                <div className="signals--sec__price">{(product.salePrice || product.originalPrice).toFixed(2)}</div>
+                <div className="signals--sec__price">{product.salePrice !== undefined && (product.salePrice || product.originalPrice).toFixed(2)}</div>
                 {cart.find((item) => item.id == product.id) ? (
                 <Link to="/cart" className="product__button secondary__button">
                   <button className="product__button secondary__button">
