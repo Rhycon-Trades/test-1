@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import ProductFeature from "../ui/ProductFeature";
 import { Link, useParams } from "react-router-dom";
 import Signals from "./Signals";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function AboutProduct({ products, cart }) {
   const [product, setProduct] = useState(false);
   const [features, setFeatures] = useState([]);
   const [reload, setReload] = useState(false);
   const [badgePrice , setBadgePrice] = useState(7.99)
+  const [gallery , setGallery] = useState(1)
 
   useEffect(() => {
   setProduct({...product , originalPrice: badgePrice})
@@ -38,6 +40,18 @@ function AboutProduct({ products, cart }) {
   function getProduct(item) {
     cart.push(item);
     setReload(!reload);
+  }
+
+  function slideRight(){
+    if(gallery !== 3){
+      setGallery(gallery + 1)
+    }
+  }
+
+  function slideLeft(){
+    if(gallery !== 1){
+      setGallery(gallery - 1)
+    }
   }
 
   return (
@@ -205,6 +219,25 @@ function AboutProduct({ products, cart }) {
           </div>
         )}
       </div>}
+      {
+        url === "badge" && (
+          <div className="gallery">
+            <figure className="gallery--img">
+              {gallery === 1 && <img className="skeleton-img" src="https://media.discordapp.net/attachments/1045402320252444693/1094942562801954846/unnamed_2.jpg?width=604&height=604"/> }
+              {gallery === 2 && <img className="skeleton-img" src="https://media.discordapp.net/attachments/1045402320252444693/1094951282105651220/Untitled_design_16.png?width=604&height=604" alt="" /> }
+              {gallery === 3 && <img className="skeleton-img" src="https://i.postimg.cc/76p17yL7/Screenshot-2023-04-02-224834.png" alt="" /> }
+            </figure>
+            <div className="testimonials--arrows">
+        <button onClick={slideLeft} className="testimonial__arrow">
+          <FontAwesomeIcon icon='fa fa-arrow-left' />
+        </button>
+        <button onClick={slideRight} className="testimonial__arrow">
+          <FontAwesomeIcon icon='fa fa-arrow-right' />
+        </button>
+      </div>
+          </div>
+        )
+      }
     </main>
   );
 }

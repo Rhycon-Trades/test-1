@@ -78,7 +78,7 @@ function Header({products}) {
             </div>
           </div>
           <Link className="buy__link" to="/products">
-            <button className="buy__btn">buy now</button>
+            <button className="buy__btn">Buy Now</button>
           </Link>
         </div>
         <div className="buy--img">

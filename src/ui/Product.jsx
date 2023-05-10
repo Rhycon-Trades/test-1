@@ -30,6 +30,11 @@ function Product({ product  , cart}) {
       </div>
 
       <div className="product--btns">
+      <Link className="product__btn" to={`/products/${product.nameInUrl}`}>
+            <button className="lowlighted-btn product__btn">
+              Learn More
+            </button>
+          </Link>
                       {cart.find((item) => item.id == product.id) ? (
                 <Link to='/cart' className="product__btn--cart">
                   <button className="product__btn">
@@ -41,14 +46,9 @@ function Product({ product  , cart}) {
                   onClick={() => getProduct(product)}
                   className="product__btn"
                 >
-                  add to cart
+                  Buy Now
                 </button>
               )}
-          <Link className="product__btn" to={`/products/${product.nameInUrl}`}>
-            <button className="lowlighted-btn product__btn">
-              read more
-            </button>
-          </Link>
       </div>
     </div>
   );

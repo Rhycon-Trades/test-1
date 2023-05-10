@@ -24,7 +24,7 @@ function Features() {
                     <p><FontAwesomeIcon className='purple' icon='fa fa-arrow-right' /> <b className="purple">gain</b> an edge in the market</p>
                   </li>
                 </ul>
-                <Link to='/products'><button className='features__btn'>enroll now</button></Link>
+                <Link to='/products'><button className='features__btn'>Buy Now</button></Link>
             </div>
             <div className="features-wrapper">
             <Feature typeIsAccurate={true} />
