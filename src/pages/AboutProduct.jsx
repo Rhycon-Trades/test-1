@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ProductFeature from "../ui/ProductFeature";
 import { Link, useParams } from "react-router-dom";
+import Signals from "./Signals";
 
 function AboutProduct({ products, cart }) {
   const [product, setProduct] = useState(false);
@@ -41,7 +42,12 @@ function AboutProduct({ products, cart }) {
 
   return (
     <main>
-      <div className="aboutProduct-container">
+      {url === "signals" ? 
+      (
+        <Signals product={product} cart={cart} getProduct={getProduct} />
+      )
+      :
+       <div className="aboutProduct-container">
         <div className="product--about">
           <div className="about-container">
             <figure className="product--small-img">
@@ -197,7 +203,7 @@ function AboutProduct({ products, cart }) {
             </div>
           </div>
         )}
-      </div>
+      </div>}
     </main>
   );
 }

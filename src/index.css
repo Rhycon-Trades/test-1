@@ -872,6 +872,85 @@ width: max-content;
   color: #0000fe;
 }
 
+.signals{
+  padding: 20px 20px;
+  display: flex;
+}
+
+.signals--main{
+  max-width:60% ;
+}
+
+.signals--main__sub-header{
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.signals--main__header{
+  max-width: 60%;
+  font-size: 24px;
+  line-height: 30px;
+}
+
+.signals__features{
+  max-width:80% ;
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(2 , 50%);
+}
+
+.signals__feature{
+  margin-bottom: 30px;
+}
+
+.signals--icon{
+  background-color: #0000fe;
+  color: #fff;
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 40px;
+  width: 45px;
+}
+
+.signals--title{
+  margin-top: 6px;
+  font-size: 18px;
+  max-width: 80%;
+}
+
+.signals--description{
+  margin-top:4px ;
+  color: #606060;
+  max-width: 80%;
+}
+
+.signals--sec{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.signals--sec__img{
+  max-height: 450px;
+}
+
+.signals--sec__img img{
+  max-height: 450px;
+}
+
+.signals--sec__price{
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  display: flex;
+}
+
+.signals--sec__price::before{
+  content: '$';
+  font-size: 16px;
+}
+
 /*
   Cart
 */
