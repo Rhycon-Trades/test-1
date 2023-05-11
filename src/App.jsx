@@ -10,6 +10,9 @@ import AboutProduct from './pages/AboutProduct';
 import Cart from './pages/Cart';
 import Terms from './pages/Terms';
 import PopUp from './ui/PopUp';
+import SignUp from './compnents/Auth/SignUp';
+import Signin from './compnents/Auth/SignIn';
+import ForgetPassword from './compnents/Auth/ForgetPassword';
 
 function App() {
 
@@ -63,6 +66,9 @@ function App() {
         <Route exact path='products/:nameInUrl' element={<AboutProduct products={products} cart={cart} />}/>
         <Route exact path='/cart' element={<Cart  setCart={updateCart} cart={cart} />} />
         <Route exact path='/terms' element={<Terms />} />
+        <Route exact path='/signup' element={<SignUp />} />
+        <Route exact path='/signin' element={<Signin />} />
+        <Route exact path='/passwordreset' element={<ForgetPassword />} />
       </Routes>
       {
         popup &&

@@ -26,7 +26,12 @@ function openMenu(){
             </li>
             <li className="nav--link">
               <Link to="/cart">
-                <FontAwesomeIcon icon="fa fa-shopping-cart" />{" "}
+                <FontAwesomeIcon icon="fa fa-shopping-cart" />
+              </Link>
+            </li>
+            <li className="nav--link nav--link__btn">
+              <Link to="/signup">
+                Sign Up
               </Link>
             </li>
           </ul>

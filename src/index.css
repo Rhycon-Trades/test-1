@@ -145,10 +145,12 @@ nav {
 }
 
 .nav--link {
-  margin: 0 16px;
-  font-size: 20px;
+  margin-right: 20px;
+  font-size: 18px;
   font-weight: 700;
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .nav--link::after {
@@ -157,13 +159,30 @@ nav {
   background-color: #0000fe;
   position: absolute;
   left: 0;
-  bottom: 0;
+  bottom: 4px;
   width: 0;
 }
 
 .nav--link:hover::after {
   width: 100%;
   transition: width 500ms;
+}
+
+.nav--link__btn{
+  background-color: #0000fe;
+  padding: 8px 14px;
+  border-radius: 10px;
+  margin: 0;
+}
+
+.nav--link__btn a{
+  color: #fff;
+  font-size: 16px;
+  letter-spacing: 1.2px;
+}
+
+.nav--link__btn::after{
+  display: none;
 }
 
 .menu-btn {
@@ -774,6 +793,8 @@ width: max-content;
 
 .product__btn--cart{
   width: 100%;
+  display:flex;
+  justify-content: center;
 }
 
 .aboutProduct-container {
@@ -1170,6 +1191,76 @@ width: max-content;
 .popup__header{
   font-size: 18px;
 }
+
+/*
+  auth
+*/
+
+.auth-container{
+  margin: 100px 50px;
+  display: flex;
+  justify-content: center;
+}
+
+  .modal{
+    display: flex;
+    max-width: 800px;
+    border: 1px solid #606060;
+    border-radius: 20px;
+  }
+
+  .modal--block{
+    width: 50%;
+  }
+
+  .modal--content{
+    padding: 20px;
+  }
+
+  .modal--block__img{
+    height: 100%;
+    border-radius: 20px 0 0 20px;
+  }
+
+  .block--note{
+    font-size: 14px;
+    color: #9e9e9e;
+    margin-bottom: 6px;
+  }
+
+  .block--form{
+    margin: 30px 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .block--form__input{
+    margin-bottom: 20px;
+    border-bottom: 1px solid #0000fe;
+    color: #000 !important;
+    height: 30px;
+    font-size: 16px;
+    font-weight: 400px;
+  }
+
+  .block--form__submit{
+    color: #ffffff !important;
+    border-radius: 10px !important;
+  }
+
+  .block--change-method{
+    color: #606060;
+  }
+
+  .form__input--password{
+    margin-bottom: 0;
+  }
+
+  .form__input--forget{
+    font-size: 14px;
+    margin: 6px 0 14px 0;
+    align-self: flex-end;
+  }
 
 /*
 Footer
@@ -1571,6 +1662,19 @@ input[type="submit"]:hover {
 
   .signals__features{
     max-width: 100%;
+  }
+
+  .modal{
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .modal--figure{
+    display: none;
+  }
+
+  .modal--content{
+    width: 100%;
   }
 }
 
