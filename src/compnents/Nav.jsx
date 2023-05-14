@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-function NAv() {
+function NAv({ user }) {
 
   const [menu , setMenu] = useState(false)
 
@@ -31,7 +31,7 @@ function openMenu(){
             </li>
             <li className="nav--link nav--link__btn">
               <Link to="/signup">
-                Sign Up
+                {user ? "Open App" : "Sign Up"}
               </Link>
             </li>
           </ul>

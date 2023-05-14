@@ -1,15 +1,31 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { signInUser } from "../../functions/auth";
+import React, { useState } from "react";
+import { Link, redirect } from "react-router-dom";
+import { auth } from "../../firebase/init";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
-function SignIn() {
+function SignIn({ setUser , displayOperation }) {
+
+  const [error , setError] = useState(false)
+
+  function signIn(email, password) {
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        setUser(userCredential.user)
+        displayOperation("you are now signed in" , true)
+        setError(false)
+      })
+      .catch((error) => {
+        setError(true)
+      });
+  };
+
   return (
     <div className="auth-container">
       <div className="modal">
         <figure className="modal--block modal--figure">
           <img
             className="modal--block__img"
-            src="https://media.discordapp.net/attachments/1045402320252444693/1094942562801954846/unnamed_2.jpg?width=604&height=604"
+            src="https://cdn.discordapp.com/attachments/1088531111942037534/1106309210200866956/RhyconTrades_the_real_world_with_a_portal_that_leads_to_a_room__c462b3a0-3e94-4e17-8674-ecf3e0f17ae3.png"
           />
         </figure>
         <div className="modal--block modal--content">
@@ -18,7 +34,7 @@ function SignIn() {
           <form
             onSubmit={(event) => {
               event.preventDefault();
-              signInUser(event.target[0].value, event.target[1].value);
+              signIn(event.target[0].value, event.target[1].value);
             }}
             className="block--form"
           >
@@ -39,9 +55,10 @@ function SignIn() {
               className="block--form__input block--form__submit"
               type="submit"
             />
+            {error && <p className="error">check your email or password</p>}
           </form>
           <p className="block--change-method">
-            Forget  <Link to='/signup' className="purple">Sign up</Link>
+            not a member <Link to='/signup' className="purple">Sign up</Link>
           </p>
         </div>
       </div>

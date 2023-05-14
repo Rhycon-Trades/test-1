@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import CheckOut from "../ui/CheckOut";
 
-function Cart({cart , setCart}) {
+function Cart({cart , setCart , user}) {
   const [totalPrice , setTotalPrice] = useState(0)
 
   useEffect(() => {
@@ -33,7 +33,10 @@ function Cart({cart , setCart}) {
           <p className="cart--price__sub">Subtotal <span>${(totalPrice * 0.9).toFixed(2)}</span></p>
           <p className="cart--price__sub">Tax <span>${(totalPrice * 0.1).toFixed(2)}</span></p>
           <h4 className="cart--price__sub cart--price__total">Total <span>${totalPrice.toFixed(2)}</span></h4>
-          <CheckOut cart={cart} totalPrice={totalPrice} />
+          {user ? <CheckOut cart={cart} totalPrice={totalPrice} /> : <>
+            <button className="cart--btn"><Link to='/signin'>Sign in</Link></button>
+            <p className="cart--warning">Sign in required</p>
+          </>}
         </div> : 
           <div className="cart--empty">
             <h2 className="cart--empty__header">cart is empty</h2>

@@ -1,15 +1,31 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { signUpUser } from "../../functions/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import React, { useState } from "react";
+import { Link, redirect } from "react-router-dom";
+import { auth } from "../../firebase/init";
 
-function SignUp() {
+function SignUp({ setUser , displayOperation }) {
+
+  const [error , setError] = useState(false)
+
+  function signUp(email, password) {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        setUser(userCredential.user)
+        displayOperation("your account have been created" , true)
+        setError(false)
+        
+      })
+      .catch((error) => {
+        setError(error.message);
+      });
+  };
   return (
     <div className="auth-container">
       <div className="modal">
         <figure className="modal--block modal--figure">
           <img
             className="modal--block__img"
-            src="https://media.discordapp.net/attachments/1045402320252444693/1094942562801954846/unnamed_2.jpg?width=604&height=604"
+            src="https://cdn.discordapp.com/attachments/1088531111942037534/1106309210200866956/RhyconTrades_the_real_world_with_a_portal_that_leads_to_a_room__c462b3a0-3e94-4e17-8674-ecf3e0f17ae3.png"
           />
         </figure>
         <div className="modal--block modal--content">
@@ -18,7 +34,7 @@ function SignUp() {
           <form
             onSubmit={(event) => {
               event.preventDefault();
-              signUpUser(event.target[0].value, event.target[1].value);
+              signUp(event.target[0].value, event.target[1].value);
             }}
             className="block--form"
           >
@@ -36,6 +52,7 @@ function SignUp() {
               className="block--form__input block--form__submit"
               type="submit"
             />
+            {error && <p className="error">an error ocured</p>}
           </form>
           <p className="block--change-method">
             Already a member <Link to='/signin' className="purple">Sign in</Link>
