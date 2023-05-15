@@ -1,10 +1,12 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 function Footer() {
+  const path = useLocation().pathname.toString()
   return (
-    <footer>
+    <>
+    {!path.includes("/app") && <footer>
       <div className="footer-container">
         <div className="footer--main">
           <div className="footer--trades">
@@ -94,7 +96,8 @@ function Footer() {
           </button>
         </div>
       </div>
-    </footer>
+    </footer>}
+    </>
   );
 }
 

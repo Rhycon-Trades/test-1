@@ -4,9 +4,9 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faShoppingCart , faDollarSign , faMagnifyingGlass , faWallet , faPlus , faMinus , faBars , faXmark , faCheck , faArrowRight , faArrowLeft , faGift , faCartShopping , faStar , faStarHalf , faUser , faGraduationCap , faUnlock} from '@fortawesome/free-solid-svg-icons';
+import { faShoppingCart , faDollarSign , faMagnifyingGlass , faWallet , faPlus , faMinus , faBars , faXmark , faCheck , faArrowRight , faArrowLeft , faGift , faCartShopping , faStar , faStarHalf , faUser , faGraduationCap , faUnlock , faGear} from '@fortawesome/free-solid-svg-icons';
 import { faDiscord , faInstagram , faYoutube } from '@fortawesome/free-brands-svg-icons'
-library.add( faShoppingCart , faDollarSign , faMagnifyingGlass , faWallet , faPlus , faMinus , faDiscord , faInstagram , faYoutube , faBars , faXmark , faCheck , faArrowRight , faArrowLeft , faGift , faCartShopping , faStar , faStarHalf , faUser , faGraduationCap , faUnlock)
+library.add( faShoppingCart , faDollarSign , faMagnifyingGlass , faWallet , faPlus , faMinus , faDiscord , faInstagram , faYoutube , faBars , faXmark , faCheck , faArrowRight , faArrowLeft , faGift , faCartShopping , faStar , faStarHalf , faUser , faGraduationCap , faUnlock , faGear)
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

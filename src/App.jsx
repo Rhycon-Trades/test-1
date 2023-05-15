@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import Footer from "./compnents/Footer";
 import Nav from "./compnents/Nav";
 import Home from "./pages/Home";
@@ -15,6 +15,7 @@ import Signin from "./compnents/Auth/SignIn";
 import ForgetPassword from "./compnents/Auth/ForgetPassword";
 import Operation from "./ui/Operation";
 import { onAuthStateChanged } from "firebase/auth";
+import Chat from "./pages/Chat";
 
 function App() {
   const [testimonials, setTestimonials] = useState(null);
@@ -26,8 +27,6 @@ function App() {
   const [operationSuccess, setOparationSuccess] = useState();
   const [message, setMessage] = useState();
   const [user, setUser] = useState(false);
-
-  console.log(user);
 
   function displayOperation(content, state) {
     setMessage(content);
@@ -93,7 +92,7 @@ function App() {
 
   return (
     <Router>
-      <Nav user={user} />
+      {<Nav user={user} />}
       <Routes>
         <Route
           exact
@@ -137,6 +136,7 @@ function App() {
           path="/passwordreset"
           element={<ForgetPassword displayOperation={displayOperation} />}
         />
+        <Route path="/app" element={<Chat user={user} />}/>
       </Routes>
       {popup && <PopUp closePopup={closePopup} />}
       {operation && (
