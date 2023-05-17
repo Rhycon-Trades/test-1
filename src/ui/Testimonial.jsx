@@ -9,7 +9,7 @@ function Testimonial({ testimonial }) {
       <div className="testimonial--content">
         <h3 className="testimonial__name">{testimonial.name}</h3>
         <p className="testimonial__rating">
-          {new Array(Math.floor(rating)).fill(0).map((_, index) => (
+          {rating && new Array(Math.floor(rating)).fill(0).map((_, index) => (
             <FontAwesomeIcon icon="fa fa-star" key={index} />
           ))}
           {rating != ~~rating && <FontAwesomeIcon icon="fa fa-star-half" />}

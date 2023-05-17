@@ -10,9 +10,7 @@ import AboutProduct from "./pages/AboutProduct";
 import Cart from "./pages/Cart";
 import Terms from "./pages/Terms";
 import PopUp from "./ui/PopUp";
-import SignUp from "./compnents/Auth/SignUp";
 import Signin from "./compnents/Auth/SignIn";
-import ForgetPassword from "./compnents/Auth/ForgetPassword";
 import Operation from "./ui/Operation";
 import { onAuthStateChanged } from "firebase/auth";
 import Chat from "./pages/Chat";
@@ -33,6 +31,8 @@ function App() {
     setOparationSuccess(state);
     setOperation(true);
   }
+
+  console.log(user)
 
   useEffect(() => {
     if (operation) {
@@ -119,22 +119,10 @@ function App() {
         <Route exact path="/terms" element={<Terms />} />
         <Route
           exact
-          path="/signup"
-          element={
-            <SignUp setUser={setUser} displayOperation={displayOperation} />
-          }
-        />
-        <Route
-          exact
           path="/signin"
           element={
             <Signin setUser={setUser} displayOperation={displayOperation} />
           }
-        />
-        <Route
-          exact
-          path="/passwordreset"
-          element={<ForgetPassword displayOperation={displayOperation} />}
         />
         <Route path="/app" element={<Chat user={user} />}/>
       </Routes>

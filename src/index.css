@@ -222,7 +222,7 @@ nav {
   height: 100vh;
   max-width: 250px;
   width: 100%;
-  position: static;
+  position: relative;
   left: 0;
 }
 
@@ -259,7 +259,7 @@ nav {
 .user--logo{
   width: 36px;
   height: 36px;
-  margin-right: 14px ;
+  margin-right: 10px ;
 }
 
 .user--logo img{
@@ -316,6 +316,130 @@ nav {
   color: #ffffff;
   display: flex;
   justify-content: flex-start;
+}
+
+/*
+  Chat App
+*/
+
+.chat{
+  display: flex;
+}
+
+.channel{
+  background-color: #000000;
+  height: 100vh;
+  width: 100%;
+  max-width:100%;
+}
+
+.channel--messages{
+  height: calc(100% - 60px);
+  overflow-y: scroll;
+}
+
+.channel--messages-wrapper{
+  padding: 0 20px;
+}
+
+.message{
+  max-width: 50%;
+  width: 50%;
+  margin-bottom: 48px;
+}
+
+.message-local{
+  float: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.message--user{
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.message-local .message--user{
+  flex-direction: row-reverse;
+}
+
+.message--user__logo{
+  width: 34px;
+  height: 34px;
+  border-radius: 100%;
+  margin: 0 10px;
+}
+
+.message--user__name{
+  color: #e4e4e4;
+  font-size: 16px;
+}
+
+.message--content{
+  color: #ffffff;
+  background-color: #606060;
+  line-height: 22px;
+  padding: 6px 10px;
+  margin-left: 4px;
+  border-radius: 0 10px 10px 10px;
+}
+
+.message-local .message--content{
+  background-color: #0000fe;
+  border-radius: 10px 0 10px 10px;
+}
+
+.channel__form{
+  height: 60px;
+  padding: 0 30px;
+  margin: 0;
+  background-color: #242424;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.channel__input{
+  background-color: #606060;
+  color: #ffff;
+  font-weight: 300;
+  padding: 0 10px;
+  width: 100%;
+  max-width:100% ;
+  height: 30px;
+  border-radius: 30px;
+}
+
+.channel__submit{
+  background-color: transparent;
+  padding: 0;
+  height: max-content;
+  margin-left: 14px;
+}
+
+.channel__submit:hover{
+  background-color: transparent;
+}
+
+.channel--intro{
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px 0;
+  padding-bottom:20px ;
+  border-bottom: 1px solid #606060;
+}
+
+.channel__header{
+  font-size: 30px;
+  margin-bottom: 6px;
+}
+
+.channel__para{
+  color: #e4e4e4;
 }
 
 /*
@@ -1356,45 +1480,48 @@ width: max-content;
     margin-bottom: 6px;
   }
 
-  .block--form{
-    margin: 30px 0;
+  .block--providers{
     display: flex;
     flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
   }
 
-  .block--form__input{
-    margin-bottom: 20px;
-    border-bottom: 1px solid #0000fe;
-    color: #000 !important;
-    height: 30px;
-    font-size: 16px;
-    font-weight: 400px;
-  }
-
-  .block--form__submit{
-    color: #ffffff !important;
-    border-radius: 10px !important;
-  }
-
-  .block--change-method{
-    color: #606060;
-  }
-
-  .form__input--password{
-    margin-bottom: 0;
-  }
-
-  .form__input--forget{
-    font-size: 14px;
-    margin: 6px 0 14px 0;
-    align-self: flex-end;
-  }
-
-  .error{
-    color: red;
-    width: 100%;
+  .block__provider{
+    margin-bottom: 16px;
+    width: max-content;
+    width: 300px;
+    max-width: 300px;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 16px;
+    background-color: transparent;
+    color: #000;
+    border: 1px solid #000 ;
+  }
+
+  .block__provider:hover{
+    color: #000;
+    background-color: #e4e4e4;
+    border: 1px solid #000000;
+  }
+
+  .block__provider--logo{
+    margin-right: 18px;
+    font-size: 22px;
+  }
+
+  .google{
+    color: #cf0000;
+  }
+
+  .apple{
+    color: #9e9e9e;
+  }
+
+  .facebook{
+    color: #0000fe;
   }
 
   .operation{

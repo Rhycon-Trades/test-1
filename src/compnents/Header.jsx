@@ -13,7 +13,7 @@ function Header({products}) {
     }else if(checked === 2){
       setImgUrl("https://cdn.discordapp.com/attachments/1088531111942037534/1105214825249919107/unnamed_2-removebg-preview.png")
     }else if(checked === 3){
-      setImgUrl("https://cdn.discordapp.com/attachments/1088531111942037534/1105215051968823386/Untitled_design_16-removebg-preview.png")
+      setImgUrl("https://cdn.discordapp.com/attachments/1088531111942037534/1107795553393332367/IMG_1533.png")
     }
   },[checked])
 

@@ -33,7 +33,7 @@ function NAv({ user }) {
               {user ? (
                 <Link to="/app">Open App</Link>
               ) : (
-                <Link to="/signup">Sign Up</Link>
+                <Link to="/signin">Sign Up</Link>
               )}
             </li>
           </ul>
@@ -42,7 +42,7 @@ function NAv({ user }) {
               {user ? (
                 <Link to="/app">Open App</Link>
               ) : (
-                <Link to="/signup">Sign Up</Link>
+                <Link to="/signin">Sign Up</Link>
               )}
             </button>
             <button onClick={openMenu} className="menu-btn">

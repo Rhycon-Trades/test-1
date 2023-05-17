@@ -1,21 +1,30 @@
 import React, { useState } from "react";
 import { Link, redirect } from "react-router-dom";
 import { auth } from "../../firebase/init";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { FacebookAuthProvider, GoogleAuthProvider, OAuthProvider , getRedirectResult, signInWithRedirect } from "firebase/auth";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function SignIn({ setUser , displayOperation }) {
 
-  const [error , setError] = useState(false)
+  let provider 
 
-  function signIn(email, password) {
-    signInWithEmailAndPassword(auth, email, password)
+  async function signIn(providerType) {
+    if(providerType === "google"){
+      provider = new GoogleAuthProvider()
+    }else if(providerType === "apple"){
+      provider = new OAuthProvider('apple.com')
+    }else if(providerType === 'facebook'){
+      provider= new FacebookAuthProvider()
+    }
+
+    await signInWithRedirect(auth, provider)
+    getRedirectResult(auth)
       .then((userCredential) => {
         setUser(userCredential.user)
         displayOperation("you are now signed in" , true)
-        setError(false)
       })
       .catch((error) => {
-        setError(true)
+        displayOperation("try again" , false)
       });
   };
 
@@ -29,37 +38,13 @@ function SignIn({ setUser , displayOperation }) {
           />
         </figure>
         <div className="modal--block modal--content">
-          <p className="block--note">welcome back</p>
-          <h3 className="block--header">Sign in to rhycon</h3>
-          <form
-            onSubmit={(event) => {
-              event.preventDefault();
-              signIn(event.target[0].value, event.target[1].value);
-            }}
-            className="block--form"
-          >
-            <input
-              className="block--form__input"
-              type="email"
-              placeholder="enter your email"
-            />
-            <input
-              className="block--form__input form__input--password"
-              type="password"
-              placeholder="enter your password"
-            />
-            <Link to='/passwordreset' className="block--change-method form__input--forget">
-                Forget Password
-            </Link>
-            <input
-              className="block--form__input block--form__submit"
-              type="submit"
-            />
-            {error && <p className="error">check your email or password</p>}
-          </form>
-          <p className="block--change-method">
-            not a member <Link to='/signup' className="purple">Sign up</Link>
-          </p>
+          <p className="block--note">hey there !</p>
+          <h3 className="block--header">Welcome to rhycon</h3>
+            <div className="block--providers">
+              <button onClick={() => signIn('google')} className="block__provider"><FontAwesomeIcon className="block__provider--logo google" icon='fa-brands fa-google'/> Continue with Google</button>
+              <button onClick={() => signIn('apple')} className="block__provider"><FontAwesomeIcon className="block__provider--logo apple" icon='fa-brands fa-apple'/> Continue with Apple</button>
+              <button onClick={() => signIn('facebook')} className="block__provider"><FontAwesomeIcon className="block__provider--logo facebook" icon='fa-brands fa-facebook'/> Continue with Facebook</button>
+            </div>
         </div>
       </div>
     </div>

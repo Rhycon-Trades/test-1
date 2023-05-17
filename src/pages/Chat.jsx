@@ -1,10 +1,12 @@
 import React from 'react'
 import Sidebar from '../compnents/Sidebar'
+import Channels from '../compnents/Channels'
 
 function Chat({ user }) {
   return (
     <div className="chat">
-        <Sidebar />
+        <Sidebar user={user} />
+        <Channels user={user} />
     </div>
   )
 }
