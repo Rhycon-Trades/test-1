@@ -32,8 +32,6 @@ function App() {
     setOperation(true);
   }
 
-  console.log(user)
-
   useEffect(() => {
     if (operation) {
       setTimeout(() => {
@@ -124,7 +122,7 @@ function App() {
             <Signin setUser={setUser} displayOperation={displayOperation} />
           }
         />
-        <Route path="/app" element={<Chat user={user} />}/>
+        <Route path="/app/:channel" element={<Chat user={user} />}/>
       </Routes>
       {popup && <PopUp closePopup={closePopup} />}
       {operation && (
