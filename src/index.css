@@ -353,6 +353,7 @@ nav {
   width: 330px;
   height: 410px;
   border-radius: 10px;
+  z-index: 100;
 }
 
 .user--profile__info{
