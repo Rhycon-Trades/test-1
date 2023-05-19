@@ -31,7 +31,7 @@ function NAv({ user }) {
             </li>
             <li className="nav--link nav--link__btn">
               {user ? (
-                <Link to="/app">Open App</Link>
+                <Link to="/app/intro">Open App</Link>
               ) : (
                 <Link to="/signin">Sign Up</Link>
               )}
@@ -40,7 +40,7 @@ function NAv({ user }) {
           <div className="mobile-nav">
             <button className="mobile-nav--btn">
               {user ? (
-                <Link to="/app">Open App</Link>
+                <Link to="/app/intro">Open App</Link>
               ) : (
                 <Link to="/signin">Sign Up</Link>
               )}
