@@ -25,6 +25,7 @@ function Channels({ user, channel }) {
   const input = document.getElementById("channel__input");
   const dummy = useRef();
   const { ref, inView } = useInView();
+  let previousMessage = false
 
   useEffect(() => {
     if (messages && scrollToBottom) {
@@ -107,14 +108,17 @@ function Channels({ user, channel }) {
         </div>
         <ul className="channel--messages-wrapper">
           {messages &&
-            messages.map((message) => (
-              <Message
+            messages.map((message) => {
+              const data = <Message
                 user={user}
                 message={message}
                 replyTo={replyTo}
+                previousMessage={previousMessage}
                 key={message.id}
               />
-            ))}
+              previousMessage = message
+              return data
+            })}
           <div ref={dummy}>
             <div ref={ref}></div>
           </div>

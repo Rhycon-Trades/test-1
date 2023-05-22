@@ -4,7 +4,7 @@ import { db } from "../firebase/init";
 import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import { useEffect } from "react";
 
-function Message({ message, user, replyTo }) {
+function Message({ message, user, replyTo, previousMessage }) {
   const [edit, setEdit] = useState(false);
   const [copied, setCopied] = useState(false);
   const [reply, setReply] = useState(false);
@@ -59,13 +59,17 @@ function Message({ message, user, replyTo }) {
   return (
     <>
       <li
-        className={`message ${message.userId === user.uid && "message-local"}`}
+        className={`message ${message.userId === previousMessage.userId && 'message-section'} ${message.userId === user.uid && "message-local"}`}
       >
-        <figure className="message--user">
-          <img src={message.photoUrl} className="message--user__logo" />
-        </figure>
+        {previousMessage.userId !== message.userId && (
+          <figure className="message--user">
+            <img src={message.photoUrl} className="message--user__logo" />
+          </figure>
+        )}
         <div className="message-container">
+        {previousMessage.userId !== message.userId && (
           <p className="message--user__name">{message.userName}</p>
+        )}
           {edit ? (
             <form onSubmit={(event) => updateText(event)}>
               <input
