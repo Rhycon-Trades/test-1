@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-function Sidebar({ user, channel }) {
+function Sidebar({ user, channel ,setDisplay }) {
   const [checked, setChecked] = useState(1);
   const [profileDisplay , setProfileDisplay] = useState(false)
   
@@ -150,6 +150,9 @@ function Sidebar({ user, channel }) {
           </div>}
         </div>
       </div>
+      <button onClick={() => setDisplay(false)} className="close-sidebar">
+        <FontAwesomeIcon icon='fa fa-bars' />
+      </button>
     </aside>
   );
 }

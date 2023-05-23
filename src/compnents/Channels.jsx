@@ -18,6 +18,7 @@ import { useInView } from "react-intersection-observer";
 
 function Channels({ user, channel }) {
   const [messages, setMessages] = useState(null);
+  const [emojis , setEmojis] = useState(false)
   const [newMessage, setNewMessage] = useState();
   const [scrollToBottom, setScrollToBottom] = useState(true);
   const [messageSent, setMessageSent] = useState(true);
@@ -26,6 +27,13 @@ function Channels({ user, channel }) {
   const dummy = useRef();
   const { ref, inView } = useInView();
   let previousMessage = false
+
+  useEffect(() => {
+    const rowData = fetch("https://emoji-api.com/emojis?access_key=39f8ebdd5893bad2f5b3d9bf4434b2716ebb98ab")
+    .then((response) => response.json())
+    .then((data) => data.filter((item) => !item.slug.includes('rainbow-flag' || 'kiss-man-man' || 'kiss-woman-woman' || 'couple-with-heart-man-man' || 'couple-with-heart-woman-woman') || !containsNumber(item.slug)) )
+    .then(data => setEmojis(data))
+},[])
 
   useEffect(() => {
     if (messages && scrollToBottom) {
@@ -99,6 +107,10 @@ function Channels({ user, channel }) {
     setReplyMessage(message);
   }
 
+  function containsNumber(str){
+    return /[0-9]/.test(str)
+  }
+
   return (
     <div className="channel">
       <div className="channel--messages">
@@ -113,6 +125,7 @@ function Channels({ user, channel }) {
                 user={user}
                 message={message}
                 replyTo={replyTo}
+                emojis={emojis}
                 previousMessage={previousMessage}
                 key={message.id}
               />

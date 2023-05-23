@@ -3,26 +3,51 @@ import React, { useState } from "react";
 import { db } from "../firebase/init";
 import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import { useEffect } from "react";
+import Emojis from "./Emojis";
 
-function Message({ message, user, replyTo, previousMessage }) {
+function Message({ emojis, message, user, replyTo, previousMessage }) {
   const [edit, setEdit] = useState(false);
   const [copied, setCopied] = useState(false);
   const [reply, setReply] = useState(false);
   const [msgText, setMsgText] = useState(message.text);
+  const [displayEmojis, setDisplayEmojis] = useState(false);
+  const [slugs, setSlugs] = useState(false);
 
   useEffect(() => {
     if (message.replyTo) {
       getReply();
     }
-  }, [message]);
 
-  console.log(reply);
+    const slugNumber = getSlugNumber();
+    if (slugNumber > 0) {
+      let arr = [];
+      for (let i = 1; i <= slugNumber; i++) {
+        arr.push(eval("message.character" + i));
+      }
+      setSlugs(arr);
+    }
+  }, [message]);
 
   async function getReply() {
     const docRef = doc(db, "messages", message.replyTo);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       setReply(docSnap.data());
+    }
+  }
+
+  function getSlugNumber() {
+    let num;
+    try {
+      for (
+        let i = 1;
+        eval("message.character" + i.toString()) !== undefined;
+        i++
+      ) {
+        num = i;
+      }
+    } finally {
+      return num !== undefined ? num : 0;
     }
   }
 
@@ -56,10 +81,38 @@ function Message({ message, user, replyTo, previousMessage }) {
     });
   }
 
+  async function addEmoji(slug) {
+    setDisplayEmojis(false);
+
+    if (eval("message." + user.uid)) {
+      const docRef = doc(db, "messages", message.id);
+      const emoji = slug.replace(new RegExp("-", "g"), "");
+      let slugNum = getSlugNumber() + 1;
+      let count;
+      let filteredSlug = slug.replace(new RegExp("-", "g"), "");
+      let name = "character" + slugNum.toString();
+
+      if (eval("message." + emoji)) {
+        count = eval("message." + emoji) + 1;
+      } else {
+        count = 1;
+      }
+
+      const newPost = {
+        [emoji]: count,
+        [name]: filteredSlug,
+        [user.uid]: true,
+      };
+      await updateDoc(docRef, newPost);
+    }
+  }
+
   return (
     <>
       <li
-        className={`message ${message.userId === previousMessage.userId && 'message-section'} ${message.userId === user.uid && "message-local"}`}
+        className={`message ${
+          message.userId === previousMessage.userId && "message-section"
+        } ${message.userId === user.uid && "message-local"}`}
       >
         {previousMessage.userId !== message.userId && (
           <figure className="message--user">
@@ -67,9 +120,9 @@ function Message({ message, user, replyTo, previousMessage }) {
           </figure>
         )}
         <div className="message-container">
-        {previousMessage.userId !== message.userId && (
-          <p className="message--user__name">{message.userName}</p>
-        )}
+          {previousMessage.userId !== message.userId && (
+            <p className="message--user__name">{message.userName}</p>
+          )}
           {edit ? (
             <form onSubmit={(event) => updateText(event)}>
               <input
@@ -95,11 +148,38 @@ function Message({ message, user, replyTo, previousMessage }) {
                 }`}
               >
                 {message.text}
+                {slugs && emojis && (
+                  <div className="reactions-wrapper">
+                    {slugs.map((slug) => {
+                      const targetEmoji = emojis.find(
+                        (emojiList) =>
+                          emojiList.slug.replace(new RegExp("-", "g"), "") ===
+                          slug
+                      );
+                      return (
+                        <div
+                          className={`reaction ${
+                            !!eval("message." + user.uid) && "local-reaction"
+                          }`}
+                          key={Math.random()}
+                        >
+                          {targetEmoji &&
+                            targetEmoji.character +
+                              " " +
+                              eval("message." + slug)}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </p>
             </>
           )}
           <div className="message--bar">
-            <button className="message--bar__btn">
+            <button
+              onClick={() => setDisplayEmojis(!displayEmojis)}
+              className="message--bar__btn"
+            >
               <FontAwesomeIcon icon="fa fa-face-smile" />
             </button>
             <button
@@ -125,6 +205,9 @@ function Message({ message, user, replyTo, previousMessage }) {
               </>
             )}
           </div>
+          {displayEmojis && (
+              <Emojis emojis={emojis} addEmoji={addEmoji} />
+          )}
         </div>
       </li>
       {copied && (
