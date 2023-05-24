@@ -188,7 +188,7 @@ function Message({ emojis, message, user, replyTo, previousMessage }) {
                       }`}
                     >
                       {slugs && slugs.character}
-
+                      {" "}
                       {eval(
                         "message." +
                           slugs.slug.replace(new RegExp("-", "g"), "")
