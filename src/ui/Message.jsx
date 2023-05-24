@@ -5,7 +5,7 @@ import { deleteDoc, deleteField, doc, getDoc, updateDoc } from "firebase/firesto
 import { useEffect } from "react";
 import Emojis from "./Emojis";
 
-function Message({ emojis, message, user, replyTo, previousMessage }) {
+function Message({ emojis, displaySideBar , message, user, replyTo, previousMessage }) {
   const [edit, setEdit] = useState(false);
   const [copied, setCopied] = useState(false);
   const [reply, setReply] = useState(false);
@@ -31,6 +31,12 @@ function Message({ emojis, message, user, replyTo, previousMessage }) {
     }
 
   }, [message]);
+
+  useEffect(() => {
+    if(displaySideBar){
+      setDisplayEmojis(false)
+    }
+  })
 
   async function getReply() {
     const docRef = doc(db, "messages", message.replyTo);
@@ -229,7 +235,7 @@ function Message({ emojis, message, user, replyTo, previousMessage }) {
               </>
             )}
           </div>
-          {displayEmojis && <Emojis emojis={emojis} addEmoji={addEmoji} />}
+          {displayEmojis && <Emojis setDisplayEmojis={setDisplayEmojis} emojis={emojis} addEmoji={addEmoji} />}
         </div>
       </li>
       {copied && (

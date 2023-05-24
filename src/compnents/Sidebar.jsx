@@ -5,6 +5,12 @@ import { Link } from "react-router-dom";
 function Sidebar({ user, channel , displaySideBar }) {
   const [checked, setChecked] = useState(1);
   const [profileDisplay , setProfileDisplay] = useState(false)
+
+  useEffect(() => {
+    if(profileDisplay){
+      setProfileDisplay(false)
+    }
+  },[displaySideBar])
   
   useEffect(() => {
     if (channel === "intro") {

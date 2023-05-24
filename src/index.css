@@ -597,6 +597,25 @@ nav {
   padding: 20px;
 }
 
+.emojis--bar{
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.emojis__close{
+  background-color: transparent;
+  color: #fff;
+  height: max-content;
+  padding: 0;
+  font-size: 24px;
+}
+
+.emojis__close:hover{
+  background-color: transparent;
+  color: #9e9e9e;
+}
+
 ::placeholder{
   color: #ffffff;
 }
@@ -608,7 +627,7 @@ nav {
   border-radius: 10px;
   background-color: #606060;
   color: #fff;
-  margin-bottom: 20px;
+  margin-right: 20px;
 }
 
 .emojis--list{
@@ -2366,6 +2385,12 @@ input[type="submit"]:hover {
 
   .channel{
     min-width: 400px;
+  }
+
+  .emojis{
+    min-width: 100vw;
+    bottom: 60px;
+    right: 0;
   }
 }
 

@@ -1,8 +1,9 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
 
-function Emojis({ emojis , addEmoji }) {
+function Emojis({ emojis , addEmoji , setDisplayEmojis }) {
     const [filter , setFilter] = useState("")
     const [placeHolder , setPlaceHolder] = useState('')
 
@@ -27,7 +28,12 @@ function Emojis({ emojis , addEmoji }) {
 
   return (
     <div className="emojis">
+        <div className="emojis--bar">
         <input type="text" placeholder={placeHolder} onChange={(event) => setFilter(event.target.value)} className="emojis--input" />
+        <button onClick={() => setDisplayEmojis(false)} className="emojis__close">
+            <FontAwesomeIcon icon='fa fa-xmark' />
+        </button>
+        </div>
         <ul className="emojis--list">
             {
                 emojis && (

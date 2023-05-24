@@ -136,6 +136,7 @@ function Channels({ user, channel , setDisplaySideBar , displaySideBar }) {
                 replyTo={replyTo}
                 emojis={emojis}
                 previousMessage={previousMessage}
+                displaySideBar={displaySideBar}
                 key={message.id}
               />
               previousMessage = message
