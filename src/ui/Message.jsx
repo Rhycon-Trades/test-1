@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { db } from "../firebase/init";
-import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
+import { deleteDoc, deleteField, doc, getDoc, updateDoc } from "firebase/firestore";
 import { useEffect } from "react";
 import Emojis from "./Emojis";
 
@@ -18,14 +18,18 @@ function Message({ emojis, message, user, replyTo, previousMessage }) {
       getReply();
     }
 
-    const slugNumber = getSlugNumber();
-    if (slugNumber > 0) {
-      let arr = [];
-      for (let i = 1; i <= slugNumber; i++) {
-        arr.push(eval("message.character" + i));
-      }
-      setSlugs(arr);
+    if (message.character !== undefined) {
+      const target = emojis.find(
+        (emoji) =>
+          emoji.slug.replace(new RegExp("-", "g"), "") === message.character
+      );
+      setSlugs(target);
     }
+
+    if(message.character === undefined){
+      setSlugs(false)
+    }
+
   }, [message]);
 
   async function getReply() {
@@ -33,21 +37,6 @@ function Message({ emojis, message, user, replyTo, previousMessage }) {
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       setReply(docSnap.data());
-    }
-  }
-
-  function getSlugNumber() {
-    let num;
-    try {
-      for (
-        let i = 1;
-        eval("message.character" + i.toString()) !== undefined;
-        i++
-      ) {
-        num = i;
-      }
-    } finally {
-      return num !== undefined ? num : 0;
     }
   }
 
@@ -84,13 +73,11 @@ function Message({ emojis, message, user, replyTo, previousMessage }) {
   async function addEmoji(slug) {
     setDisplayEmojis(false);
 
-    if (eval("message." + user.uid)) {
+    if (eval("message." + user.uid) === undefined) {
       const docRef = doc(db, "messages", message.id);
       const emoji = slug.replace(new RegExp("-", "g"), "");
-      let slugNum = getSlugNumber() + 1;
       let count;
       let filteredSlug = slug.replace(new RegExp("-", "g"), "");
-      let name = "character" + slugNum.toString();
 
       if (eval("message." + emoji)) {
         count = eval("message." + emoji) + 1;
@@ -98,13 +85,57 @@ function Message({ emojis, message, user, replyTo, previousMessage }) {
         count = 1;
       }
 
-      const newPost = {
-        [emoji]: count,
-        [name]: filteredSlug,
-        [user.uid]: true,
-      };
-      await updateDoc(docRef, newPost);
+      let newPost;
+
+      if (message.character === undefined) {
+        newPost = {
+          [emoji]: count,
+          character: filteredSlug,
+          [user.uid]: true,
+        };
+      } else {
+        newPost = {
+          [message.character]: count,
+          [user.uid]: true,
+        };
+      }
+
+      filteredSlug === message.character ||
+        (message.character === undefined && (await updateDoc(docRef, newPost)));
     }
+  }
+
+  async function recactionButton() {
+    const docRef = doc(db, "messages", message.id);
+    const slug = slugs.slug.replace(new RegExp("-", "g"), "");
+    let count;
+    let newPost;
+
+    if (eval("message." + user.uid) === true) {
+      count = eval("message." + slug) - 1;
+
+      if (count === 0) {
+        newPost = {
+          [user.uid]: deleteField(),
+          character: deleteField(),
+          [slug]: deleteField(),
+        };
+      } else {
+        newPost = { 
+          [user.uid]: deleteField(),
+          [slug]: count
+        };
+      }
+    }else{
+      count = eval("message." + slug) + 1;
+
+      newPost = { 
+        [user.uid]: true,
+        [slug]: count
+      };
+    }
+
+    await updateDoc(docRef, newPost);
   }
 
   return (
@@ -150,26 +181,19 @@ function Message({ emojis, message, user, replyTo, previousMessage }) {
                 {message.text}
                 {slugs && emojis && (
                   <div className="reactions-wrapper">
-                    {slugs.map((slug) => {
-                      const targetEmoji = emojis.find(
-                        (emojiList) =>
-                          emojiList.slug.replace(new RegExp("-", "g"), "") ===
-                          slug
-                      );
-                      return (
-                        <div
-                          className={`reaction ${
-                            !!eval("message." + user.uid) && "local-reaction"
-                          }`}
-                          key={Math.random()}
-                        >
-                          {targetEmoji &&
-                            targetEmoji.character +
-                              " " +
-                              eval("message." + slug)}
-                        </div>
-                      );
-                    })}
+                    <div
+                      onClick={recactionButton}
+                      className={`reaction ${
+                        eval("message." + user.uid) === true && "local-reaction"
+                      }`}
+                    >
+                      {slugs && slugs.character}
+
+                      {eval(
+                        "message." +
+                          slugs.slug.replace(new RegExp("-", "g"), "")
+                      )}
+                    </div>
                   </div>
                 )}
               </p>
@@ -205,9 +229,7 @@ function Message({ emojis, message, user, replyTo, previousMessage }) {
               </>
             )}
           </div>
-          {displayEmojis && (
-              <Emojis emojis={emojis} addEmoji={addEmoji} />
-          )}
+          {displayEmojis && <Emojis emojis={emojis} addEmoji={addEmoji} />}
         </div>
       </li>
       {copied && (
