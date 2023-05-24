@@ -5,12 +5,13 @@ import { useParams } from 'react-router-dom'
 
 function Chat({ user }) {
   const {channel} = useParams()
-  const [display , setDisplay] = useState(true)
+  const [displaySideBar , setDisplaySideBar] = useState(true)
   
   return (
     <div className="chat">
-        {display && <Sidebar setDisplay={setDisplay} user={user} channel={channel} />}
-        <Channels user={user} channel={channel} />
+        <Sidebar user={user} channel={channel} displaySideBar={displaySideBar} />
+        <Channels user={user} channel={channel} setDisplaySideBar={setDisplaySideBar} displaySideBar={displaySideBar} />
+
     </div>
   )
 }

@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-function Sidebar({ user, channel ,setDisplay }) {
+function Sidebar({ user, channel , displaySideBar }) {
   const [checked, setChecked] = useState(1);
   const [profileDisplay , setProfileDisplay] = useState(false)
   
@@ -31,7 +31,7 @@ function Sidebar({ user, channel ,setDisplay }) {
   }, [channel]);
 
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${!displaySideBar && 'sidebar-invisible'}`}>
       <figure className="sidebar--logo">
         <img src="https://cdn.discordapp.com/attachments/1088531111942037534/1091012283309760552/logo.png" />
       </figure>
@@ -150,9 +150,6 @@ function Sidebar({ user, channel ,setDisplay }) {
           </div>}
         </div>
       </div>
-      <button onClick={() => setDisplay(false)} className="close-sidebar">
-        <FontAwesomeIcon icon='fa fa-bars' />
-      </button>
     </aside>
   );
 }

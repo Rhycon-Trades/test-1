@@ -224,16 +224,11 @@ nav {
   width: 100%;
   position: relative;
   left: 0;
+  transition: all 600ms ease;
 }
 
-.close-sidebar{
-  background-color: transparent;
-  color: #fff;
-  position: absolute;
-  top: 14px;
-  right:  20px;
-  height: max-content;
-  padding: 6px;
+.sidebar-invisible{
+ max-width:0 !important;
 }
 
 .sidebar--logo{
@@ -361,6 +356,7 @@ nav {
   bottom: 72px;
   left: 10px;
   width: 330px;
+  max-width: 100%;
   height: 410px;
   border-radius: 10px;
   z-index: 100;
@@ -414,11 +410,14 @@ nav {
 
 .chat{
   display: flex;
+  height: 100vh;
+  overflow-y: hidden;
 }
 
 .channel{
   background-color: #000000;
-  height: 100vh;
+  position: relative;
+  height: calc(100vh - 50px);
   width: 100%;
   max-width:100%;
 }
@@ -742,6 +741,45 @@ nav {
 
 .channel__para{
   color: #e4e4e4;
+}
+
+.channel--bar{
+  position: relative;
+  top: 0;
+  right: 0;
+  display: flex;
+  width: 100%;
+  height: 50px;
+  justify-content: space-between;
+  align-items: center;
+  color: #ffff;
+  background-color: #242424;
+  padding: 10px 20px;
+}
+
+.bar__btn{
+  background-color: transparent;
+  font-size: 20px;
+  height: max-content;
+  padding: 0;
+}
+
+.bar__btn:hover{
+  background-color: transparent;
+  color: #9e9e9e;
+}
+
+.bar__btn-selected{
+  color: #9e9e9e;
+}
+
+.bar__btn-selected:hover{
+  color: #ffffff;
+}
+
+.bar__header{
+  font-size: 18px;
+  font-weight: 700;
 }
 
 /*
@@ -2308,6 +2346,27 @@ input[type="submit"]:hover {
     width: 8
     0%;
   }
+
+  .channels__header{
+    text-align: start;
+  }
+
+  .chat{
+    overflow-x: hidden;
+  }
+
+  .sidebar{
+    max-width: 400px;
+    min-width: 400px;
+  }
+
+  .sidebar-invisible{
+    min-width: 0;
+  }
+
+  .channel{
+    min-width: 400px;
+  }
 }
 
 /*
@@ -2413,6 +2472,24 @@ input[type="submit"]:hover {
 
   .buy__table{
     max-width: 100%;
+  }
+
+  .channel{
+    min-width: 100px;
+  }
+
+  .channel--messages{
+    overflow-x: hidden;
+  }
+
+  .sidebar{
+    max-width: 260px;
+    min-width: 260px;
+  }
+
+  .sidebar-invisible{
+    max-width: 0;
+    min-width: 0;
   }
 
 }

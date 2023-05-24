@@ -16,7 +16,7 @@ import {
 } from "firebase/firestore";
 import { useInView } from "react-intersection-observer";
 
-function Channels({ user, channel }) {
+function Channels({ user, channel , setDisplaySideBar , displaySideBar }) {
   const [messages, setMessages] = useState(null);
   const [emojis , setEmojis] = useState(false)
   const [newMessage, setNewMessage] = useState();
@@ -113,6 +113,15 @@ function Channels({ user, channel }) {
 
   return (
     <div className="channel">
+      <div className="channel--bar">
+        <button onClick={() => setDisplaySideBar(!displaySideBar)} className={`bar__btn ${!displaySideBar && 'bar__btn-selected'}`}>
+          <FontAwesomeIcon icon='fa fa-bars' />
+        </button>
+        <p className="bar__header">#{channel}</p>
+        <button className="bar__btn">
+          <FontAwesomeIcon icon='fa fa-user' />
+        </button>
+      </div>
       <div className="channel--messages">
         <div className="channel--intro">
           <h2 className="channel__header">Welcome to {channel}</h2>
