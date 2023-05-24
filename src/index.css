@@ -356,7 +356,7 @@ nav {
   bottom: 72px;
   left: 10px;
   width: 330px;
-  max-width: 100%;
+  max-width: 97vw;
   height: 410px;
   border-radius: 10px;
   z-index: 100;
@@ -410,7 +410,7 @@ nav {
 
 .chat{
   display: flex;
-  height: 100vh;
+  height: 100dvh;
   overflow-y: hidden;
 }
 
