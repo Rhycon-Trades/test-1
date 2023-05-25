@@ -12,6 +12,38 @@ function Message({ emojis, displaySideBar , message, user, replyTo, previousMess
   const [msgText, setMsgText] = useState(message.text);
   const [displayEmojis, setDisplayEmojis] = useState(false);
   const [slugs, setSlugs] = useState(false);
+  
+  /* 
+    Date of creation
+  */
+
+  const today = new Date()
+  const todayDay = today.getDate() 
+  const todayMonth = today.getMonth() + 1
+  const todayYear = today.getFullYear()
+  const todayDMY = todayDay + '-' + todayMonth + '-' + todayYear
+  const yestardayDMY = todayDay - 1 + '-' + todayMonth + '-' + todayYear
+  const messageDate = new Date(message.createdAt.seconds * 1000)
+  const messageDay = messageDate.getDate() 
+  const messageMonth = messageDate.getMonth() + 1
+  const messageYear = messageDate.getFullYear()
+  let myDate = messageDay + '-' + messageMonth + "-" + messageYear
+  let myTime
+  let dateOfCreation
+
+  if(messageDate.getMinutes() < 10){
+    myTime = messageDate.getHours()+':'+ '0' +messageDate.getMinutes()
+  }else{
+    myTime = messageDate.getHours()+':'+messageDate.getMinutes()
+  }
+
+  if(todayDMY === myDate){
+    dateOfCreation = 'today at ' + myTime
+  }else if(yestardayDMY === myDate){
+    dateOfCreation = 'yestarday at ' + myTime
+  }else{
+    dateOfCreation = myDate + ' at ' + myTime 
+  }
 
   useEffect(() => {
     if (message.replyTo) {
@@ -158,7 +190,7 @@ function Message({ emojis, displaySideBar , message, user, replyTo, previousMess
         )}
         <div className="message-container">
           {previousMessage.userId !== message.userId && (
-            <p className="message--user__name">{message.userName}</p>
+            <p className="message--user__name">{message.userName} &nbsp; <span className="creationDate">{dateOfCreation}</span></p>
           )}
           {edit ? (
             <form onSubmit={(event) => updateText(event)}>

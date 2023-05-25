@@ -12,6 +12,8 @@ function NAv({ user }) {
   useEffect(() => {
     if(user || user === null){
       setLoading(false)
+    }
+    if(user){
       setOperation(true)
     }
   },[user])
