@@ -1824,9 +1824,10 @@ width: max-content;
 */
 
 .auth-container{
-  margin: 100px 50px;
+  margin: 100px 20px;
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
   .modal{
@@ -1860,13 +1861,13 @@ width: max-content;
     flex-direction: column;
     align-items: center;
     margin-top: 50px;
+    width: 100%;
   }
 
   .block__provider{
     margin-bottom: 16px;
-    width: max-content;
-    width: 300px;
     max-width: 300px;
+    width: 100%;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -1883,7 +1884,7 @@ width: max-content;
   }
 
   .block__provider--logo{
-    margin-right: 18px;
+    margin-right: 14px;
     font-size: 22px;
   }
 

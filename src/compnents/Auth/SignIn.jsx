@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Link, redirect } from "react-router-dom";
 import { auth } from "../../firebase/init";
 import { FacebookAuthProvider, GoogleAuthProvider, OAuthProvider , getRedirectResult, signInWithRedirect } from "firebase/auth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
