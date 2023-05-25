@@ -153,6 +153,22 @@ nav {
   align-items: center;
 }
 
+.nav--link-loading{
+  max-width: 113px;
+  width: 113px;
+  height: 34px;
+  animation: blue-btn-loading 600ms ease-in-out infinite alternate-reverse;
+}
+
+@keyframes blue-btn-loading{
+  0%{
+    background-color: #0000fe;
+  }
+  100%{
+    background-color: #3b3bff;
+  }
+}
+
 .nav--link::after {
   content: "";
   height: 2px;
@@ -2372,6 +2388,8 @@ input[type="submit"]:hover {
 
   .chat{
     overflow-x: hidden;
+    min-height: 100dvh;
+    height: 100dvh;
   }
 
   .sidebar{

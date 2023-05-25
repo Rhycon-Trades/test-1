@@ -1,10 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Operation from "../ui/Operation";
 
 function NAv({ user }) {
   const [menu, setMenu] = useState(false);
   const path = (useLocation().pathname).toString()
+  const [loading , setLoading] = useState(true)
+  const [operation , setOperation] = useState(false)
+
+  useEffect(() => {
+    if(user || user === null){
+      setLoading(false)
+      setOperation(true)
+    }
+  },[user])
 
   function openMenu() {
     setMenu(!menu);
@@ -29,8 +39,9 @@ function NAv({ user }) {
                 <FontAwesomeIcon icon="fa fa-shopping-cart" />
               </Link>
             </li>
-            <li className="nav--link nav--link__btn">
-              {user ? (
+            <li className={`nav--link nav--link__btn ${loading && 'nav--link-loading'}`}>
+              { loading ? ("") :
+              user ? (
                 <Link to="/app/intro">Open App</Link>
               ) : (
                 <Link to="/signin">Sign Up</Link>
@@ -67,6 +78,11 @@ function NAv({ user }) {
           </li>
         </ul>
       )}
+
+      {
+        operation &&
+        <Operation message={'you are now logged in'} success={true} setOperation={setOperation} />
+      }
     </>
   );
 }

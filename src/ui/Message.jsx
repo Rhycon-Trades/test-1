@@ -18,7 +18,7 @@ function Message({ emojis, displaySideBar , message, user, replyTo, previousMess
       getReply();
     }
 
-    if (message.character !== undefined) {
+    if (message.character !== undefined  && emojis) {
       const target = emojis.find(
         (emoji) =>
           emoji.slug.replace(new RegExp("-", "g"), "") === message.character
