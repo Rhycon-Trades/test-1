@@ -12,6 +12,14 @@ function Message({ emojis, displaySideBar , message, user, replyTo, previousMess
   const [msgText, setMsgText] = useState(message.text);
   const [displayEmojis, setDisplayEmojis] = useState(false);
   const [slugs, setSlugs] = useState(false);
+
+  if(edit){
+    document.addEventListener('keydown', key => {
+      if(key.key === 'Escape'){
+        setEdit(false)
+      }
+    })
+  }
   
   /* 
     Date of creation
@@ -201,7 +209,7 @@ function Message({ emojis, displaySideBar , message, user, replyTo, previousMess
                 onChange={(event) => setMsgText(event.target.value)}
                 value={msgText}
               />
-              <div className="edit--bar">Click enter to<button className="purple">submit</button> or click esc to <button className="purple">escape</button></div>
+              <div className="edit--bar">Click enter to <button type="submit" className="purple edit--bar__btn">submit</button> or click esc to <button className=" edit--bar__btn purple">escape</button></div>
             </form>
           ) : (
             <>
