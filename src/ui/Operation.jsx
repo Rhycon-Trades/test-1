@@ -1,7 +1,12 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 function Operation({success , message , setOperation}) {
+  useEffect(() => {
+    setTimeout(() => {
+      setOperation(false)
+    },5000)
+  },[])
   return (
     <div className='operation'>
         <FontAwesomeIcon className={`operation--logo ${!success && "failed-operation"}`} icon={success ? "fa fa-check" : "fa fa-xmark"} />

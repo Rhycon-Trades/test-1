@@ -21,13 +21,13 @@ function Message({ emojis, displaySideBar , message, user, replyTo, previousMess
   const todayDay = today.getDate() 
   const todayMonth = today.getMonth() + 1
   const todayYear = today.getFullYear()
-  const todayDMY = todayDay + '-' + todayMonth + '-' + todayYear
-  const yestardayDMY = todayDay - 1 + '-' + todayMonth + '-' + todayYear
+  const todayDMY = todayDay + '/' + todayMonth + '/' + todayYear
+  const yestardayDMY = todayDay - 1 + '/' + todayMonth + '/' + todayYear
   const messageDate = new Date(message.createdAt.seconds * 1000)
   const messageDay = messageDate.getDate() 
   const messageMonth = messageDate.getMonth() + 1
   const messageYear = messageDate.getFullYear()
-  let myDate = messageDay + '-' + messageMonth + "-" + messageYear
+  let myDate = messageDay + '/' + messageMonth + "/" + messageYear
   let myTime
   let dateOfCreation
 
@@ -65,7 +65,7 @@ function Message({ emojis, displaySideBar , message, user, replyTo, previousMess
   }, [message]);
 
   useEffect(() => {
-    if(displaySideBar){
+    if(displaySideBar && window.innerWidth <= 768){
       setDisplayEmojis(false)
     }
   })
@@ -97,6 +97,7 @@ function Message({ emojis, displaySideBar , message, user, replyTo, previousMess
     const docRef = doc(db, "messages", message.id);
     const newPost = {
       text: text,
+      edited:true
     };
     setEdit(false);
     await updateDoc(docRef, newPost);
@@ -200,6 +201,7 @@ function Message({ emojis, displaySideBar , message, user, replyTo, previousMess
                 onChange={(event) => setMsgText(event.target.value)}
                 value={msgText}
               />
+              <div className="edit--bar">Click enter to<button className="purple">submit</button> or click esc to <button className="purple">escape</button></div>
             </form>
           ) : (
             <>
@@ -216,7 +218,7 @@ function Message({ emojis, displaySideBar , message, user, replyTo, previousMess
                   reply && "message--content-reply"
                 }`}
               >
-                {message.text}
+                {message.text} {message.edited && <span className="creationDate">(edited)</span>}
                 {slugs && emojis && (
                   <div className="reactions-wrapper">
                     <div

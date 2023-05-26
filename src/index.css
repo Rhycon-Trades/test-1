@@ -10,6 +10,14 @@
   border: none;
 }
 
+html{
+  height: -webkit-fill-available;
+}
+
+body{
+  height: -webkit-fill-available;
+}
+
 .container {
   padding: 0 20px;
 }
@@ -512,6 +520,18 @@ nav {
   padding: 6px 10px;
   margin-left: 4px;
   border-radius: 6px 6px;
+}
+
+.message--edit{
+  font-size: 16px;
+}
+
+.message--container form{
+  margin-top: 0;
+}
+
+.edit--bar{
+  background-color: #9e9e9e;
 }
 
 .message--content-reply{

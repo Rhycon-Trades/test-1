@@ -33,14 +33,6 @@ function App() {
   }
 
   useEffect(() => {
-    if (operation) {
-      setTimeout(() => {
-        setOperation(false);
-      }, 5000);
-    }
-  }, [operation]);
-
-  useEffect(() => {
     const getTestimonials = async () => {
       const data = await getDocs(collection(db, "testimonials"));
       setTestimonials(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));

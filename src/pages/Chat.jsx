@@ -15,11 +15,11 @@ function Chat({ user }) {
   },[])
   
   return (
-    <div className="chat">
+    <main className="chat">
         <Sidebar user={user} channel={channel} displaySideBar={displaySideBar} />
         <Channels user={user} channel={channel} setDisplaySideBar={setDisplaySideBar} displaySideBar={displaySideBar} />
 
-    </div>
+    </main>
   )
 }
 
