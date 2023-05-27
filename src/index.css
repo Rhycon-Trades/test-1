@@ -2434,8 +2434,7 @@ input[type="submit"]:hover {
 
   .chat{
     overflow-x: hidden;
-    min-height: 100dvh;
-    height: 100dvh;
+    height: 100%;
   }
 
   .sidebar{
