@@ -1,64 +1,85 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { db } from "../firebase/init";
-import { deleteDoc, deleteField, doc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  deleteDoc,
+  deleteField,
+  doc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { useEffect } from "react";
 import Emojis from "./Emojis";
 
-function Message({ emojis, displaySideBar , message, user, replyTo, previousMessage }) {
+function Message({
+  emojis,
+  displaySideBar,
+  message,
+  user,
+  replyTo,
+  previousMessage,
+}) {
   const [edit, setEdit] = useState(false);
   const [copied, setCopied] = useState(false);
   const [reply, setReply] = useState(false);
   const [msgText, setMsgText] = useState(message.text);
   const [displayEmojis, setDisplayEmojis] = useState(false);
   const [slugs, setSlugs] = useState(false);
+  const [dateOfCreation , setDateOfCreation] = useState(".")
 
-  if(edit){
-    document.addEventListener('keydown', key => {
-      if(key.key === 'Escape'){
-        setEdit(false)
+  if (edit) {
+    document.addEventListener("keydown", (key) => {
+      if (key.key === "Escape") {
+        setEdit(false);
       }
-    })
+    });
   }
-  
+
   /* 
     Date of creation
-  */
+    */
 
-  const today = new Date()
-  const todayDay = today.getDate() 
-  const todayMonth = today.getMonth() + 1
-  const todayYear = today.getFullYear()
-  const todayDMY = todayDay + '/' + todayMonth + '/' + todayYear
-  const yestardayDMY = todayDay - 1 + '/' + todayMonth + '/' + todayYear
-  const messageDate = new Date(message.createdAt.seconds * 1000)
-  const messageDay = messageDate.getDate() 
-  const messageMonth = messageDate.getMonth() + 1
-  const messageYear = messageDate.getFullYear()
-  let myDate = messageDay + '/' + messageMonth + "/" + messageYear
-  let myTime
-  let dateOfCreation
+  useEffect(() => {
+    if (message.createdAt !== null) {
+      const today = new Date();
+      const todayDay = today.getDate();
+      const todayMonth = today.getMonth() + 1;
+      const todayYear = today.getFullYear();
+      const todayDMY = todayDay + "/" + todayMonth + "/" + todayYear;
+      const yestardayDMY = todayDay - 1 + "/" + todayMonth + "/" + todayYear;
+      const timeFrame = message.createdAt.seconds * 1000 
+      const messageDate = new Date(timeFrame);
+      const messageDay = messageDate.getDate();
+      const messageMonth = messageDate.getMonth() + 1;
+      const messageYear = messageDate.getFullYear();
+      let myDate = messageDay + "/" + messageMonth + "/" + messageYear;
+      let myTime;
+  
+      if (messageDate.getMinutes() < 10) {
+        myTime = messageDate.getHours() + ":" + "0" + messageDate.getMinutes();
+      } else {
+        myTime = messageDate.getHours() + ":" + messageDate.getMinutes();
+      }
+  
+      if (todayDMY === myDate) {
+        setDateOfCreation("today at " + myTime)
+      } else if (yestardayDMY === myDate) {
+        setDateOfCreation("yestarday at " + myTime)
+      } else {
+        setDateOfCreation(myDate + " at " + myTime)
+      }
+    }
+  },[message])
 
-  if(messageDate.getMinutes() < 10){
-    myTime = messageDate.getHours()+':'+ '0' +messageDate.getMinutes()
-  }else{
-    myTime = messageDate.getHours()+':'+messageDate.getMinutes()
-  }
 
-  if(todayDMY === myDate){
-    dateOfCreation = 'today at ' + myTime
-  }else if(yestardayDMY === myDate){
-    dateOfCreation = 'yestarday at ' + myTime
-  }else{
-    dateOfCreation = myDate + ' at ' + myTime 
-  }
+    // console.log(message)
 
   useEffect(() => {
     if (message.replyTo) {
       getReply();
     }
 
-    if (message.character !== undefined  && emojis) {
+    if (message.character !== undefined && emojis) {
       const target = emojis.find(
         (emoji) =>
           emoji.slug.replace(new RegExp("-", "g"), "") === message.character
@@ -66,17 +87,16 @@ function Message({ emojis, displaySideBar , message, user, replyTo, previousMess
       setSlugs(target);
     }
 
-    if(message.character === undefined){
-      setSlugs(false)
+    if (message.character === undefined) {
+      setSlugs(false);
     }
-
   }, [message]);
 
   useEffect(() => {
-    if(displaySideBar && window.innerWidth <= 768){
-      setDisplayEmojis(false)
+    if (displaySideBar && window.innerWidth <= 768) {
+      setDisplayEmojis(false);
     }
-  })
+  });
 
   async function getReply() {
     const docRef = doc(db, "messages", message.replyTo);
@@ -105,7 +125,7 @@ function Message({ emojis, displaySideBar , message, user, replyTo, previousMess
     const docRef = doc(db, "messages", message.id);
     const newPost = {
       text: text,
-      edited:true
+      edited: true,
     };
     setEdit(false);
     await updateDoc(docRef, newPost);
@@ -168,17 +188,17 @@ function Message({ emojis, displaySideBar , message, user, replyTo, previousMess
           [slug]: deleteField(),
         };
       } else {
-        newPost = { 
+        newPost = {
           [user.uid]: deleteField(),
-          [slug]: count
+          [slug]: count,
         };
       }
-    }else{
+    } else {
       count = eval("message." + slug) + 1;
 
-      newPost = { 
+      newPost = {
         [user.uid]: true,
-        [slug]: count
+        [slug]: count,
       };
     }
 
@@ -199,7 +219,10 @@ function Message({ emojis, displaySideBar , message, user, replyTo, previousMess
         )}
         <div className="message-container">
           {previousMessage.userId !== message.userId && (
-            <p className="message--user__name">{message.userName} &nbsp; <span className="creationDate">{dateOfCreation}</span></p>
+            <p className="message--user__name">
+              {message.userName} &nbsp;{" "}
+              <span className="creationDate">{dateOfCreation}</span>
+            </p>
           )}
           {edit ? (
             <form onSubmit={(event) => updateText(event)}>
@@ -209,7 +232,14 @@ function Message({ emojis, displaySideBar , message, user, replyTo, previousMess
                 onChange={(event) => setMsgText(event.target.value)}
                 value={msgText}
               />
-              <div className="edit--bar">Click enter to <button type="submit" className="purple edit--bar__btn">submit</button> or click esc to <button className=" edit--bar__btn purple">escape</button></div>
+              <div className="edit--bar">
+                Click enter to{" "}
+                <button type="submit" className="purple edit--bar__btn">
+                  submit
+                </button>{" "}
+                or click esc to{" "}
+                <button className=" edit--bar__btn purple">escape</button>
+              </div>
             </form>
           ) : (
             <>
@@ -226,7 +256,10 @@ function Message({ emojis, displaySideBar , message, user, replyTo, previousMess
                   reply && "message--content-reply"
                 }`}
               >
-                {message.text} {message.edited && <span className="creationDate">(edited)</span>}
+                {message.text}{" "}
+                {message.edited && (
+                  <span className="creationDate">(edited)</span>
+                )}
                 {slugs && emojis && (
                   <div className="reactions-wrapper">
                     <div
@@ -235,8 +268,7 @@ function Message({ emojis, displaySideBar , message, user, replyTo, previousMess
                         eval("message." + user.uid) === true && "local-reaction"
                       }`}
                     >
-                      {slugs && slugs.character}
-                      {" "}
+                      {slugs && slugs.character}{" "}
                       {eval(
                         "message." +
                           slugs.slug.replace(new RegExp("-", "g"), "")
@@ -277,7 +309,13 @@ function Message({ emojis, displaySideBar , message, user, replyTo, previousMess
               </>
             )}
           </div>
-          {displayEmojis && <Emojis setDisplayEmojis={setDisplayEmojis} emojis={emojis} addEmoji={addEmoji} />}
+          {displayEmojis && (
+            <Emojis
+              setDisplayEmojis={setDisplayEmojis}
+              emojis={emojis}
+              addEmoji={addEmoji}
+            />
+          )}
         </div>
       </li>
       {copied && (
