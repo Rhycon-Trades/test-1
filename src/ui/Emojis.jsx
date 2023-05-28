@@ -15,7 +15,7 @@ function Emojis({ emojis , addEmoji , setDisplayEmojis }) {
 
         if(filter){
             items.forEach((item) => {
-                if(!item.id.includes(filter)){
+                if(!item.id.includes(filter.replace(new RegExp(' ' , 'g'),'-').toLowerCase())){
                     item.style.display = 'none'
                 }else{
                     item.style.display = 'flex'

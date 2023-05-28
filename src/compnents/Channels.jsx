@@ -24,18 +24,10 @@ function Channels({ user, channel , setDisplaySideBar , displaySideBar }) {
   const [messageSent, setMessageSent] = useState(true);
   const [replyMessage, setReplyMessage] = useState(null);
   const input = document.getElementById("channel__input");
-  // const [channelWidth , setChannelWidth] = useState('0px')
   const dummy = useRef();
   const { ref, inView } = useInView();
   let previousMessage = false
   
-  // useEffect(() => {
-  //   const channelRef = document.getElementById('channel')
-  //   if(channelRef !== null){
-  //     setChannelWidth(channelRef.offsetWidth.toString()+'px')
-  //   }
-  // },document.getElementById('channel'))
-
   useEffect(() => {
     const rowData = fetch("https://emoji-api.com/emojis?access_key=39f8ebdd5893bad2f5b3d9bf4434b2716ebb98ab")
     .then((response) => response.json())

@@ -68,7 +68,7 @@ function App() {
         const rowUser = getDocs(userRef)
         rowUser.then((data) => {
           const userData = data.docs.map((item) => (item.data()))
-          if(userData){
+          if(Object.keys(userData).length > 0){
             setUser(userData[0])
           }else{
             const userInfo = {
