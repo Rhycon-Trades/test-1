@@ -7,14 +7,10 @@ function NAv({ user }) {
   const [menu, setMenu] = useState(false);
   const path = (useLocation().pathname).toString()
   const [loading , setLoading] = useState(true)
-  const [operation , setOperation] = useState(false)
 
   useEffect(() => {
     if(user || user === null){
       setLoading(false)
-    }
-    if(user){
-      setOperation(true)
     }
   },[user])
 
@@ -81,10 +77,6 @@ function NAv({ user }) {
         </ul>
       )}
 
-      {
-        operation &&
-        <Operation message={'you are now logged in'} success={true} setOperation={setOperation} />
-      }
     </>
   );
 }

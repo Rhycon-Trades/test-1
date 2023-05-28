@@ -1,9 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { auth } from "../../firebase/init";
 import { FacebookAuthProvider, GoogleAuthProvider, OAuthProvider , getRedirectResult, signInWithRedirect } from "firebase/auth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Operation from "../../ui/Operation";
 
-function SignIn({ setUser , displayOperation }) {
+function SignIn({ setUser }) {
+
+  const [operation , setOperation] = useState(false)
+  const [operationState , setOperationState] = useState(true)
+  const [message , setMessage] = useState('')
+
+  function displayOperation(message , state){
+    setOperationState(state)
+    setMessage(message)
+    setOperation(true)
+  }
+
+  useEffect(() => {
+    if(operation){
+      setTimeout(() => {
+        setOperation(false)
+      },5000)
+    }
+  }, [operation])
 
   let provider 
 
@@ -17,15 +36,21 @@ function SignIn({ setUser , displayOperation }) {
     }
 
     await signInWithRedirect(auth, provider)
-    getRedirectResult(auth)
-      .then((userCredential) => {
-        setUser(userCredential.user)
-        displayOperation("you are now signed in" , true)
-      })
-      .catch((error) => {
-        displayOperation("try again" , false)
-      });
   };
+
+  useEffect(() => {
+    getRedirectResult(auth)
+        .then((userCredential) => {
+          setUser(userCredential.user)
+          displayOperation("you are now signed in" , true)
+          setTimeout(() => {
+            window.location.pathname = '/'
+          },2000)
+        })
+        .catch(() => {
+
+        })
+  },[])
 
   return (
     <div className="auth-container">
@@ -46,6 +71,9 @@ function SignIn({ setUser , displayOperation }) {
             </div>
         </div>
       </div>
+      {
+        operation && <Operation success={operationState} message={message} setOperation={setOperation} />
+      }
     </div>
   );
 }

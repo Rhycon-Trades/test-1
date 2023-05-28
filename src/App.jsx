@@ -11,7 +11,6 @@ import Cart from "./pages/Cart";
 import Terms from "./pages/Terms";
 import PopUp from "./ui/PopUp";
 import Signin from "./compnents/Auth/SignIn";
-import Operation from "./ui/Operation";
 import { onAuthStateChanged } from "firebase/auth";
 import Chat from "./pages/Chat";
 
@@ -21,16 +20,7 @@ function App() {
   const [products, setProducts] = useState(null);
   const [cart, setCart] = useState([]);
   const [popup, setPopup] = useState(false);
-  const [operation, setOperation] = useState(false);
-  const [operationSuccess, setOparationSuccess] = useState();
-  const [message, setMessage] = useState();
   const [user, setUser] = useState(false);
-
-  function displayOperation(content, state) {
-    setMessage(content);
-    setOparationSuccess(state);
-    setOperation(true);
-  }
 
   useEffect(() => {
     const getTestimonials = async () => {
@@ -147,19 +137,12 @@ function App() {
           exact
           path="/signin"
           element={
-            <Signin setUser={setUser} displayOperation={displayOperation} />
+            <Signin setUser={setUser} />
           }
         />
         <Route path="/app/:channel" element={<Chat user={user} />}/>
       </Routes>
       {popup && <PopUp closePopup={closePopup} />}
-      {operation && (
-        <Operation
-          success={operationSuccess}
-          message={message}
-          setOperation={setOperation}
-        />
-      )}
       <Footer />
     </Router>
   );
