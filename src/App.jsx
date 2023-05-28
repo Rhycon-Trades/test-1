@@ -4,7 +4,7 @@ import Nav from "./compnents/Nav";
 import Home from "./pages/Home";
 import Products from "./pages/Prodcuts";
 import { auth, db } from "./firebase/init";
-import { collection, getDocs } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import AboutProduct from "./pages/AboutProduct";
 import Cart from "./pages/Cart";
@@ -61,10 +61,46 @@ function App() {
     setCart(value);
   }
 
-  function autoSignIn() {
+  async function autoSignIn() {
     onAuthStateChanged(auth, (appUser) => {
       if (appUser) {
-        setUser(appUser);
+        const userRef = query(collection(db , 'users') , where('uid' , "==" , appUser.uid ))
+        const rowUser = getDocs(userRef)
+        rowUser.then((data) => {
+          const userData = data.docs.map((item) => (item.data()))
+          if(userData){
+            setUser(userData[0])
+          }else{
+            const userInfo = {
+              uid: appUser.uid,
+              displayName: appUser.displayName,
+              photoUrl: appUser.photoURL,
+              email: appUser.email,
+              creationTime: appUser.metadata.creationTime,
+              warn: 0,
+              kick:0,
+              muteCount:0,
+              muteDuration:0,
+              ban: 0,
+              founder:false,
+              admin:false,
+              analyst:false,
+              support:false,
+              blue_badge_trader:false,
+              premium_signals:false,
+              premium_trader:false,
+              booster:false,
+              crypto:false,
+              stocks:false,
+              forex:false,
+              free_signals:false,
+              marketing:true,
+              free_member:true,
+            }
+            setUser(userInfo)
+            addDoc(collection(db , 'users') , userInfo)
+          }
+        })
       }else{
         setUser(null)
       }

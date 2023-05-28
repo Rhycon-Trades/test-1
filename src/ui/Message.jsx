@@ -72,8 +72,6 @@ function Message({
   },[message])
 
 
-    // console.log(message)
-
   useEffect(() => {
     if (message.replyTo) {
       getReply();
