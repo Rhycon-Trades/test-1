@@ -2400,6 +2400,13 @@ input[type="submit"]:hover {
 */
 
 @media (max-width: 768px) {
+
+  .user-info--profile{
+    bottom: 0;
+    right: 0;
+    width: 100vw;
+  }
+
   h1 {
     font-size: 26px;
     line-height: 40px;
