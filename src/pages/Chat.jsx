@@ -10,7 +10,8 @@ function Chat({ user }) {
   const {channel} = useParams()
   const [displaySideBar , setDisplaySideBar] = useState(false)
   const [displayUsersList , setDisplayUsersList] = useState(false)
-  const [usersList , setUsersList] = useState(null)
+  const [rowUsersList , setRowUsersList] = useState([])
+  const [usersList , setUsersList] = useState([])
   const vw = window.innerWidth
 
   useEffect(() =>{
@@ -21,19 +22,29 @@ function Chat({ user }) {
     getUsers()
   },[])
 
+  useEffect(() => {
+    if(displaySideBar && vw < 900){
+      setDisplayUsersList(false)
+    }
+  },[displaySideBar])
+
+  useEffect(() => {
+    if(displayUsersList && vw < 900){
+      setDisplaySideBar(false)
+    }
+  },[displayUsersList])
+
   async function getUsers(){
     const data = await getDocs(collection(db , 'users'))
     const users = data.docs.map((doc) => ({...doc.data() , docId: doc.id}))
-    setUsersList(users)
+    setRowUsersList(users)
   }
-
-  console.log(usersList)
   
   return (
     <main className="chat">
         <Sidebar user={user} channel={channel} displaySideBar={displaySideBar} />
-        <Channels user={user} channel={channel} displayUsersList={displayUsersList} setDisplayUsersList={setDisplayUsersList} setDisplaySideBar={setDisplaySideBar} displaySideBar={displaySideBar} />
-        <UsersList displayUsersList={displayUsersList} usersList={usersList} />
+        <Channels user={user} channel={channel} displayUsersList={displayUsersList} setDisplayUsersList={setDisplayUsersList} setDisplaySideBar={setDisplaySideBar} displaySideBar={displaySideBar} usersList={usersList} />
+        <UsersList displayUsersList={displayUsersList} rowUsers={rowUsersList} users={usersList} setUsers={setUsersList} />
     </main>
   )
 }

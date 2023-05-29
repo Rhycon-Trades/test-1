@@ -12,11 +12,12 @@ import {
   orderBy,
   query,
   serverTimestamp,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { useInView } from "react-intersection-observer";
 
-function Channels({ user, channel , setDisplaySideBar , displaySideBar }) {
+function Channels({ user, channel , setDisplaySideBar , displaySideBar , usersList , displayUsersList , setDisplayUsersList }) {
   const [messages, setMessages] = useState(null);
   const [emojis , setEmojis] = useState(false)
   const [newMessage, setNewMessage] = useState();
@@ -111,6 +112,22 @@ function Channels({ user, channel , setDisplaySideBar , displaySideBar }) {
     return /[0-9]/.test(str)
   }
 
+  async function claimRole(role , claim){
+    const docRef = doc(db, 'users' , user.docId)
+    let update
+    if(claim){
+      update = {
+        [role]:true
+      }
+    }else{
+      update = {
+        [role]: false
+      }
+    }
+    await updateDoc(docRef , update)
+
+  }
+
   return (
     <div id="channel" className="channel">
       <div className="channel--bar">
@@ -118,7 +135,7 @@ function Channels({ user, channel , setDisplaySideBar , displaySideBar }) {
           <FontAwesomeIcon icon='fa fa-bars' />
         </button>
         <p className="bar__header">#{channel}</p>
-        <button className="bar__btn">
+        <button onClick={() => setDisplayUsersList(!displayUsersList)} className={`bar__btn ${!displayUsersList && 'bar__btn-selected'}`}>
           <FontAwesomeIcon icon='fa fa-user' />
         </button>
       </div>
@@ -132,6 +149,8 @@ function Channels({ user, channel , setDisplaySideBar , displaySideBar }) {
             messages.map((message) => {
               const data = <Message
                 user={user}
+                userId={message.userId}
+                usersList={usersList}
                 message={message}
                 replyTo={replyTo}
                 emojis={emojis}
@@ -142,12 +161,31 @@ function Channels({ user, channel , setDisplaySideBar , displaySideBar }) {
               previousMessage = message
               return data
             })}
+            {channel === 'claim' && 
+                <div className="message--content">
+                  <h5>Claim Roles:</h5>
+                  <ul className="claim-roles">
+                    <li className="calim-roles--role">
+                      <p>Crypto</p> { !user.crypto ? <button onClick={() => claimRole("crypto" , true)} className="claim-roles__btn claim-roles__btn--claim">claim</button> : <button onClick={() => claimRole("crypto" , false)} className="claim-roles__btn claim-roles__btn--remove">remove</button>}
+                    </li>
+                    <li className="calim-roles--role">
+                      <p>Stocks</p> { !user.stocks ? <button onClick={() => claimRole("stocks" ,true)} className="claim-roles__btn claim-roles__btn--claim">claim</button> : <button onClick={() => claimRole("stocks" , false)} className="claim-roles__btn claim-roles__btn--remove">remove</button>}
+                    </li>
+                    <li className="calim-roles--role">
+                      <p>Forex</p> {!user.forex ? <button onClick={() => claimRole("forex" ,true)} className="claim-roles__btn claim-roles__btn--claim">claim</button> : <button onClick={() => claimRole("forex" , false)} className="claim-roles__btn claim-roles__btn--remove">remove</button>}
+                    </li>
+                    <li className="calim-roles--role">
+                      <p>Free Signals</p> {!user.free_signals ? <button onClick={() => claimRole("free_signals" ,true)} className="claim-roles__btn claim-roles__btn--claim">claim</button> : <button onClick={() => claimRole("free_signals" , false)} className="claim-roles__btn claim-roles__btn--remove">remove</button>}
+                    </li>
+                  </ul>
+                </div>
+            }
           <div ref={dummy}>
             <div ref={ref}></div>
           </div>
         </ul>
       </div>
-      <form onSubmit={(event) => sendMessage(event)} className="channel__form">
+      {channel !== 'claim' ? <form onSubmit={(event) => sendMessage(event)} className="channel__form">
         <input
           autoComplete="off"
           placeholder="Message"
@@ -169,6 +207,11 @@ function Channels({ user, channel , setDisplaySideBar , displaySideBar }) {
         </div>
           )}
       </form>
+      : (
+        <div className="channel__form">
+          <div className="channel__input" style={{cursor:'not-allowed'}}>You don't have permission</div>
+        </div>
+      )}
     </div>
   );
 }

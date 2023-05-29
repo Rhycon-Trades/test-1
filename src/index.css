@@ -253,6 +253,8 @@ nav {
 
 .sidebar-invisible{
  max-width:0 !important;
+ min-width: 0 !important;
+ padding: 0 !important;
 }
 
 .sidebar--logo{
@@ -386,6 +388,14 @@ nav {
   z-index: 100;
 }
 
+.user-info--profile{
+  position:fixed;
+  top: 50px;
+  right: 250px;
+  left: unset;
+  z-index:100;
+}
+
 .user--profile__info{
   margin-bottom: 20px;
 }
@@ -456,6 +466,69 @@ nav {
   margin-right: 6px;
 }
 
+.users-list{
+  min-width: 250px;
+  max-width: 250px;
+  background-color:#242424;
+  padding:30px 20px;
+  transition: all 600ms ease;
+}
+
+.users-list--section{
+  margin-bottom: 30px;
+}
+
+.users-list__list{
+  margin-top: 16px;
+}
+
+.users-list__header{
+  font-size: 14px;
+  color: #dadada;
+  margin-bottom: 4px;
+}
+
+.user-info{
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.user-info--content{
+  width: 100%;
+  display: flex;
+  align-items:center;
+  padding: 4px 4px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 300ms ease;
+}
+
+.user-info--content:hover{
+  background-color: #606060;
+}
+
+.user-info--img{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-info--img img{
+  width: 36px;
+  height: 36px;
+  border-radius: 100%;
+  margin-right: 8px;
+}
+
+.user-info--name{
+  font-weight: 700;
+  font-size: 16px;
+  color: #ffffff;
+}
+
 /*
   Chat App
 */
@@ -463,7 +536,7 @@ nav {
 .chat{
   display: flex;
   min-height: 100dvh;
-  overflow-y: hidden;
+  overflow: hidden;
 }
 
 .channel{
@@ -671,6 +744,46 @@ nav {
   }
 }
 
+.claim-roles{
+  margin-top: 20px;
+}
+
+.calim-roles--role{
+  display: flex;
+  margin-bottom: 10px;
+  align-items: center;
+  font-size: 18px;
+}
+
+.claim-roles__btn{
+  margin-left: 14px;
+  font-size: 18px;
+  border-radius: 10px;
+  padding: 4px 6px;
+  height: max-content;
+  background-color: transparent;
+}
+
+.claim-roles__btn--claim:hover{
+  border: #0d580d solid 3px;
+  background-color: rgba(13, 88, 13 , 0.5);
+}
+
+.claim-roles__btn--remove:hover{
+  border: #a00a0a solid 3px;
+  background-color: rgba(160, 10, 10 , 0.5);
+}
+
+.claim-roles__btn--claim{
+  border: #0d580d solid 3px;
+  background-color: rgba(13, 88, 13 , 0.5);
+}
+
+.claim-roles__btn--remove{
+  border: #a00a0a solid 3px;
+  background-color: rgba(160, 10, 10 , 0.5);
+}
+
 .emojis{
   position: fixed;
   background-color: #272935;
@@ -784,6 +897,8 @@ nav {
   max-width:100% ;
   height: 30px;
   border-radius: 10px;
+  display: flex;
+  align-items: center;
 }
 
 .channel__submit{
@@ -2471,6 +2586,7 @@ input[type="submit"]:hover {
   }
 
   .sidebar-invisible{
+    max-width: 0;
     min-width: 0;
   }
 

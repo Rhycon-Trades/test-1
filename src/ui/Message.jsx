@@ -18,6 +18,8 @@ function Message({
   user,
   replyTo,
   previousMessage,
+  usersList,
+  userId
 }) {
   const [edit, setEdit] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -26,6 +28,34 @@ function Message({
   const [displayEmojis, setDisplayEmojis] = useState(false);
   const [slugs, setSlugs] = useState(false);
   const [dateOfCreation , setDateOfCreation] = useState(".")
+  const [userInfo , setUserInfo] = useState(null)
+  const [color , setColor] = useState('#ffffff')
+
+  useEffect(() => {
+    if(Object.keys(usersList).length > 0){
+      setUserInfo(usersList.find((item) => item.uid === userId))
+    }
+  },[usersList])
+
+  useEffect(() => {
+    if(userInfo){
+      if(userInfo.userPriority === 1){
+        setColor("#ffffff")
+      }else if(userInfo.userPriority === 2){
+        setColor('rgb(194, 124, 14)')
+      }else if(userInfo.userPriority === 3){
+        setColor('rgb(0, 122, 255)')
+      }else if(userInfo.userPriority === 4){
+        setColor('rgb(255, 0, 0)')
+      }else if(userInfo.userPriority === 5){
+        setColor('rgb(244, 127, 255)')
+      }else if(userInfo.userPriority === 6){
+        setColor('rgb(8, 188, 231)')
+      }else if(userInfo.userPriority === 7){
+        setColor("rgb(26, 227, 29)")
+      }
+    }
+  },[userInfo])
 
   if (edit) {
     document.addEventListener("keydown", (key) => {
@@ -217,7 +247,7 @@ function Message({
         )}
         <div className="message-container">
           {previousMessage.userId !== message.userId && (
-            <p className="message--user__name">
+            <p style={{color:color}} className="message--user__name">
               {message.userName} &nbsp;{" "}
               <span className="creationDate">{dateOfCreation}</span>
             </p>
