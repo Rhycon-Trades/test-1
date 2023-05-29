@@ -2402,6 +2402,7 @@ input[type="submit"]:hover {
 @media (max-width: 768px) {
 
   .user-info--profile{
+    top: unset;
     bottom: 0;
     right: 0;
     width: 100vw;
