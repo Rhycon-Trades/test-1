@@ -51,28 +51,28 @@ function Sidebar({ user, channel, displaySideBar }) {
                 checked === 1 && "channels__btn-checked"
               }`}
             >
-              <Link to="/app/intro">Introduction</Link>
+              <Link className="channel__btn--link" to="/app/intro">Introduction {user.intro &&<span className="mention-count">{ user.intro}</span>}</Link>
             </button>
             <button
               className={`channels__btn ${
                 checked === 2 && "channels__btn-checked"
               }`}
             >
-              <Link to="/app/faq">faq</Link>
+              <Link className="channel__btn--link" to="/app/faq">faq {user.faq &&<span className="mention-count">{ user.faq}</span>}</Link>
             </button>
             <button
               className={`channels__btn ${
                 checked === 3 && "channels__btn-checked"
               }`}
             >
-              <Link to="/app/announcements">announcements</Link>
+              <Link className="channel__btn--link" to="/app/announcements">announcements {user.announcements &&<span className="mention-count">{ user.announcements}</span>}</Link>
             </button>
             <button
               className={`channels__btn ${
                 checked === 4 && "channels__btn-checked"
               }`}
             >
-              <Link to="/app/results">results</Link>
+              <Link className="channel__btn--link" to="/app/results">results {user.results &&<span className="mention-count">{ user.results}</span>}</Link>
             </button>
           </li>
           <li className="sidebar--channels__items">
@@ -82,21 +82,21 @@ function Sidebar({ user, channel, displaySideBar }) {
                 checked === 5 && "channels__btn-checked"
               }`}
             >
-              <Link to="/app/general">General chat</Link>
+              <Link className="channel__btn--link" to="/app/general">General chat {user.general &&<span className="mention-count">{ user.general}</span>}</Link>
             </button>
             <button
               className={`channels__btn ${
                 checked === 6 && "channels__btn-checked"
               }`}
             >
-              <Link to="/app/begginer">begginer 's chat</Link>
+              <Link className="channel__btn--link" to="/app/begginer">begginer 's chat {user.begginer && <span className="mention-count">{user.begginer}</span>}</Link>
             </button>
             <button
               className={`channels__btn ${
                 checked === 7 && "channels__btn-checked"
               }`}
             >
-              <Link to="/app/ask">ask a mentor</Link>
+              <Link className="channel__btn--link" to="/app/ask">ask a mentor {user.ask &&<span className="mention-count">{ user.ask}</span>}</Link>
             </button>
           </li>
           <li className="sidebar--channels__items">
@@ -106,21 +106,21 @@ function Sidebar({ user, channel, displaySideBar }) {
                 checked === 8 && "channels__btn-checked"
               }`}
             >
-              <Link to="/app/claim">claim roles</Link>
+              <Link className="channel__btn--link" to="/app/claim">claim roles {user.claim && <span className="mention-count">{user.claim}</span>}</Link>
             </button>
             <button
               className={`channels__btn ${
                 checked === 9 && "channels__btn-checked"
               }`}
             >
-              <Link to="/app/polls">polls</Link>
+              <Link className="channel__btn--link" to="/app/polls">polls {user.polls && <span className="mention-count">{user.polls}</span>}</Link>
             </button>
             <button
               className={`channels__btn ${
                 checked === 10 && "channels__btn-checked"
               }`}
             >
-              <Link to="/app/invites">check invites</Link>
+              <Link className="channel__btn--link" to="/app/invites">check invites {user.invites &&<span className="mention-count">{user.invites}</span>}</Link>
             </button>
           </li>
         </ul>
