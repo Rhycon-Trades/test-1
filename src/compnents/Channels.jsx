@@ -5,6 +5,7 @@ import { db } from "../firebase/init";
 import {
   addDoc,
   collection,
+  deleteField,
   doc,
   getDoc,
   limit,
@@ -19,6 +20,8 @@ import { useInView } from "react-intersection-observer";
 
 function Channels({ user, channel , setDisplaySideBar , displaySideBar , usersList , displayUsersList , setDisplayUsersList }) {
   const [messages, setMessages] = useState(null);
+  const [text , setText] = useState('')
+  const [displayAtMenu , setDisplayAtMenu] = useState(false)
   const [emojis , setEmojis] = useState(false)
   const [newMessage, setNewMessage] = useState();
   const [scrollToBottom, setScrollToBottom] = useState(true);
@@ -41,6 +44,14 @@ function Channels({ user, channel , setDisplaySideBar , displaySideBar , usersLi
       dummy.current.scrollIntoView();
       setScrollToBottom(false);
     }
+
+    if(eval("user." + channel)){
+      const post = {
+      [channel]: deleteField()
+    }
+    updateDoc(doc(db , 'users' , user.docId) , post)
+  }
+
   }, [messages]);
 
   useEffect(() => {
@@ -60,6 +71,11 @@ function Channels({ user, channel , setDisplaySideBar , displaySideBar , usersLi
     importData();
   }, [channel]);
 
+  useEffect(() => {
+    text[text.length-1] !== '@' && setDisplayAtMenu(false)
+    text[text.length-1] === '@' && setDisplayAtMenu(true)
+  },[text])
+
   function importData() {
     const q = query(
       collection(db, "messages"),
@@ -78,11 +94,20 @@ function Channels({ user, channel , setDisplaySideBar , displaySideBar , usersLi
     });
   }
 
-  function sendMessage(event) {
+  async function sendMessage(event) {
     event.preventDefault();
     const message = event.target[0].value;
+    let mention = []
+
+    usersList.map((item) => {
+      if(text.includes('@'+item.displayName)){
+        mention.push({id:item.docId , channel:channel})
+      }
+    })
+
     if (message != false) {
       let replyTo
+
       if(replyMessage){
         replyTo = replyMessage.id
         setReplyMessage(null)
@@ -98,9 +123,25 @@ function Channels({ user, channel , setDisplaySideBar , displaySideBar , usersLi
         channel: channel,
         replyTo: replyTo
       };
-      addDoc(collection(db, "messages"), post);
+      await addDoc(collection(db, "messages"), post);
       setMessageSent(!messageSent);
+      setText('')
       input.value = "";
+      mention.map((item) => {
+        let mentionPost 
+        if(eval('item.' +  channel)){
+          let num = eval('item.' +  channel) + 1
+          mentionPost = {
+            [channel] : num
+          }
+        }else{
+          mentionPost = {
+            [channel] : 1
+          }
+        }
+
+        updateDoc(doc(db , 'users' , item.id) , mentionPost)
+      })
     }
   }
 
@@ -145,23 +186,7 @@ function Channels({ user, channel , setDisplaySideBar , displaySideBar , usersLi
           <p className="channel__para">this is the start of this channel</p>
         </div>
         <ul className="channel--messages-wrapper">
-          {messages &&
-            messages.map((message) => {
-              const data = <Message
-                user={user}
-                userId={message.userId}
-                usersList={usersList}
-                message={message}
-                replyTo={replyTo}
-                emojis={emojis}
-                previousMessage={previousMessage}
-                displaySideBar={displaySideBar}
-                key={message.id}
-              />
-              previousMessage = message
-              return data
-            })}
-            {channel === 'claim' && 
+        {channel === 'claim' && 
                 <div className="message--content">
                   <h5>Claim Roles:</h5>
                   <ul className="claim-roles">
@@ -180,18 +205,37 @@ function Channels({ user, channel , setDisplaySideBar , displaySideBar , usersLi
                   </ul>
                 </div>
             }
+
+          {messages &&
+            messages.map((message) => {
+              const data = <Message
+                user={user}
+                userId={message.userId}
+                usersList={usersList}
+                message={message}
+                replyTo={replyTo}
+                emojis={emojis}
+                previousMessage={previousMessage}
+                displaySideBar={displaySideBar}
+                key={message.id}
+              />
+              previousMessage = message
+              return data
+            })}
           <div ref={dummy}>
             <div ref={ref}></div>
           </div>
         </ul>
       </div>
-      {channel !== 'claim' ? <form onSubmit={(event) => sendMessage(event)} className="channel__form">
+      {channel !== 'claim' || user.founder || user.admin ? <form onSubmit={(event) => sendMessage(event)} className="channel__form">
         <input
           autoComplete="off"
           placeholder="Message"
           type="text"
           id="channel__input"
           className="channel__input"
+          onChange={(event) => setText(event.target.value)}
+          value={text}
         />
         <button type="submit" className="channel__submit">
           <FontAwesomeIcon icon="fa fa-paper-plane" />
@@ -206,6 +250,24 @@ function Channels({ user, channel , setDisplaySideBar , displaySideBar , usersLi
             </button>
         </div>
           )}
+          {
+            displayAtMenu && (
+              <div className="channel--reply channel--menu">
+                <ul className="channel--menu__users">
+                {
+                  usersList && usersList.map((item) => (
+                    <li onClick={() => setText(text+item.displayName)} key={item.uid} className="menu__user">
+                    <figure className="menu__user--img">
+                      <img src={item.photoUrl} />
+                    </figure>
+                    <p className="menu__user--name">{item.displayName}</p>
+                  </li>
+                  ))
+                }
+                </ul>
+              </div>
+            )
+          }
       </form>
       : (
         <div className="channel__form">

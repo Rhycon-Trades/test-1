@@ -753,6 +753,7 @@ nav {
   margin-bottom: 10px;
   align-items: center;
   font-size: 18px;
+  list-style-type: disc;
 }
 
 .claim-roles__btn{
@@ -926,6 +927,42 @@ nav {
   max-width: 100%;
   background-color: #474747;
   border-radius: 10px 10px 0 0;
+}
+
+.channel--menu{
+  padding: 16px;
+  display: unset;
+  height: 200px;
+  top: -200px;
+  overflow-y: scroll;
+}
+
+.menu__user{
+  display: flex;
+  align-items: center;
+  margin-bottom: 2px;
+  padding: 6px 4px;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.menu__user:hover{
+  background-color: #606060;
+}
+
+.menu__user--img{
+  width: 34px;
+  margin-right: 8px;
+}
+
+.menu__user--img img{
+  border-radius: 100%;
+}
+
+.menu__user--name{
+  font-size: 16px;
+  color: #e4e4e4;
+  font-weight: 700;
 }
 
 .channel--reply__text{

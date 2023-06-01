@@ -323,14 +323,15 @@ function Message({
             <button onClick={copyText} className="message--bar__btn">
               <FontAwesomeIcon icon="fa fa-copy" />
             </button>
-            {message.userId === user.uid && (
+            {(message.userId === user.uid || user.founder || user.admin) && (
               <>
-                <button
+               {message.userId === user.uid && <button
                   onClick={() => setEdit(true)}
                   className="message--bar__btn"
                 >
                   <FontAwesomeIcon icon="fa fa-pen" />
                 </button>
+                }
                 <button onClick={deleteMessage} className="message--bar__btn">
                   <FontAwesomeIcon icon="fa fa-trash" />
                 </button>

@@ -1,71 +1,7 @@
-import React, { useEffect, useState } from 'react'
 import UserInfo from './UserInfo'
 
-function UsersList({ displayUsersList , rowUsers , users , setUsers }) {
-  const [p1 , setP1] = useState(0)
-  const [p2 , setP2] = useState(0)
-  const [p3 , setP3] = useState(0)
-  const [p4 , setP4] = useState(0)
-  const [p5 , setP5] = useState(0)
-  const [p6 , setP6] = useState(0)
-  const [p7 , setP7] = useState(0)
+function UsersList({ displayUsersList , users , p1 , p2 , p3 , p4 , p5 , p6 , p7 }) {
 
-
-  useEffect(() => {
-    if(Object.keys(rowUsers).length > 0){
-      const newUsers = []
-      let role1 = 0
-      let role2 = 0
-      let role3 = 0
-      let role4 = 0
-      let role5 = 0
-      let role6 = 0
-      let role7 = 0
-
-      rowUsers.map((user) => {
-        let priority
-        if(user.free_member){
-          priority = 7
-          role7++
-        }
-        if(user.blue_badge_trader || user.premium_trader || user.premium_signals){
-          priority = 6
-          role6++
-        }
-        if(user.booster){
-          priority = 5
-          role5++
-        }
-        if(user.support){
-          priority = 4
-          role4++
-        }
-        if(user.analyst){
-          priority = 3
-          role3++
-        }
-        if(user.admin){
-          priority = 2
-          role2++
-        }
-        if(user.founder){
-          priority = 1
-          role1++
-        }
-        
-        newUsers.push(({...user , userPriority:priority, }))
-      })
-      setUsers(newUsers)
-      setP1(role1)
-      setP2(role2)
-      setP3(role3)
-      setP4(role4)
-      setP5(role5)
-      setP6(role6)
-      setP7(role7)
-
-    }
-  }, [rowUsers])
 
   return (
     <div className={`users-list ${!displayUsersList && 'sidebar-invisible'}`}>

@@ -4,7 +4,7 @@ import Nav from "./compnents/Nav";
 import Home from "./pages/Home";
 import Products from "./pages/Prodcuts";
 import { auth, db } from "./firebase/init";
-import { addDoc, collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
+import { QuerySnapshot, addDoc, collection, doc, getDoc, getDocs, onSnapshot, query, setDoc, where } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import AboutProduct from "./pages/AboutProduct";
 import Cart from "./pages/Cart";
@@ -55,10 +55,10 @@ function App() {
     onAuthStateChanged(auth, (appUser) => {
       if (appUser) {
         const userRef = query(collection(db , 'users') , where('uid' , "==" , appUser.uid ))
-        const rowUser = getDocs(userRef)
-        rowUser.then((data) => {
-          const userData = data.docs.map((item) => (item.data()))
-          if(Object.keys(userData).length > 0){
+        const unsubscribe = onSnapshot(userRef , (querySnapshot) => {
+          const userData = []
+           querySnapshot.docs.forEach((item) => userData.push({...item.data() , docId:item.id}))
+          if(Object.keys(userData).length > 0 && user !== userData){
             setUser(userData[0])
           }else{
             const userInfo = {
@@ -87,7 +87,7 @@ function App() {
               marketing:true,
               free_member:true,
             }
-            setUser(userInfo)
+            user !== userInfo && setUser(userInfo)
             addDoc(collection(db , 'users') , userInfo)
           }
         })
@@ -140,7 +140,7 @@ function App() {
             <Signin setUser={setUser} />
           }
         />
-        <Route path="/app/:channel" element={<Chat user={user} />}/>
+       {user !== null ? <Route path="/app/:channel" element={<Chat user={user} />}/> : window.location.pathname = '/signin'}
       </Routes>
       {popup && <PopUp closePopup={closePopup} />}
       <Footer />
