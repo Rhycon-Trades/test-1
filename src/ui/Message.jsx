@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import { useEffect } from "react";
 import Emojis from "./Emojis";
+import { Link } from "react-router-dom";
 
 function Message({
   emojis,
@@ -19,7 +20,8 @@ function Message({
   replyTo,
   previousMessage,
   usersList,
-  userId
+  userId,
+  channels,
 }) {
   const [edit, setEdit] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -27,35 +29,36 @@ function Message({
   const [msgText, setMsgText] = useState(message.text);
   const [displayEmojis, setDisplayEmojis] = useState(false);
   const [slugs, setSlugs] = useState(false);
-  const [dateOfCreation , setDateOfCreation] = useState(".")
-  const [userInfo , setUserInfo] = useState(null)
-  const [color , setColor] = useState('#ffffff')
+  const [dateOfCreation, setDateOfCreation] = useState(".");
+  const [userInfo, setUserInfo] = useState(null);
+  const [color, setColor] = useState("#ffffff");
+  let returnTimes = 0;
 
   useEffect(() => {
-    if(Object.keys(usersList).length > 0){
-      setUserInfo(usersList.find((item) => item.uid === userId))
+    if (Object.keys(usersList).length > 0) {
+      setUserInfo(usersList.find((item) => item.uid === userId));
     }
-  },[usersList])
+  }, [usersList]);
 
   useEffect(() => {
-    if(userInfo){
-      if(userInfo.userPriority === 1){
-        setColor("#ffffff")
-      }else if(userInfo.userPriority === 2){
-        setColor('rgb(194, 124, 14)')
-      }else if(userInfo.userPriority === 3){
-        setColor('rgb(0, 122, 255)')
-      }else if(userInfo.userPriority === 4){
-        setColor('rgb(255, 0, 0)')
-      }else if(userInfo.userPriority === 5){
-        setColor('rgb(244, 127, 255)')
-      }else if(userInfo.userPriority === 6){
-        setColor('rgb(8, 188, 231)')
-      }else if(userInfo.userPriority === 7){
-        setColor("rgb(26, 227, 29)")
+    if (userInfo) {
+      if (userInfo.userPriority === 1) {
+        setColor("#ffffff");
+      } else if (userInfo.userPriority === 2) {
+        setColor("rgb(194, 124, 14)");
+      } else if (userInfo.userPriority === 3) {
+        setColor("rgb(0, 122, 255)");
+      } else if (userInfo.userPriority === 4) {
+        setColor("rgb(255, 0, 0)");
+      } else if (userInfo.userPriority === 5) {
+        setColor("rgb(244, 127, 255)");
+      } else if (userInfo.userPriority === 6) {
+        setColor("rgb(8, 188, 231)");
+      } else if (userInfo.userPriority === 7) {
+        setColor("rgb(26, 227, 29)");
       }
     }
-  },[userInfo])
+  }, [userInfo]);
 
   if (edit) {
     document.addEventListener("keydown", (key) => {
@@ -77,30 +80,29 @@ function Message({
       const todayYear = today.getFullYear();
       const todayDMY = todayDay + "/" + todayMonth + "/" + todayYear;
       const yestardayDMY = todayDay - 1 + "/" + todayMonth + "/" + todayYear;
-      const timeFrame = message.createdAt.seconds * 1000 
+      const timeFrame = message.createdAt.seconds * 1000;
       const messageDate = new Date(timeFrame);
       const messageDay = messageDate.getDate();
       const messageMonth = messageDate.getMonth() + 1;
       const messageYear = messageDate.getFullYear();
       let myDate = messageDay + "/" + messageMonth + "/" + messageYear;
       let myTime;
-  
+
       if (messageDate.getMinutes() < 10) {
         myTime = messageDate.getHours() + ":" + "0" + messageDate.getMinutes();
       } else {
         myTime = messageDate.getHours() + ":" + messageDate.getMinutes();
       }
-  
+
       if (todayDMY === myDate) {
-        setDateOfCreation("today at " + myTime)
+        setDateOfCreation("today at " + myTime);
       } else if (yestardayDMY === myDate) {
-        setDateOfCreation("yestarday at " + myTime)
+        setDateOfCreation("yestarday at " + myTime);
       } else {
-        setDateOfCreation(myDate + " at " + myTime)
+        setDateOfCreation(myDate + " at " + myTime);
       }
     }
-  },[message])
-
+  }, [message]);
 
   useEffect(() => {
     if (message.replyTo) {
@@ -247,7 +249,7 @@ function Message({
         )}
         <div className="message-container">
           {previousMessage.userId !== message.userId && (
-            <p style={{color:color}} className="message--user__name">
+            <p style={{ color: color }} className="message--user__name">
               {message.userName} &nbsp;{" "}
               <span className="creationDate">{dateOfCreation}</span>
             </p>
@@ -284,7 +286,15 @@ function Message({
                   reply && "message--content-reply"
                 }`}
               >
-                {message.text}{" "}
+                {channels.map((channel , _) => {
+                  if (returnTimes === 0 && message.text.includes('#'+channel)) {
+                    returnTimes++;
+                    const rowMessage = message.text.replace(/\s\#(.*?)(\s|$)/g, ' <a class="message--link" href="/app/$1">#$1</a>$2');
+                    return <span key={_} dangerouslySetInnerHTML={{__html: ([rowMessage])}} />
+                  }
+                })}{
+                  returnTimes === 0 && message.text
+                }{" "}
                 {message.edited && (
                   <span className="creationDate">(edited)</span>
                 )}
@@ -325,13 +335,14 @@ function Message({
             </button>
             {(message.userId === user.uid || user.founder || user.admin) && (
               <>
-               {message.userId === user.uid && <button
-                  onClick={() => setEdit(true)}
-                  className="message--bar__btn"
-                >
-                  <FontAwesomeIcon icon="fa fa-pen" />
-                </button>
-                }
+                {message.userId === user.uid && (
+                  <button
+                    onClick={() => setEdit(true)}
+                    className="message--bar__btn"
+                  >
+                    <FontAwesomeIcon icon="fa fa-pen" />
+                  </button>
+                )}
                 <button onClick={deleteMessage} className="message--bar__btn">
                   <FontAwesomeIcon icon="fa fa-trash" />
                 </button>

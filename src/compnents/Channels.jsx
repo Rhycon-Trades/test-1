@@ -22,12 +22,14 @@ function Channels({ user, channel , setDisplaySideBar , displaySideBar , usersLi
   const [messages, setMessages] = useState(null);
   const [text , setText] = useState('')
   const [displayAtMenu , setDisplayAtMenu] = useState(false)
+  const [displayChannelMenu , setDisplayChannelMenu] = useState(false)
   const [emojis , setEmojis] = useState(false)
   const [newMessage, setNewMessage] = useState();
   const [scrollToBottom, setScrollToBottom] = useState(true);
   const [messageSent, setMessageSent] = useState(true);
   const [replyMessage, setReplyMessage] = useState(null);
   const input = document.getElementById("channel__input");
+  const channels = ['intro' , 'faq' , 'annoucements' , 'results' , 'general' , 'begginer' , 'ask' , 'claim' , 'polls' , 'invites']
   const dummy = useRef();
   const { ref, inView } = useInView();
   let previousMessage = false
@@ -74,6 +76,8 @@ function Channels({ user, channel , setDisplaySideBar , displaySideBar , usersLi
   useEffect(() => {
     text[text.length-1] !== '@' && setDisplayAtMenu(false)
     text[text.length-1] === '@' && setDisplayAtMenu(true)
+    text[text.length-1] !== '#' && setDisplayChannelMenu(false)
+    text[text.length-1] === '#' && setDisplayChannelMenu(true)
   },[text])
 
   function importData() {
@@ -174,6 +178,7 @@ function Channels({ user, channel , setDisplaySideBar , displaySideBar , usersLi
       <div className="channel--bar">
         <button onClick={() => setDisplaySideBar(!displaySideBar)} className={`bar__btn ${!displaySideBar && 'bar__btn-selected'}`}>
           <FontAwesomeIcon icon='fa fa-bars' />
+          {user.intro || user.faq || user.announcements || user.results || user.general || user.begginer || user.ask || user.cliam || user.polls || user.invites &&<span className="bar__btn--dot"></span>}
         </button>
         <p className="bar__header">#{channel}</p>
         <button onClick={() => setDisplayUsersList(!displayUsersList)} className={`bar__btn ${!displayUsersList && 'bar__btn-selected'}`}>
@@ -218,6 +223,7 @@ function Channels({ user, channel , setDisplaySideBar , displaySideBar , usersLi
                 previousMessage={previousMessage}
                 displaySideBar={displaySideBar}
                 key={message.id}
+                channels={channels}
               />
               previousMessage = message
               return data
@@ -264,6 +270,20 @@ function Channels({ user, channel , setDisplaySideBar , displaySideBar , usersLi
                   </li>
                   ))
                 }
+                </ul>
+              </div>
+            )
+          }
+                    {
+            displayChannelMenu && (
+              <div className="channel--reply channel--menu">
+                <ul className="channel--menu__users">
+                  {channels.map((item , _) => {
+                    return (<li key={_} onClick={() => setText(text+item)} className="menu__user">
+                    <p className="menu__user--name"># {item}</p>
+                  </li>)
+                  })
+                  }
                 </ul>
               </div>
             )

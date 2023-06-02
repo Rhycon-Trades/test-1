@@ -51,7 +51,7 @@ function Sidebar({ user, channel, displaySideBar }) {
                 checked === 1 && "channels__btn-checked"
               }`}
             >
-              <Link className="channel__btn--link" to="/app/intro">Introduction {user.intro &&<span className="mention-count">{ user.intro}</span>}</Link>
+              <Link className="channel__btn--link" to="/app/intro">Introduction {user.intro && <span className="mention-count">{ user.intro}</span>}</Link>
             </button>
             <button
               className={`channels__btn ${

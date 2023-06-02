@@ -567,6 +567,13 @@ nav {
   align-items: flex-start;
 }
 
+.message--link{
+  color: #ffffff;
+  background-color: rgba(0, 0, 254, 0.6);
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+
 .message-section{
   margin-top: 2px;
   width: calc(100% - 54px);
@@ -1035,10 +1042,22 @@ nav {
 }
 
 .bar__btn{
+  position: relative;
   background-color: transparent;
   font-size: 20px;
   height: max-content;
   padding: 0;
+}
+
+.bar__btn--dot{
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 100%;
+  background-color: #a00a0a;
+  z-index: 100;
+  bottom: 0;
+  right: -6px;
 }
 
 .bar__btn:hover{
@@ -1190,6 +1209,7 @@ header {
   display: flex;
   justify-content: space-between;
   padding: 10px;
+  margin-top: 20px;
 }
 
 .testimonial img {
