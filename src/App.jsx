@@ -114,7 +114,7 @@ function App() {
           exact
           path="/"
           element={
-            <Home testimonials={testimonials} products={products} faqs={faq} />
+            <Home testimonials={testimonials} products={products} user={user} faqs={faq} />
           }
         />
         <Route

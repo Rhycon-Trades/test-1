@@ -1221,6 +1221,69 @@ header {
   color: #606060;
 }
 
+.review--write{
+  position: fixed;
+  top: 80px;
+  left: 0;
+  max-width: calc(100% - 20px);
+  width: 100%;
+  height: calc(100% - 100px);
+  margin: 0 10px;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid #474747;
+  background-color: #ffffff;
+  box-shadow: 0 10px 10px 0 rgba(96, 96, 96 , 0.3);
+}
+
+.review__form{
+  height: calc(100% - 180px);
+}
+
+.review__form--title{
+  font-size: 16px;
+  letter-spacing: 1.1px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.review__form--input{
+  margin-bottom: 20px;
+  border-bottom: 2px solid #0000fe;
+}
+
+.form--input-text{
+  width: 100%;
+  max-height: 250px;
+  height: 100%;
+  border: 2px solid #0000fe;
+  background-color: rgba(0, 0, 255, 0.2);
+  border-radius: 10px;
+  margin-top: 10px;
+  padding: 4px 10px;
+}
+
+.review__user{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.review__user--profile-img{
+  width: 80px;
+  margin-bottom: 10px;
+}
+
+.review__user--profile-img img{
+  border-radius: 100%;
+}
+
+.review__user--profile{
+  color: #000000;
+  margin-bottom: 8px;
+}
+
 /*
   Features
 */
@@ -2012,10 +2075,10 @@ width: max-content;
 #popup{
   max-width: 400px;
   background-color: #fff;
-  border: 1px solid #606060;
-  position: fixed;
+  border: 1px solid #cf8888;
+  position: sticky;
   bottom: 20px;
-  left: 20px;
+  margin: 0 10px;
   padding: 20px;
   border-radius: 10px;
   display: flex;
@@ -2038,18 +2101,28 @@ width: max-content;
   position: absolute;
   font-size: 18px;
   top: 8px ;
-  left: 8px;
+  right: 8px;
   color: #0000fe;
   cursor: pointer;
+  background-color: transparent;
+  padding: 0;
+  height: max-content;
 }
 
-.popup--icon{
-  font-size: 80px;
+.popup--mark:hover{
+  background-color: transparent;
   color: #0000fe;
-  margin-right: 40px;
 }
 
 .popup--content{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 50px 0;
+}
+
+.popup--content form{
   width: 100%;
 }
 
@@ -2058,7 +2131,15 @@ width: max-content;
 }
 
 .popup__header{
-  font-size: 18px;
+  font-size: 22px;
+  text-align: center;
+  line-height: 30px;
+}
+
+.popup__text{
+  margin-top: 20px;
+  line-height: 24px;
+  text-align: center;
 }
 
 /*
@@ -2455,6 +2536,11 @@ input[type="submit"]:hover {
 
 @media (max-width: 768px) {
 
+  .questions{
+    min-width: 100%;
+    padding: 0 20px;
+  }
+
   .user-info--profile{
     top: unset;
     bottom: 0;
@@ -2668,6 +2754,7 @@ input[type="submit"]:hover {
 */
 
 @media (max-width: 480px) {
+
   h1 {
     font-size: 24px;
   }

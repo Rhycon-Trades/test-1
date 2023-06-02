@@ -129,7 +129,7 @@ function Channels({ user, channel , setDisplaySideBar , displaySideBar , usersLi
       input.value = "";
       mention.map((item) => {
         let mentionPost 
-        if(eval('item.' +  channel)){
+        if(eval('item.' +  channel) > 0){
           let num = eval('item.' +  channel) + 1
           mentionPost = {
             [channel] : num

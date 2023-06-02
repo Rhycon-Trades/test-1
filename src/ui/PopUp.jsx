@@ -10,12 +10,12 @@ function PopUp({closePopup}) {
   return (
     <div id='popup'>
         <FontAwesomeIcon onClick={(event) => removePopup(event)} className='popup--mark' icon='fa fa-xmark'/>
-        <FontAwesomeIcon className='popup--icon' icon='fa fa-gift' />
         <div className="popup--content">
-        <h4 className="popup__header">1 week of <span className="purple">Free</span> signals !!</h4>
+        <h4 className="popup__header">Limited Time <br /> 15% off</h4>
+        <p className="popup__text">Save on your first order and get email-only offers when you join our mailing list.</p>
             <form action="">
                 <input id='popup__input' placeholder='enter your email' type="email" />
-                <input onClick={(event) => removePopup(event)} type='submit' />
+                <input style={{borderRadius:'10px'}} onClick={(event) => removePopup(event)} type='submit' />
             </form>
         </div>
     </div>
