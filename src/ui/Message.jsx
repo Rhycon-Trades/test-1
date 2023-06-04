@@ -32,6 +32,7 @@ function Message({
   const [dateOfCreation, setDateOfCreation] = useState(".");
   const [userInfo, setUserInfo] = useState(null);
   const [color, setColor] = useState("#ffffff");
+  const linkRegex = /(https?\:\/\/)?(www\.)?[^\s]+\.[^\s]+/g
   let returnTimes = 0;
 
   useEffect(() => {
@@ -235,6 +236,16 @@ function Message({
     await updateDoc(docRef, newPost);
   }
 
+  function replacer(mathched){
+    let withProtocol = mathched
+    if(!withProtocol.includes('http')){
+      withProtocol = 'http://' + mathched
+    }
+
+    const newStr = `<a class="message--link" href="${withProtocol}">${mathched}</a>`
+    return newStr
+  }
+
   return (
     <>
       <li
@@ -281,19 +292,20 @@ function Message({
                   </div>
                 </div>
               )}
-              <p
+{             !message.img ? <p id='message'
                 className={`message--content ${
                   reply && "message--content-reply"
-                }`}
+                } ${message.userId === 'rhycon-bot' && 'bot-message'}`}
               >
-                {channels.map((channel , _) => {
+               { (channels.map((channel , _) => {
                   if (returnTimes === 0 && message.text.includes('#'+channel)) {
                     returnTimes++;
-                    const rowMessage = message.text.replace(/\s\#(.*?)(\s|$)/g, ' <a class="message--link" href="/app/$1">#$1</a>$2');
+                    const rowMessage = message.text.replace(/\s\#(.*?)(\s|$)/g, ' <a class="message--link" href="/app/$1">#$1</a>$2').replace(linkRegex , replacer)
                     return <span key={_} dangerouslySetInnerHTML={{__html: ([rowMessage])}} />
                   }
-                })}{
-                  returnTimes === 0 && message.text
+                }))}
+                {
+                  returnTimes === 0 && <span dangerouslySetInnerHTML={{__html: ([message.text.replace(linkRegex , replacer)])}} />
                 }{" "}
                 {message.edited && (
                   <span className="creationDate">(edited)</span>
@@ -315,6 +327,9 @@ function Message({
                   </div>
                 )}
               </p>
+              :
+              <img src={message.imageUrl} alt="" className="message--image" />
+              }
             </>
           )}
           <div className="message--bar">
@@ -335,7 +350,7 @@ function Message({
             </button>
             {(message.userId === user.uid || user.founder || user.admin) && (
               <>
-                {message.userId === user.uid && (
+                {message.userId === user.uid && !message.img && (
                   <button
                     onClick={() => setEdit(true)}
                     className="message--bar__btn"

@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
 import Message from "../ui/Message";
-import { db } from "../firebase/init";
+import { db, storage } from "../firebase/init";
 import {
   addDoc,
   collection,
@@ -17,8 +17,10 @@ import {
   where,
 } from "firebase/firestore";
 import { useInView } from "react-intersection-observer";
+import { getDownloadURL, uploadBytes, ref } from "firebase/storage";
+import { v4 } from "uuid";
 
-function Channels({ user, channel , setDisplaySideBar , displaySideBar , usersList , displayUsersList , setDisplayUsersList }) {
+function Channels({ user, channel , setDisplaySideBar , displaySideBar , usersList , displayUsersList , setDisplayUsersList , claimRole , badWords , rhyconBot }) {
   const [messages, setMessages] = useState(null);
   const [text , setText] = useState('')
   const [displayAtMenu , setDisplayAtMenu] = useState(false)
@@ -31,7 +33,7 @@ function Channels({ user, channel , setDisplaySideBar , displaySideBar , usersLi
   const input = document.getElementById("channel__input");
   const channels = ['intro' , 'faq' , 'annoucements' , 'results' , 'general' , 'begginer' , 'ask' , 'claim' , 'polls' , 'invites']
   const dummy = useRef();
-  const { ref, inView } = useInView();
+  const { refItem, inView } = useInView();
   let previousMessage = false
   
   useEffect(() => {
@@ -102,6 +104,47 @@ function Channels({ user, channel , setDisplaySideBar , displaySideBar , usersLi
     event.preventDefault();
     const message = event.target[0].value;
     let mention = []
+    let isReturn
+
+    await badWords.map((badWord) => {
+      if(message.toLowerCase().includes(badWord)){
+        const warning = user.warn + 1
+        let mentions
+        if(eval('user.'+channel)){
+          mentions = eval('user.'+channel) + 1
+        }else{
+          mentions = 1
+        }
+
+        const post = {
+          warn: warning,
+          [channel]: mentions
+        }
+        const messageText = `@${user.displayName} have been warned for using disrespectful words , you now have ${user.warn + 1} ${user.warn + 1 > 1 ? 'warnings' : 'warning'}`
+        const message = {
+          text: messageText,
+          userName: rhyconBot.displayName,
+          photoUrl: rhyconBot.photoUrl,
+          userId: rhyconBot.uid,
+          createdAt: serverTimestamp(),
+          channel: channel,
+          replyTo: null,
+          img:false
+        }
+        setText("")
+        const userRef = doc(db , "users" , user.docId)
+        updateDoc(userRef , post)
+        addDoc(collection(db , 'messages') , message)
+
+
+        isReturn = true
+        return
+      }
+    })
+
+    if(isReturn){
+      return
+    }
 
     usersList.map((item) => {
       if(text.includes('@'+item.displayName)){
@@ -110,22 +153,24 @@ function Channels({ user, channel , setDisplaySideBar , displaySideBar , usersLi
     })
 
     if (message != false) {
-      let replyTo
-
+      let post
+        let replyTo
+        
       if(replyMessage){
         replyTo = replyMessage.id
         setReplyMessage(null)
       }else{
         replyTo = null
       }
-      const post = {
+       post = {
         text: message,
         userName: user.displayName,
         photoUrl: user.photoUrl,
         userId: user.uid,
         createdAt: serverTimestamp(),
         channel: channel,
-        replyTo: replyTo
+        replyTo: replyTo,
+        img:false
       };
       await addDoc(collection(db, "messages"), post);
       setMessageSent(!messageSent);
@@ -149,28 +194,48 @@ function Channels({ user, channel , setDisplaySideBar , displaySideBar , usersLi
     }
   }
 
+  async function sendImage(event){
+    event.preventDefault()
+    const image = event.target.files[0]
+    if(image === null){
+      return
+    }
+
+    let replyTo
+
+    if(replyMessage){
+      replyTo = replyMessage.id
+      setReplyMessage(null)
+    }else{
+      replyTo = null
+    }
+
+    const imageRef = ref(storage , `images/${v4()}`)
+    const uploadTask = uploadBytes(imageRef , image).then(() => {
+      const link = getDownloadURL(imageRef).then((url) => {
+        const post = {
+          imageUrl:url,
+          userName: user.displayName,
+          photoUrl: user.photoUrl,
+          userId: user.uid,
+          createdAt: serverTimestamp(),
+          channel: channel,
+          replyTo: replyTo,
+          img:true
+        }
+
+        addDoc(collection(db,'messages'),post)
+
+      })
+    })
+  }
+
   async function replyTo(message) {
     setReplyMessage(message);
   }
 
   function containsNumber(str){
     return /[0-9]/.test(str)
-  }
-
-  async function claimRole(role , claim){
-    const docRef = doc(db, 'users' , user.docId)
-    let update
-    if(claim){
-      update = {
-        [role]:true
-      }
-    }else{
-      update = {
-        [role]: false
-      }
-    }
-    await updateDoc(docRef , update)
-
   }
 
   return (
@@ -229,11 +294,17 @@ function Channels({ user, channel , setDisplaySideBar , displaySideBar , usersLi
               return data
             })}
           <div ref={dummy}>
-            <div ref={ref}></div>
+            <div ref={refItem}></div>
           </div>
         </ul>
       </div>
-      {channel !== 'claim' || user.founder || user.admin ? <form onSubmit={(event) => sendMessage(event)} className="channel__form">
+      {channel !== 'claim' || user.founder || user.admin ? 
+      <div className="channel__form-wrapper">
+        <label for='actual-btn' className="form--img">
+          <FontAwesomeIcon icon={"fa fa-plus"} />
+        </label>
+          <input onChange={(event) => sendImage(event)} id="actual-btn" type="file"  accept="image/*" hidden/>
+      <form style={{maxWidth:'100%' , width:'100%'}} onSubmit={(event) => sendMessage(event)} className="channel__form">
         <input
           autoComplete="off"
           placeholder="Message"
@@ -289,6 +360,7 @@ function Channels({ user, channel , setDisplaySideBar , displaySideBar , usersLi
             )
           }
       </form>
+      </div>
       : (
         <div className="channel__form">
           <div className="channel__input" style={{cursor:'not-allowed'}}>You don't have permission</div>
