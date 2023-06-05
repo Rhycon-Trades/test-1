@@ -25,7 +25,9 @@ function Chat({ user }) {
   const [displaySideBar, setDisplaySideBar] = useState(false);
   const [displayUsersList, setDisplayUsersList] = useState(false);
   const [usersList, setUsersList] = useState([]);
-  const badWords = ['cum' , 'fuck' , 'shit' , 'piss' , 'ass' , 'dick' , 'cock' , 'bitch' , 'pussy' , 'bastard' , 'damn' , 'bugger' , 'tit' , 'boob' , 'masterbate']
+  const badWords = ['cum' , 'fuck' , 'shit' , 'piss' , 'ass' , 'dick' , 'cock' , 'bitch' , 'pussy' , 'bastard' , 'damn' , 'bugger' , 'tit' , 'boob' , 'masterbat']
+  const commands = ['warn', 'ban' , 'kick' , 'mute' , 'give' , 'remove' , 'send' , 'announce' , 'remove-announcement' , 'status']
+  const roles = ['everyone' ,'admin' , 'analyst' , 'blue_badge_trader' , 'booster' , 'crypto' , 'forex' , 'founder' , 'free_member' , 'free_signals' , 'marketing' , 'premium_signals' , 'premium_trader' , 'stocks' , 'support']
   const rhyconBot = {
     displayName:'rhycon bot',
     uid:'rhycon-bot',
@@ -148,6 +150,8 @@ function Chat({ user }) {
             cliamRole={claimRole}
             badWords={badWords}
             rhyconBot={rhyconBot}
+            roles={roles}
+            commands={commands}
           />
           <UsersList
             displayUsersList={displayUsersList}

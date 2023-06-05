@@ -4,7 +4,7 @@ import Nav from "./compnents/Nav";
 import Home from "./pages/Home";
 import Products from "./pages/Prodcuts";
 import { auth, db } from "./firebase/init";
-import { QuerySnapshot, addDoc, collection, doc, getDoc, getDocs, onSnapshot, query, setDoc, where } from "firebase/firestore";
+import { QuerySnapshot, addDoc, collection, doc, getDoc, getDocs, onSnapshot, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import AboutProduct from "./pages/AboutProduct";
 import Cart from "./pages/Cart";
@@ -47,6 +47,32 @@ function App() {
     autoSignIn()
   }, [])
 
+  useEffect(() => {
+    if(user){
+      let update = null
+      let today = new Date()
+      if(user.warn === 3){
+        today.setDate(today.getDate() + 1)
+        update = {...update , ban:user.ban+1 , banDuration:today}
+      }
+      if(user.kick === 3){
+        today.setDate(today.getDate() + 3)
+        update = {...update , ban:user.ban+1 , banDuration:today}
+      }
+      if(user.mute === 3){
+        // today.setDate(today.getDate() + 3)
+        update = {...update , warn:user.warn+1}
+      }
+      if(user.ban === 3){
+        today.setDate(today.getDate() + 999999999999999)
+        update = {...update , ban:user.ban+1 , banDuration:today}
+      }
+      if(update !== null){
+        updateDoc(doc(db,'users',user.docId),update)
+      }
+    }
+  },[user])
+
   function updateCart(value) {
     setCart(value);
   }
@@ -69,9 +95,10 @@ function App() {
               creationTime: appUser.metadata.creationTime,
               warn: 0,
               kick:0,
-              muteCount:0,
-              muteDuration:0,
+              mute:0,
+              muteDuration:false,
               ban: 0,
+              banDuration:false,
               founder:false,
               admin:false,
               analyst:false,
