@@ -51,21 +51,33 @@ function App() {
     if(user){
       let update = null
       let today = new Date()
-      if(user.warn === 3){
+      if(user.warn === 3 ){
+        const timeFrame = user.banDuration.seconds * 1000;
+        const duration = new Date(timeFrame);
+        if(duration < new Date()){
         today.setDate(today.getDate() + 1)
-        update = {...update , ban:user.ban+1 , banDuration:today}
+        update = {...update , ban:user.ban+1 , banDuration:today , warn:0}
+        }
       }
-      if(user.kick === 3){
+      if(user.kick === 3 ){
+        const timeFrame = user.banDuration.seconds * 1000;
+        const duration = new Date(timeFrame);
+        if(duration < new Date()){
         today.setDate(today.getDate() + 3)
-        update = {...update , ban:user.ban+1 , banDuration:today}
+        update = {...update , ban:user.ban+1 , banDuration:today , kick:0}
+        }
       }
-      if(user.mute === 3){
+      if(user.mute === 3 ){
         // today.setDate(today.getDate() + 3)
-        update = {...update , warn:user.warn+1}
+        update = {...update , warn:user.warn+1 , mute:0}
       }
       if(user.ban === 3){
         today.setDate(today.getDate() + 999999999999999)
+        const timeFrame = user.banDuration.seconds * 1000;
+        const duration = new Date(timeFrame);
+        if(duration < new Date()){
         update = {...update , ban:user.ban+1 , banDuration:today}
+        }
       }
       if(update !== null){
         updateDoc(doc(db,'users',user.docId),update)
@@ -96,9 +108,9 @@ function App() {
               warn: 0,
               kick:0,
               mute:0,
-              muteDuration:false,
+              muteDuration:new Date(),
               ban: 0,
-              banDuration:false,
+              banDuration:new Date(),
               founder:false,
               admin:false,
               analyst:false,

@@ -63,7 +63,7 @@ function Channels({
     "invites",
   ];
   const dummy = useRef();
-  const { refItem, inView } = useInView();
+  const { ref:refItem, inView } = useInView();
   let previousMessage = false;
 
   useEffect(() => {

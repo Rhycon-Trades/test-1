@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase/init";
 import UsersList from "../ui/UsersList";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function Chat({ user }) {
   const [p1, setP1] = useState(0);
@@ -218,9 +219,21 @@ function Chat({ user }) {
     }
   }, [user]);
 
+  const [banDuration , setBanDuration] = useState(false)
+  const [muteDuration , setMuteDuration] = useState(false)
+
+  useEffect(() => {
+    if(user){
+      const rawMute = new Date(user.muteDuration.seconds * 1000).toString()
+      const rawBan = new Date(user.banDuration.seconds * 1000).toString()
+      setBanDuration(rawBan);
+      setMuteDuration(rawMute);
+    }
+  },[user])
+
   return (
     <>
-      {user && (
+      {user ? (
         <main className="chat">
           <Sidebar
             user={user}
@@ -229,6 +242,15 @@ function Chat({ user }) {
             tickets={tickets}
           />
           {isAllowed ? (
+            (new Date(banDuration) > new Date() || new Date(muteDuration) > new Date()) ? 
+            (     <div style={{backgroundColor:'#000000',margin:'0px', padding:'100px' ,borderRadius:'0',width:"100%",display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column'}} className="message--content">
+            <h5> You don't have access</h5>
+            <p style={{ margin: "14px 0" , textAlign:'center' }}>
+              {" "}
+              you have benn {new Date(banDuration) > new Date() ? 'banned' : "muted"} till {new Date(banDuration) > new Date() ? banDuration : muteDuration} for violating our community guidelines <br/> <br/> if you think this is done by mistake contact us at *gmail*
+            </p>
+          </div>)
+            :
             <Channels
               user={user}
               channel={channel}
@@ -247,7 +269,7 @@ function Chat({ user }) {
           ) : (
             <div style={{backgroundColor:'#000000',margin:'0px',borderRadius:'0',width:"100%",display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column'}} className="message--content">
             <h5> You don't have access</h5>
-            <p style={{ margin: "14px 0" }}>
+            <p style={{ margin: "14px 0" , textAlign:'center'}}>
               {" "}
               you dont have the permission to read or write in this channel
             </p>
@@ -359,6 +381,13 @@ function Chat({ user }) {
             </div>
           )}
         </main>
+      ) : (
+        <div style={{backgroundColor:'#000000',margin:'0px', padding:'100px' ,borderRadius:'0',width:"100%", minHeight:"100vh" ,display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column'}} className="message--content">
+          <div className="loading-spinner-wrapper" >
+            <FontAwesomeIcon className="loading-spinner" icon='fa fa-spinner' />
+          </div>
+          <p>invest this time to think of your future</p>
+        </div>
       )}
     </>
   );

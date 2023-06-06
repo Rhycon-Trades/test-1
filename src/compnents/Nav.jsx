@@ -48,7 +48,8 @@ function NAv({ user }) {
           </ul>
           <div className="mobile-nav">
             <button className="mobile-nav--btn">
-              {user ? (
+            { loading ? ("") :
+              user ? (
                 <Link to="/app/intro">Open App</Link>
               ) : (
                 <Link to="/signin">Sign Up</Link>

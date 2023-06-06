@@ -540,6 +540,23 @@ nav {
   overflow: hidden;
 }
 
+.loading-spinner-wrapper{
+  margin-bottom:20px;
+}
+
+.loading-spinner{
+  font-size: 50px;
+  animation: spinner 1000ms infinite alternate ease;
+}
+
+@keyframes spinner{
+  0%{
+    transform: rotate(0deg);
+  }100%{
+    transform: rotate(-360deg);
+  }
+}
+
 .channel{
   background-color: #000000;
   position: relative;
@@ -555,6 +572,7 @@ nav {
 }
 
 .channel--messages-wrapper{
+  position: relative;
   padding: 0 20px;
   display: flex;
   flex-direction: column;
