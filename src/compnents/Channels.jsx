@@ -800,7 +800,7 @@ function Channels({
           </form>
         </div>
       ) : (
-        <div className="channel__form">
+        <div className="channel__form-wrapper">
           <div className="channel__input" style={{ cursor: "not-allowed" }}>
             You don't have permission
           </div>

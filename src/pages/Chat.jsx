@@ -197,13 +197,17 @@ function Chat({ user }) {
     }
 
     if (!channel.includes("ticket")) {
+      if(channel === 'crypto_channel' || channel === 'stocks_channel' || channel === 'forex' || channel === 'free_signals_channel' || channel === 'premium' || channel === 'staff'){
       if(channel === 'crypto_channel' && (user.crypto || user.admin || user.founder)){setIsAllowed(true)}
       if(channel === 'stocks_channel' && (user.stocks || user.admin || user.founder)){setIsAllowed(true)}
       if(channel === 'forex_channel' && (user.forex || user.admin || user.founder)){setIsAllowed(true)}
       if(channel === 'free_signals_channel' && (user.free_signals || user.admin || user.founder)){setIsAllowed(true)}
       if(channel === 'premium' && (user.premium_signals || user.premium_trader || user.blue_badge_trader || user.admin || user.founder)){setIsAllowed(true)}
-      if(channel === 'staff' && ( user.admin || user.founder)){setIsAllowed(true)}
-      
+      if(channel === 'staff' && (user.crypto || user.admin || user.founder)){setIsAllowed(true)}
+    }else{
+      setIsAllowed(true)
+    }
+    
     } else {
       if (user && tickets.length > 0) {
         const target = tickets.find((ticket) => ticket.name === channel);

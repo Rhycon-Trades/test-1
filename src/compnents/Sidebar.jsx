@@ -185,16 +185,17 @@ function Sidebar({ user, channel, displaySideBar, tickets }) {
               <Link className="channel__btn--link" to="/app/invites">check invites {user.invites &&<span className="mention-count">{user.invites}</span>}</Link>
             </button>
           </li>
+          {(user.free_signals || user.founder || user.admin) &&
           <li className="sidebar--channels__items">
             <h6 className="channels__header">Staff</h6>
-            {(user.free_signals || user.founder || user.admin) && <button
+             <button
               className={`channels__btn ${
                 checked === 16 && "staff"
               }`}
             >
               <Link className="channel__btn--link" to="/app/staff">staff room {user.staff && <span className="mention-count">{user.staff}</span>}</Link>
-            </button>}
-            </li>
+            </button>
+            </li>}
         </ul>
         <div className="sidebar--user">
           <div className="sidebar--user__content">
