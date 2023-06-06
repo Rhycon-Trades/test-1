@@ -19,6 +19,7 @@ import {
 import { useInView } from "react-intersection-observer";
 import { getDownloadURL, uploadBytes, ref } from "firebase/storage";
 import { v4 } from "uuid";
+import Operation from "../ui/Operation";
 
 function Channels({
   user,
@@ -33,12 +34,16 @@ function Channels({
   rhyconBot,
   roles,
   commands,
+  tickets,
 }) {
   const [messages, setMessages] = useState(null);
   const [text, setText] = useState("");
   const [displayAtMenu, setDisplayAtMenu] = useState(false);
   const [displayChannelMenu, setDisplayChannelMenu] = useState(false);
   const [displayCommandsMenu, setDisplayCommandsMenu] = useState(false);
+  const [displayOperation, setDisplayOperation] = useState(false);
+  const [operationState, setOperationState] = useState(false);
+  const [operationMessage, setOperationMessage] = useState("");
   const [emojis, setEmojis] = useState(false);
   const [newMessage, setNewMessage] = useState();
   const [scrollToBottom, setScrollToBottom] = useState(true);
@@ -272,6 +277,13 @@ function Channels({
       return;
     }
 
+    if (image.size > 8388608) {
+      setDisplayOperation(true);
+      setOperationMessage("File transfer limit is 8MB");
+      setOperationState(false);
+      return;
+    }
+
     let replyTo;
 
     if (replyMessage) {
@@ -301,8 +313,8 @@ function Channels({
   }
 
   async function command(command, type) {
-    setText('')
-    if (user.founder || user.admin || text.split(' ')[0] === '/status') {
+    setText("");
+    if (user.founder || user.admin || text.split(" ")[0] === "/status") {
       let message;
       let isReturn;
       if (
@@ -346,20 +358,25 @@ function Channels({
           action = {
             [type]: eval("target." + type) + 1,
             [type + "Duration"]: duration,
-            [channel]: (eval("user." + channel) !== undefined ? eval("user." + channel) + 1 : 1)
-
+            [channel]:
+              eval("user." + channel) !== undefined
+                ? eval("user." + channel) + 1
+                : 1,
           };
         } else {
           action = {
             [type]: eval("target." + type) + 1,
-            [channel]: (eval("user." + channel) !== undefined ? eval("user." + channel) + 1 : 1)
+            [channel]:
+              eval("user." + channel) !== undefined
+                ? eval("user." + channel) + 1
+                : 1,
           };
         }
 
         updateDoc(doc(db, "users", target.docId), action);
-      }else if(type === 'status'){
+      } else if (type === "status") {
         message = {
-          text:`@${user.displayName}, since you joined you have had ${user.ban} ban(s), ${user.kick} kick(s), ${user.mute} mute(s), ${user.warn} warn(s)`,
+          text: `@${user.displayName}, since you joined you have had ${user.ban} ban(s), ${user.kick} kick(s), ${user.mute} mute(s), ${user.warn} warn(s)`,
           userName: rhyconBot.displayName,
           userId: rhyconBot.uid,
           photoUrl: rhyconBot.photoUrl,
@@ -367,45 +384,59 @@ function Channels({
           channel: channel,
           replyTo: null,
           img: false,
+        };
+
+        updateDoc(doc(db, "users", user.docId), {
+          [channel]:
+            eval("user." + channel) !== undefined
+              ? eval("user." + channel) + 1
+              : 1,
+        });
+      } else if (type === "give" || type === "remove") {
+        const targetName = command.split(" ")[1];
+        const targetRole = command.split(" ")[2].toLowerCase();
+        const target = usersList.find(
+          (el) =>
+            el.displayName.replace(new RegExp(" ", "g"), "") === targetName
+        );
+
+        if (target == undefined) {
+          isReturn = true;
+          return;
         }
 
-        updateDoc(doc(db, 'users', user.docId), {
-          [channel]: (eval("user." + channel) !== undefined ? eval("user." + channel) + 1 : 1)
-        })
-      }else if(type === 'give' || type === 'remove'){
-        const targetName = command.split(' ')[1]
-        const targetRole = (command.split(' ')[2]).toLowerCase()
-        const target = usersList.find((el) => el.displayName.replace(new RegExp(" ", "g"), "") === targetName)
-
-        if(target == undefined){
-          isReturn = true
-          return
-        }
-
-        roles.map((el) =>{ if(el.toLowerCase() !== targetRole){
-          isReturn = true
-          return
-        }})
-
-        let messageText
-        let action 
-        
-        if(type === 'give'){
-          messageText = `@${target.displayName} now have "${targetRole}"`
-          action = {
-            [channel]:(eval("user." + channel) !== undefined ? eval("user." + channel) + 1 : 1),
-            [targetRole]:true
+        roles.map((el) => {
+          if (el.toLowerCase() !== targetRole) {
+            isReturn = true;
+            return;
           }
-        }else{
-          messageText = `"${targetRole}" have been removed from @${target.displayName} `
+        });
+
+        let messageText;
+        let action;
+
+        if (type === "give") {
+          messageText = `@${target.displayName} now have "${targetRole}"`;
           action = {
-            [channel]:(eval("user." + channel) !== undefined ? eval("user." + channel) + 1 : 1),
-            [targetRole]:false
-          }
+            [channel]:
+              eval("user." + channel) !== undefined
+                ? eval("user." + channel) + 1
+                : 1,
+            [targetRole]: true,
+          };
+        } else {
+          messageText = `"${targetRole}" have been removed from @${target.displayName} `;
+          action = {
+            [channel]:
+              eval("user." + channel) !== undefined
+                ? eval("user." + channel) + 1
+                : 1,
+            [targetRole]: false,
+          };
         }
 
         message = {
-          text:messageText,
+          text: messageText,
           userName: rhyconBot.displayName,
           userId: rhyconBot.uid,
           photoUrl: rhyconBot.photoUrl,
@@ -413,15 +444,14 @@ function Channels({
           channel: channel,
           replyTo: null,
           img: false,
-        }
+        };
 
-        updateDoc(doc(db, 'users', target.docId), action)
+        updateDoc(doc(db, "users", target.docId), action);
         addDoc(collection(db, "messages"), message);
-
-      }else if(type === 'send'){
-        const messageText = command.replace('/send','')
+      } else if (type === "send") {
+        const messageText = command.replace("/send", "");
         message = {
-          text:messageText,
+          text: messageText,
           userName: rhyconBot.displayName,
           userId: rhyconBot.uid,
           photoUrl: rhyconBot.photoUrl,
@@ -429,12 +459,70 @@ function Channels({
           channel: channel,
           replyTo: null,
           img: false,
+        };
+      } else if(type === 'close'){
+        if(channel.includes('ticket')){
+          const target = tickets.find((ticket) => ticket.name === channel)
+          message = {
+            text: `closing ticket`,
+            userName: rhyconBot.displayName,
+            userId: rhyconBot.uid,
+            photoUrl: rhyconBot.photoUrl,
+            createdAt: serverTimestamp(),
+            channel: channel,
+            replyTo: null,
+            img: false,
+          }
+          updateDoc(doc(db , 'tickets' , target.docId) , {display:false})
+        }else{
+          message = {
+            text: `@${user.displayName}, you can't use this command here`,
+            userName: rhyconBot.displayName,
+            userId: rhyconBot.uid,
+            photoUrl: rhyconBot.photoUrl,
+            createdAt: serverTimestamp(),
+            channel: channel,
+            replyTo: null,
+            img: false,
+          };
         }
       }
 
       if (isReturn) {
         return;
       }
+      addDoc(collection(db, "messages"), message);
+    }
+  }
+
+  async function openTicket() {
+    if (user) {
+      let name = "ticket" + tickets.length.toString();
+      if (tickets.length < 10) {
+        name = "ticket0" + tickets.length.toString();
+      }
+
+      const ticket = {
+        name: name,
+        new: true,
+        user1: user.displayName,
+        uid1: user.uid,
+        ticketNum: tickets.length,
+        display:true,
+      };
+
+      const message = {
+        text: `@${user.displayName}, thanks for reaching out @founder or @admin will reach you out soon}`,
+        userName: rhyconBot.displayName,
+        userId: rhyconBot.uid,
+        photoUrl: rhyconBot.photoUrl,
+        createdAt: serverTimestamp(),
+        channel: name,
+        replyTo: null,
+        img: false,
+      };
+
+      await addDoc(collection(db, "tickets"), ticket);
       addDoc(collection(db, "messages"), message);
     }
   }
@@ -560,6 +648,20 @@ function Channels({
             </div>
           )}
 
+          {channel === "ask" && (
+            <div className="message--content">
+              <h5>Need Help ?!</h5>
+              <p style={{ margin: "14px 0" }}>
+                {" "}
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                Molestias veniam asperiores laborum hic maxime dolor repudiandae
+                aut velit iure ducimus possimus, est sed consequuntur, quas
+                blanditiis neque! Dolorum, numquam tempora?
+              </p>
+              <button onClick={openTicket}>open a ticket</button>
+            </div>
+          )}
+
           {messages &&
             messages.map((message) => {
               const data = (
@@ -584,7 +686,10 @@ function Channels({
           </div>
         </ul>
       </div>
-      {channel !== "claim" || user.founder || user.admin ? (
+      {(channel !== "claim" &&
+      channel !== "ask" && channel !== "intro" && channel !== "polls" && channel !== "announcements" && channel !== "faq" ) ||
+      user.founder ||
+      user.admin ? (
         <div className="channel__form-wrapper">
           <label for="actual-btn" className="form--img">
             <FontAwesomeIcon icon={"fa fa-plus"} />
@@ -700,6 +805,14 @@ function Channels({
             You don't have permission
           </div>
         </div>
+      )}
+
+      {displayOperation && (
+        <Operation
+          setOperation={setDisplayOperation}
+          success={operationState}
+          message={operationMessage}
+        />
       )}
     </div>
   );

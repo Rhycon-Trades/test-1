@@ -21,18 +21,65 @@ function Chat({ user }) {
   const [p6, setP6] = useState(0);
   const [p7, setP7] = useState(0);
   const [displayClaim, setDisplayClaim] = useState(false);
+  const [isAllowed, setIsAllowed] = useState(false);
   const { channel } = useParams();
   const [displaySideBar, setDisplaySideBar] = useState(false);
   const [displayUsersList, setDisplayUsersList] = useState(false);
   const [usersList, setUsersList] = useState([]);
-  const badWords = ['cum' , 'fuck' , 'shit' , 'piss' , 'ass' , 'dick' , 'cock' , 'bitch' , 'pussy' , 'bastard' , 'damn' , 'bugger' , 'tit' , 'boob' , 'masterbat']
-  const commands = ['warn', 'ban' , 'kick' , 'mute' , 'give' , 'remove' , 'send' , 'announce' , 'remove-announcement' , 'status']
-  const roles = ['everyone' ,'admin' , 'analyst' , 'blue_badge_trader' , 'booster' , 'crypto' , 'forex' , 'founder' , 'free_member' , 'free_signals' , 'marketing' , 'premium_signals' , 'premium_trader' , 'stocks' , 'support']
+  const [tickets, setTickets] = useState([]);
+  const badWords = [
+    "cum",
+    "fuck",
+    "shit",
+    "piss",
+    "ass",
+    "dick",
+    "cock",
+    "bitch",
+    "pussy",
+    "bastard",
+    "damn",
+    "bugger",
+    "tit",
+    "boob",
+    "masterbat",
+  ];
+  const commands = [
+    "warn",
+    "ban",
+    "kick",
+    "mute",
+    "give",
+    "remove",
+    "send",
+    "close",
+    "announce",
+    "remove-announcement",
+    "status",
+  ];
+  const roles = [
+    "everyone",
+    "admin",
+    "analyst",
+    "blue_badge_trader",
+    "booster",
+    "crypto",
+    "forex",
+    "founder",
+    "free_member",
+    "free_signals",
+    "marketing",
+    "premium_signals",
+    "premium_trader",
+    "stocks",
+    "support",
+  ];
   const rhyconBot = {
-    displayName:'rhycon bot',
-    uid:'rhycon-bot',
-    photoUrl:'https://cdn.discordapp.com/attachments/1088531111942037534/1114933133566034032/IMG_1245.jpg'
-  }
+    displayName: "rhycon bot",
+    uid: "rhycon-bot",
+    photoUrl:
+      "https://cdn.discordapp.com/attachments/1088531111942037534/1114933133566034032/IMG_1245.jpg",
+  };
   const vw = window.innerWidth;
 
   useEffect(() => {
@@ -45,6 +92,8 @@ function Chat({ user }) {
       setDisplayClaim(true);
       localStorage.firstChatVisit = 1;
     }
+
+    getTickets();
   }, []);
 
   useEffect(() => {
@@ -59,60 +108,72 @@ function Chat({ user }) {
     }
   }, [displayUsersList]);
 
-  async function getUsers() {
-    const data = await getDocs(collection(db, "users"));
-    const users = data.docs.map((doc) => ({ ...doc.data(), docId: doc.id }));
-
-    const newUsers = [];
-    let role1 = 0;
-    let role2 = 0;
-    let role3 = 0;
-    let role4 = 0;
-    let role5 = 0;
-    let role6 = 0;
-    let role7 = 0;
-
-    users.map((user) => {
-      let priority;
-
-      if (user.founder) {
-        priority = 1;
-        role1++;
-      } else if (user.admin) {
-        priority = 2;
-        role2++;
-      } else if (user.analyst) {
-        priority = 3;
-        role3++;
-      } else if (user.support) {
-        priority = 4;
-        role4++;
-      } else if (user.booster) {
-        priority = 5;
-        role5++;
-      } else if (
-        user.blue_badge_trader ||
-        user.premium_trader ||
-        user.premium_signals
-      ) {
-        priority = 6;
-        role6++;
-      } else if (user.free_member) {
-        priority = 7;
-        role7++;
-      }
-
-      newUsers.push({ ...user, userPriority: priority });
+  function getTickets() {
+    onSnapshot(collection(db, "tickets"), (snapshot) => {
+      const rawTicket = [];
+      snapshot.docs.forEach((el) => {
+        rawTicket.push({ ...el.data(), docId: el.id });
+      });
+      setTickets(rawTicket);
     });
+  }
 
-    usersList !== newUsers && setUsersList(newUsers);
-    setP1(role1);
-    setP2(role2);
-    setP3(role3);
-    setP4(role4);
-    setP5(role5);
-    setP6(role6);
-    setP7(role7);
+  async function getUsers() {
+    // const data = await getDocs(collection(db, "users"));
+    // const users = data.docs.map((doc) => ({ ...doc.data(), docId: doc.id }));
+    onSnapshot(collection(db , 'users'), (data) => {
+      const users = data.docs.map((doc) => ({ ...doc.data(), docId: doc.id }));
+      const newUsers = [];
+      let role1 = 0;
+      let role2 = 0;
+      let role3 = 0;
+      let role4 = 0;
+      let role5 = 0;
+      let role6 = 0;
+      let role7 = 0;
+  
+      users.map((user) => {
+        let priority;
+  
+        if (user.founder) {
+          priority = 1;
+          role1++;
+        } else if (user.admin) {
+          priority = 2;
+          role2++;
+        } else if (user.analyst) {
+          priority = 3;
+          role3++;
+        } else if (user.support) {
+          priority = 4;
+          role4++;
+        } else if (user.booster) {
+          priority = 5;
+          role5++;
+        } else if (
+          user.blue_badge_trader ||
+          user.premium_trader ||
+          user.premium_signals
+        ) {
+          priority = 6;
+          role6++;
+        } else if (user.free_member) {
+          priority = 7;
+          role7++;
+        }
+  
+        newUsers.push({ ...user, userPriority: priority });
+      });
+  
+      usersList !== newUsers && setUsersList(newUsers);
+      setP1(role1);
+      setP2(role2);
+      setP3(role3);
+      setP4(role4);
+      setP5(role5);
+      setP6(role6);
+      setP7(role7);
+    })
   }
 
   async function claimRole(role, claim) {
@@ -130,6 +191,29 @@ function Chat({ user }) {
     await updateDoc(docRef, update);
   }
 
+  useEffect(() => {
+    if (user.admin || user.founder) {
+      setIsAllowed(true);
+    }
+
+    if (!channel.includes("ticket")) {
+      if(channel === 'crypto_channel' && (user.crypto || user.admin || user.founder)){setIsAllowed(true)}
+      if(channel === 'stocks_channel' && (user.stocks || user.admin || user.founder)){setIsAllowed(true)}
+      if(channel === 'forex_channel' && (user.forex || user.admin || user.founder)){setIsAllowed(true)}
+      if(channel === 'free_signals_channel' && (user.free_signals || user.admin || user.founder)){setIsAllowed(true)}
+      if(channel === 'premium' && (user.premium_signals || user.premium_trader || user.blue_badge_trader || user.admin || user.founder)){setIsAllowed(true)}
+      if(channel === 'staff' && ( user.admin || user.founder)){setIsAllowed(true)}
+      
+    } else {
+      if (user && tickets.length > 0) {
+        const target = tickets.find((ticket) => ticket.name === channel);
+        if (target.uid1 === user.uid && target.display) {
+          setIsAllowed(true);
+        }
+      }
+    }
+  }, [user]);
+
   return (
     <>
       {user && (
@@ -138,21 +222,33 @@ function Chat({ user }) {
             user={user}
             channel={channel}
             displaySideBar={displaySideBar}
+            tickets={tickets}
           />
-          <Channels
-            user={user}
-            channel={channel}
-            displayUsersList={displayUsersList}
-            setDisplayUsersList={setDisplayUsersList}
-            setDisplaySideBar={setDisplaySideBar}
-            displaySideBar={displaySideBar}
-            usersList={usersList}
-            cliamRole={claimRole}
-            badWords={badWords}
-            rhyconBot={rhyconBot}
-            roles={roles}
-            commands={commands}
-          />
+          {isAllowed ? (
+            <Channels
+              user={user}
+              channel={channel}
+              displayUsersList={displayUsersList}
+              setDisplayUsersList={setDisplayUsersList}
+              setDisplaySideBar={setDisplaySideBar}
+              displaySideBar={displaySideBar}
+              usersList={usersList}
+              claimRole={claimRole}
+              badWords={badWords}
+              rhyconBot={rhyconBot}
+              roles={roles}
+              commands={commands}
+              tickets={tickets}
+            />
+          ) : (
+            <div style={{backgroundColor:'#000000',margin:'0px',borderRadius:'0',width:"100%",display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column'}} className="message--content">
+            <h5> You don't have access</h5>
+            <p style={{ margin: "14px 0" }}>
+              {" "}
+              you dont have the permission to read or write in this channel
+            </p>
+          </div>
+          )}
           <UsersList
             displayUsersList={displayUsersList}
             users={usersList}
@@ -165,7 +261,7 @@ function Chat({ user }) {
             p6={p6}
             p7={p7}
           />
-          { displayClaim &&
+          {displayClaim && (
             <div className="claim--popup-wrapper">
               <div className="message--content claim--popup">
                 <h5>Choose your intrests:</h5>
@@ -244,12 +340,20 @@ function Chat({ user }) {
                   </li>
                 </ul>
                 <div className="claim--note">
-                  <p className="claim--note__text">Each role you claim will be added to your profile and you may recive information regarding your intrests</p>
-                  <button onClick={() => setDisplayClaim(false)} className="claim--note__btn">Next</button>
+                  <p className="claim--note__text">
+                    Each role you claim will be added to your profile and you
+                    may recive information regarding your intrests
+                  </p>
+                  <button
+                    onClick={() => setDisplayClaim(false)}
+                    className="claim--note__btn"
+                  >
+                    Next
+                  </button>
                 </div>
               </div>
             </div>
-          }
+          )}
         </main>
       )}
     </>

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Profile from "../ui/Profile";
 
-function Sidebar({ user, channel, displaySideBar }) {
+function Sidebar({ user, channel, displaySideBar, tickets }) {
   const [checked, setChecked] = useState(1);
   const [profileDisplay, setProfileDisplay] = useState(false);
 
@@ -34,6 +34,20 @@ function Sidebar({ user, channel, displaySideBar }) {
       setChecked(9);
     } else if (channel === "invites") {
       setChecked(10);
+    }else if(channel === 'crypto_channel'){
+      setChecked(11)
+    }else if(channel === 'forex_channel'){
+      setChecked(12)
+    }else if(channel === 'stocks_channel'){
+      setChecked(13)
+    }else if(channel === 'free_signals_channel'){
+      setChecked(14)
+    }else if(channel === 'premium'){
+      setChecked(15)
+    }else if(channel === 'staff'){
+      setChecked(16)
+    }else{
+      setChecked(0)
     }
   }, [channel]);
 
@@ -91,6 +105,41 @@ function Sidebar({ user, channel, displaySideBar }) {
             >
               <Link className="channel__btn--link" to="/app/begginer">begginer 's chat {user.begginer && <span className="mention-count">{user.begginer}</span>}</Link>
             </button>
+           {(user.crypto || user.founder || user.admin) && <button
+              className={`channels__btn ${
+                checked === 11 && "channels__btn-checked"
+              }`}
+            >
+              <Link className="channel__btn--link" to="/app/crypto_channel">crypto chat {user.crypto_channel && <span className="mention-count">{user.crypto_channel}</span>}</Link>
+            </button>}
+            {(user.forex || user.founder || user.admin) && <button
+              className={`channels__btn ${
+                checked === 15 && "channels__btn-checked"
+              }`}
+            >
+              <Link className="channel__btn--link" to="/app/premium">premium chat {user.premium && <span className="mention-count">{user.premium}</span>}</Link>
+            </button>}
+            {(user.forex || user.founder || user.admin) && <button
+              className={`channels__btn ${
+                checked === 12 && "channels__btn-checked"
+              }`}
+            >
+              <Link className="channel__btn--link" to="/app/forex_channel">forex chat {user.forex_channel && <span className="mention-count">{user.forex_channel}</span>}</Link>
+            </button>}
+            {(user.stocks || user.founder || user.admin) && <button
+              className={`channels__btn ${
+                checked === 13 && "channels__btn-checked"
+              }`}
+            >
+              <Link className="channel__btn--link" to="/app/stocks_channel">stocks chat {user.stocks_channel && <span className="mention-count">{user.stocks_channel}</span>}</Link>
+            </button>}
+            {(user.free_signals || user.founder || user.admin) && <button
+              className={`channels__btn ${
+                checked === 14 && "channels__btn-checked"
+              }`}
+            >
+              <Link className="channel__btn--link" to="/app/free_signals_channel">free_signals chat {user.free_signals_channel && <span className="mention-count">{user.free_signals_channel}</span>}</Link>
+            </button>}
             <button
               className={`channels__btn ${
                 checked === 7 && "channels__btn-checked"
@@ -98,6 +147,19 @@ function Sidebar({ user, channel, displaySideBar }) {
             >
               <Link className="channel__btn--link" to="/app/ask">ask a mentor {user.ask &&<span className="mention-count">{ user.ask}</span>}</Link>
             </button>
+          {
+            tickets.length > 0 && tickets.map((ticket) => {
+              if((ticket.uid1 === user.uid || user.founder || user.admin) && ticket.display){
+                return <button
+                className={`channels__btn ${
+                  channel === ticket.name && "channels__btn-checked"
+                }`}
+              >
+                <Link className="channel__btn--link" to={`/app/${ticket.name}`}>{ticket.name} {user.ask &&<span className="mention-count">{ eval("user." + ticket.name)}</span>}</Link>
+              </button>
+              }
+            })
+          }
           </li>
           <li className="sidebar--channels__items">
             <h6 className="channels__header">interactive</h6>
@@ -123,6 +185,16 @@ function Sidebar({ user, channel, displaySideBar }) {
               <Link className="channel__btn--link" to="/app/invites">check invites {user.invites &&<span className="mention-count">{user.invites}</span>}</Link>
             </button>
           </li>
+          <li className="sidebar--channels__items">
+            <h6 className="channels__header">Staff</h6>
+            {(user.free_signals || user.founder || user.admin) && <button
+              className={`channels__btn ${
+                checked === 16 && "staff"
+              }`}
+            >
+              <Link className="channel__btn--link" to="/app/staff">staff room {user.staff && <span className="mention-count">{user.staff}</span>}</Link>
+            </button>}
+            </li>
         </ul>
         <div className="sidebar--user">
           <div className="sidebar--user__content">
