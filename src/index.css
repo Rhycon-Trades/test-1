@@ -244,11 +244,47 @@ nav {
 .sidebar{
   background-color: #242424;
   height: 100vh;
-  max-width: 250px;
-  width: 100%;
   position: relative;
   left: 0;
+  max-width: 260px;
+  width: 100%;
+}
+
+.sidebar-nav{
+  max-width: 60px;
+  min-width: 60px;
+  background-color: #242424;
+  border-right: 1px solid #606060;
+  overflow-y: auto;
+  padding: 20px 0 ;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sidebar-nav--item{
+  margin-bottom: 20px;
+}
+
+.sidebar-nav--item__btn button{
+  border-radius: 100%;
+  background-color: #606060;
+  font-size: 18px;
+}
+
+.sidebar-nav--item__btn-checked button{
+  background-color: #9e9e9e;
+}
+
+.sidebar-nav--item__btn button:hover{
+  background-color: #9e9e9e;
+}
+
+.sidebars-wrapper{
+  max-width: 320px;
   transition: all 600ms ease;
+  width: 100%;
+  display: flex;
 }
 
 .sidebar-invisible{
@@ -269,9 +305,25 @@ nav {
 
 .sidebar--channels{
   border-top:1px solid #606060;
-  margin: 10px 10px;
+  margin: 10px;
+  padding-left: 10px;
+  margin-left: 0;
   height: calc(100% - 60px);
   overflow-y:auto;
+}
+
+.logout-btn{
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  width: 100%;
+  height: 40px;
+  background-color: #606060;
+  transition: all 300ms ease;
+}
+
+.logout-btn:hover{
+  background-color: #9e9e9e;
 }
 
 .sidebar--user{
@@ -415,12 +467,14 @@ nav {
   height: 280px;
   border-radius: 10px;
   padding: 10px;
+  overflow-y: auto;
 }
 
 .profile--block__section{
   padding: 10px 0;
   border-bottom: #606060 1px solid ;
   color: #fff;
+  height: max-content;
 }
 
 .profile--block__section:last-child{
@@ -442,8 +496,7 @@ nav {
 .roles{
   flex-wrap: wrap;
   display: flex;
-  overflow-y: auto;
-  max-height: 100px;
+  max-height: 130px;
 }
 
 .role{
@@ -2850,9 +2903,14 @@ input[type="submit"]:hover {
     height: 100%;
   }
 
-  .sidebar{
+  .sidebar-wrapper{
     max-width: 400px;
     min-width: 400px;
+  }
+
+  .sidebar{
+    max-width: 360px;
+    min-width: 360px;
   }
 
   .sidebar-invisible{
@@ -2883,6 +2941,13 @@ input[type="submit"]:hover {
 
   h6 {
     font-size: 16px;
+  }
+
+  .nav--link-loading__mobile{
+    max-width: 78px;
+    min-width: 78px;
+    min-height:33px;
+    height: 33px;
   }
 
   .mobile-nav{
@@ -2985,9 +3050,9 @@ input[type="submit"]:hover {
     overflow-x: hidden;
   }
 
-  .sidebar{
-    max-width: 260px;
-    min-width: 260px;
+  .sidebars-wrapper{
+    max-width: 270px;
+    min-width: 270px;
   }
 
   .sidebar-invisible{

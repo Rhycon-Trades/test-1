@@ -12,6 +12,7 @@ import {
 import { db } from "../firebase/init";
 import UsersList from "../ui/UsersList";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import AppNav from "../compnents/AppNav";
 
 function Chat({ user }) {
   const [p1, setP1] = useState(0);
@@ -46,16 +47,19 @@ function Chat({ user }) {
     "masterbat",
   ];
   const commands = [
-    "warn",
+    "announce",
     "ban",
+    "warn",
     "kick",
     "mute",
+    "clear",
+    "close",
     "give",
     "remove",
-    "send",
-    "close",
-    "announce",
+    "poll",
+    'delete-poll',
     "remove-announcement",
+    "send",
     "status",
   ];
   const roles = [
@@ -381,13 +385,15 @@ function Chat({ user }) {
             </div>
           )}
         </main>
-      ) : (
+      ) : user !== null ? (
         <div style={{backgroundColor:'#000000',margin:'0px', padding:'100px' ,borderRadius:'0',width:"100%", minHeight:"100vh" ,display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column'}} className="message--content">
           <div className="loading-spinner-wrapper" >
             <FontAwesomeIcon className="loading-spinner" icon='fa fa-spinner' />
           </div>
-          <p>invest this time to think of your future</p>
+          <p style={{textAlign:'cetner'}}>invest this time to think of your future</p>
         </div>
+      ) : (
+        window.location.pathname = '/signin'
       )}
     </>
   );

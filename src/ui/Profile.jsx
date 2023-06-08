@@ -1,6 +1,16 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { signOut } from "firebase/auth";
 import React from "react";
+import { auth } from "../firebase/init";
 
 function Profile({ user , className }) {
+
+  function logout(){
+    signOut(auth).then(() => {
+      window.location.pathname = '/'
+    })
+  }
+
   return (
     <div className={`user--profile ${className}`}>
       <div className="sidebar--user__content user--profile__info">
@@ -19,6 +29,9 @@ function Profile({ user , className }) {
         <div className="profile--block__section">
           <h5 className="block__section--mini-title">Rhycon member since</h5>
           <p>{user && user.creationTime}</p>
+        </div>
+        <div className="profile--block__section">
+          <button className="logout-btn" onClick={logout}><FontAwesomeIcon style={{marginRight:'10px'}} icon='fa fa-right-from-bracket' /> <span>Log Out</span></button>
         </div>
         <div className="profile--block__section">
           <h5 className="block__section--mini-title">Ranks</h5>

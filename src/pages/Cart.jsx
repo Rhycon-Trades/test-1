@@ -33,7 +33,7 @@ function Cart({cart , setCart , user}) {
           <p className="cart--price__sub">Subtotal <span>${(totalPrice * 0.9).toFixed(2)}</span></p>
           <p className="cart--price__sub">Tax <span>${(totalPrice * 0.1).toFixed(2)}</span></p>
           <h4 className="cart--price__sub cart--price__total">Total <span>${totalPrice.toFixed(2)}</span></h4>
-          {user ? <CheckOut cart={cart} totalPrice={totalPrice} /> : <>
+          {user ? <CheckOut cart={cart} setCart={setCart} user={user} totalPrice={totalPrice} /> : <>
             <button className="cart--btn"><Link to='/signin'>Sign in</Link></button>
             <p className="cart--warning">Sign in required</p>
           </>}

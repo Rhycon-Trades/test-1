@@ -47,7 +47,7 @@ function NAv({ user }) {
             </li>
           </ul>
           <div className="mobile-nav">
-            <button className="mobile-nav--btn">
+            <button className={`mobile-nav--btn ${loading && 'nav--link-loading' && 'nav--link-loading__mobile'}`}>
             { loading ? ("") :
               user ? (
                 <Link to="/app/intro">Open App</Link>

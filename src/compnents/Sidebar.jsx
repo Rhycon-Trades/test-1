@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Profile from "../ui/Profile";
+import AppNav from "./AppNav";
 
 function Sidebar({ user, channel, displaySideBar, tickets }) {
   const [checked, setChecked] = useState(1);
@@ -52,7 +53,9 @@ function Sidebar({ user, channel, displaySideBar, tickets }) {
   }, [channel]);
 
   return (
-    <aside className={`sidebar ${!displaySideBar && "sidebar-invisible"}`}>
+    <div className={`sidebars-wrapper ${!displaySideBar && "sidebar-invisible"}`}>
+          <AppNav/>
+    <aside className={`sidebar`}>
       <figure className="sidebar--logo">
         <img src="https://cdn.discordapp.com/attachments/1088531111942037534/1091012283309760552/logo.png" />
       </figure>
@@ -112,7 +115,7 @@ function Sidebar({ user, channel, displaySideBar, tickets }) {
             >
               <Link className="channel__btn--link" to="/app/crypto_channel">crypto chat {user.crypto_channel && <span className="mention-count">{user.crypto_channel}</span>}</Link>
             </button>}
-            {(user.forex || user.founder || user.admin) && <button
+            {(user.blue_badge_trader || user.premium_signals || user.premium_trader || user.founder || user.admin) && <button
               className={`channels__btn ${
                 checked === 15 && "channels__btn-checked"
               }`}
@@ -218,6 +221,7 @@ function Sidebar({ user, channel, displaySideBar, tickets }) {
         </div>
       </div>
     </aside>
+    </div>
   );
 }
 

@@ -22,6 +22,7 @@ function Message({
   usersList,
   userId,
   channels,
+  scroll
 }) {
   const [edit, setEdit] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -328,7 +329,7 @@ function Message({
                 )}
               </p>
               :
-              <img src={message.imageUrl} alt="" className="message--image" />
+              <img src={message.imageUrl} alt="" onLoad={scroll} className="message--image" />
               }
             </>
           )}

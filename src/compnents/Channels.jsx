@@ -5,6 +5,7 @@ import { db, storage } from "../firebase/init";
 import {
   addDoc,
   collection,
+  deleteDoc,
   deleteField,
   doc,
   getDoc,
@@ -45,10 +46,12 @@ function Channels({
   const [operationState, setOperationState] = useState(false);
   const [operationMessage, setOperationMessage] = useState("");
   const [emojis, setEmojis] = useState(false);
+  const [polls , setPolls] = useState([])
   const [newMessage, setNewMessage] = useState();
   const [scrollToBottom, setScrollToBottom] = useState(true);
   const [messageSent, setMessageSent] = useState(true);
   const [replyMessage, setReplyMessage] = useState(null);
+  const [scrollDown , setScrollDown] = useState(true)
   const input = document.getElementById("channel__input");
   const channels = [
     "intro",
@@ -65,10 +68,9 @@ function Channels({
   const dummy = useRef();
   const { ref:refItem, inView } = useInView();
   let previousMessage = false;
-
   useEffect(() => {
     const rowData = fetch(
-      "https://emoji-api.com/emojis?access_key=39f8ebdd5893bad2f5b3d9bf4434b2716ebb98ab"
+      "https:emoji-api.com/emojis?access_key=39f8ebdd5893bad2f5b3d9bf4434b2716ebb98ab"
     )
       .then((response) => response.json())
       .then((data) =>
@@ -85,6 +87,10 @@ function Channels({
       )
       .then((data) => setEmojis(data));
   }, []);
+
+  useEffect(() =>{
+    getPolls()
+  },[])
 
   useEffect(() => {
     if (messages && scrollToBottom) {
@@ -105,6 +111,12 @@ function Channels({
       dummy.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [newMessage]);
+
+  useEffect(() => {
+    
+    dummy.current.scrollIntoView();
+    
+  },[scrollDown])
 
   useEffect(() => {
     if (db) {
@@ -153,7 +165,7 @@ function Channels({
     let isReturn;
 
     commands.map((el) => {
-      if (message.toLowerCase().includes(el)) {
+      if (message.toLowerCase().includes("/" + el)) {
         command(message, el);
         isReturn = true;
       }
@@ -268,6 +280,10 @@ function Channels({
         updateDoc(doc(db, "users", item.id), mentionPost);
       });
     }
+  }
+
+  function moveToView(){
+    setScrollDown(!scrollDown)
   }
 
   async function sendImage(event) {
@@ -473,7 +489,7 @@ function Channels({
             replyTo: null,
             img: false,
           }
-          updateDoc(doc(db , 'tickets' , target.docId) , {display:false})
+          updateDoc(doc(db , 'tickets' , target.docId) , {display:false })
         }else{
           message = {
             text: `@${user.displayName}, you can't use this command here`,
@@ -486,12 +502,40 @@ function Channels({
             img: false,
           };
         }
+      }else if(type === 'clear'){
+        messages.map((item) => {
+          if(item.channel === channel){
+            const docRef = doc(db,'messages',item.id)
+            deleteDoc(docRef)
+          }
+        })
+      }else if(type === 'poll'){
+        const rawCommand = command.split(' "')
+        const header = rawCommand[1].replace('"' , '')
+        const text = rawCommand[2].replace('"' , '')
+        rawCommand.shift()
+        rawCommand.shift()
+        rawCommand.shift()
+        let count = 1
+        let post = {text:text , header:header}
+        rawCommand.map((el) => {
+          post = {...post , ["option" + count.toString()]:el.replace('"' , "" ) , ["option" + count.toString() + "Count"]:0}
+          count++
+        })
+        
+        addDoc(collection(db , 'polls'),post)
+      }else if(type === 'delete-poll'){
+        const targetHeader = command.replace('/delete-poll ' , '')
+        const target = polls.find((poll) => poll.header === targetHeader)
+        await deleteDoc(doc(db , 'polls' , target.docId))
       }
 
       if (isReturn) {
         return;
       }
+      if(message){
       addDoc(collection(db, "messages"), message);
+    }
     }
   }
 
@@ -527,12 +571,56 @@ function Channels({
     }
   }
 
+  async function getPolls(){
+    const unsubscribe = onSnapshot(collection(db , 'polls'), (snapshot) => {
+      const pollsList = []
+      snapshot.forEach((el) => {
+        pollsList.push({...el.data() , docId:el.id})
+      })
+      if(pollsList !== polls){
+        setPolls(pollsList)
+      }
+    })
+  }
+
   async function replyTo(message) {
     setReplyMessage(message);
   }
 
   function containsNumber(str) {
     return /[0-9]/.test(str);
+  }
+
+  async function choosePoll(el){
+    let post = {}
+    if(eval("el." + user.uid) === undefined){
+      post = {
+        [user.uid]:el.storedIn,
+        [el.storedIn + "Count"]: eval('el.' + el.storedIn+"Count") + 1,
+      }
+    }else{
+      const rowUserEl = eval('el.' + user.uid)
+      const userEl = eval("el." + rowUserEl + "Count")
+      post = {
+        [rowUserEl + "Count"]: userEl - 1,
+        [user.uid]:el.storedIn,
+        [el.storedIn + "Count"]: eval('el.' + el.storedIn+"Count") + 1,
+      }
+    }
+    await updateDoc(doc(db , 'polls' , el.docId), post)
+  }
+
+  async function deselectPoll(el){
+    const rowUserEl = eval('el.' + user.uid)
+    const userEl = eval("el." + rowUserEl + "Count")
+
+    const post = {
+      [rowUserEl + "Count"]: userEl - 1,
+      [user.uid]: deleteField()
+    }
+
+    await updateDoc(doc(db , 'polls' , el.docId), post)
+
   }
 
   return (
@@ -648,7 +736,44 @@ function Channels({
             </div>
           )}
 
-          {channel === "ask" && (
+          {
+            channel === 'polls' && (
+              <div>
+                {
+                  polls.map((data) => {
+                    const options = []
+                    {
+                      for(let i = 1 ; eval("data.option" + i.toString()) !== undefined ; i++){
+                        options.push({...data , option:eval("data.option" + i.toString()) , storedIn:'option'+i.toString()})
+                      }
+                    }
+              return <div key={data.docId} style={{marginBottom:'60px'}} className="message--content">
+                 <h5 style={{marginBottom:"10px"}}>{data.header}</h5>
+                 <p>{data.text}</p>
+                 <ul className="claim-roles">
+                   {
+                    options.map((el , _) => {
+                     return <li key={_} className="calim-roles--role">
+                      <p>{el.option}</p>
+                      {eval("el." + user.uid) !== el.storedIn ? <button onClick={() => choosePoll(el)} className="claim-roles__btn claim-roles__btn--claim">
+                        Select
+                      </button> : 
+                      (<button onClick={() => deselectPoll(el)} className="claim-roles__btn claim-roles__btn--remove">Deselect</button>)
+                      }
+
+                      <p style={{marginLeft:'20px'}}>count: {eval('el.' + el.storedIn + "Count")}</p>
+                      </li>
+                    })
+                   }
+                     </ul>
+                   </div>
+                  })
+                }
+                  </div>
+                  )
+                }
+                
+                {channel === "ask" && (
             <div className="message--content">
               <h5>Need Help ?!</h5>
               <p style={{ margin: "14px 0" }}>
@@ -666,6 +791,7 @@ function Channels({
             messages.map((message) => {
               const data = (
                 <Message
+                scroll={moveToView}
                   user={user}
                   userId={message.userId}
                   usersList={usersList}

@@ -82,7 +82,16 @@ function App() {
       if(update !== null){
         updateDoc(doc(db,'users',user.docId),update)
       }
+      if(user.signals_duration && user.premium_signals){
+        const signalsDuration = new Date(user.signals_duration.seconds * 1000)
+        const today = new Date()
+        let post = {}
+        if(signalsDuration <= today){post = {premium_signals: false}}
+        updateDoc(doc(db,'users',user.docId),post)
+      }
     }
+
+
   },[user])
 
   function updateCart(value) {
@@ -96,7 +105,8 @@ function App() {
         const unsubscribe = onSnapshot(userRef , (querySnapshot) => {
           const userData = []
            querySnapshot.docs.forEach((item) => userData.push({...item.data() , docId:item.id}))
-          if(Object.keys(userData).length > 0 && user !== userData){
+           if(user !== userData){
+          if(Object.keys(userData).length > 0){
             setUser(userData[0])
           }else{
             const userInfo = {
@@ -128,7 +138,7 @@ function App() {
             }
             user !== userInfo && setUser(userInfo)
             addDoc(collection(db , 'users') , userInfo)
-          }
+          }}
         })
       }else{
         setUser(null)
@@ -179,7 +189,7 @@ function App() {
             <Signin setUser={setUser} />
           }
         />
-       {user !== null ? <Route path="/app/:channel" element={<Chat user={user} />}/> : window.location.pathname = '/signin'}
+        <Route path="/app/:channel" element={<Chat user={user} />}/>
       </Routes>
       {popup && <PopUp closePopup={closePopup} />}
       <Footer />
