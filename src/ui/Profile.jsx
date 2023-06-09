@@ -3,7 +3,7 @@ import { signOut } from "firebase/auth";
 import React from "react";
 import { auth } from "../firebase/init";
 
-function Profile({ user , className }) {
+function Profile({ user , currentUser , className }) {
 
   function logout(){
     signOut(auth).then(() => {
@@ -30,9 +30,9 @@ function Profile({ user , className }) {
           <h5 className="block__section--mini-title">Rhycon member since</h5>
           <p>{user && user.creationTime}</p>
         </div>
-        <div className="profile--block__section">
+       {user.uid === currentUser.uid && <div className="profile--block__section">
           <button className="logout-btn" onClick={logout}><FontAwesomeIcon style={{marginRight:'10px'}} icon='fa fa-right-from-bracket' /> <span>Log Out</span></button>
-        </div>
+        </div>}
         <div className="profile--block__section">
           <h5 className="block__section--mini-title">Ranks</h5>
           <ul className="roles">

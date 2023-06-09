@@ -4,7 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import Signals from "./Signals";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-function AboutProduct({ products, cart }) {
+function AboutProduct({ products, cart , user }) {
   const [product, setProduct] = useState(false);
   const [features, setFeatures] = useState([]);
   const [reload, setReload] = useState(false);
@@ -84,7 +84,12 @@ function AboutProduct({ products, cart }) {
                     Check Cart
                   </button>{" "}
                 </Link>
-              ) : (
+              ) : eval("user." + product.role) ? (                <button
+                
+                className="product__button secondary__button"
+              >
+                Owned
+              </button>) : (
                 <button
                   onClick={() => getProduct(product)}
                   className="product__button secondary__button"

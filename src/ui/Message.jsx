@@ -22,7 +22,8 @@ function Message({
   usersList,
   userId,
   channels,
-  scroll
+  scroll,
+  isDark
 }) {
   const [edit, setEdit] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -45,7 +46,11 @@ function Message({
   useEffect(() => {
     if (userInfo) {
       if (userInfo.userPriority === 1) {
-        setColor("#ffffff");
+        if(isDark){
+          setColor('#ffffff')
+        }else{
+          setColor("#000000")
+        }
       } else if (userInfo.userPriority === 2) {
         setColor("rgb(194, 124, 14)");
       } else if (userInfo.userPriority === 3) {
@@ -60,7 +65,7 @@ function Message({
         setColor("rgb(26, 227, 29)");
       }
     }
-  }, [userInfo]);
+  }, [userInfo] , [isDark]);
 
   if (edit) {
     document.addEventListener("keydown", (key) => {
@@ -261,7 +266,7 @@ function Message({
         )}
         <div className="message-container">
           {previousMessage.userId !== message.userId && (
-            <p style={{ color: color }} className="message--user__name">
+            <p style={message.userId !== 'rhycon-bot' ? { color: color } : isDark? { color: '#ffffff' } : { color: '#000000'} } className="message--user__name">
               {message.userName} &nbsp;{" "}
               <span className="creationDate">{dateOfCreation}</span>
             </p>

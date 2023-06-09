@@ -32,7 +32,7 @@ function Features() {
             </div>
             </div>
             <figure className="feature--img">
-              <img src="https://cdn.discordapp.com/attachments/1088531111942037534/1093574216592408676/IMG_1457_1.png"/>
+              <img src="https://i.ibb.co/gWfTR0Q/IMG-1532-removebg.png"/>
             </figure>
         </div>
     </section>

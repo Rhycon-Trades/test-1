@@ -6,7 +6,7 @@ function Footer() {
   const path = useLocation().pathname.toString()
   return (
     <>
-    {!path.includes("/app") && <footer>
+    {(!path.includes("/app") && !path.includes('marketing') && !path.includes('invite') && !path.includes('learn') && !path.includes('signals')) && <footer>
       <div className="footer-container">
         <div className="footer--main">
           <div className="footer--trades">

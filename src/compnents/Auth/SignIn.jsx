@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { auth } from "../../firebase/init";
+import { auth, db } from "../../firebase/init";
 import { FacebookAuthProvider, GoogleAuthProvider, OAuthProvider , getRedirectResult, signInWithRedirect } from "firebase/auth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Operation from "../../ui/Operation";
+import { doc, updateDoc } from "firebase/firestore";
 
 function SignIn({ setUser }) {
 
@@ -43,12 +44,25 @@ function SignIn({ setUser }) {
         .then((userCredential) => {
           setUser(userCredential.user)
           displayOperation("you are now signed in" , true)
+          // if(userCredential.user.inviter === undefined && window.localStorage.invited){
+          //   const post = {
+          //     inviter: window.localStorage.invited
+          //   }
+
+          //   const targetUser = user
+
+          //   const reward = {
+          //     signups:
+          //   }
+
+          //   updateDoc(doc(db , 'users' , userCredential.user.id))
+          // }
           setTimeout(() => {
             window.location.pathname = '/'
           },2000)
         })
         .catch(() => {
-
+          displayOperation("try again" , false)
         })
   },[])
 

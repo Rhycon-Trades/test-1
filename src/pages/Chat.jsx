@@ -13,22 +13,16 @@ import { db } from "../firebase/init";
 import UsersList from "../ui/UsersList";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AppNav from "../compnents/AppNav";
+import Loading from "../ui/Loading";
 
-function Chat({ user }) {
-  const [p1, setP1] = useState(0);
-  const [p2, setP2] = useState(0);
-  const [p3, setP3] = useState(0);
-  const [p4, setP4] = useState(0);
-  const [p5, setP5] = useState(0);
-  const [p6, setP6] = useState(0);
-  const [p7, setP7] = useState(0);
+function Chat({ user , usersList , p1 , p2 , p3 ,p4 ,p5 ,p6 ,p7 ,setUsersList }) {
   const [displayClaim, setDisplayClaim] = useState(false);
   const [isAllowed, setIsAllowed] = useState(false);
   const { channel } = useParams();
   const [displaySideBar, setDisplaySideBar] = useState(false);
   const [displayUsersList, setDisplayUsersList] = useState(false);
-  const [usersList, setUsersList] = useState([]);
   const [tickets, setTickets] = useState([]);
+  const [isDark , setIsDark] = useState()
   const badWords = [
     "cum",
     "fuck",
@@ -47,7 +41,6 @@ function Chat({ user }) {
     "masterbat",
   ];
   const commands = [
-    "announce",
     "ban",
     "warn",
     "kick",
@@ -58,8 +51,8 @@ function Chat({ user }) {
     "remove",
     "poll",
     'delete-poll',
-    "remove-announcement",
     "send",
+    'marketing-cv',
     "status",
   ];
   const roles = [
@@ -91,7 +84,6 @@ function Chat({ user }) {
     if (vw > 768) {
       setDisplaySideBar(true);
     }
-    getUsers();
 
     if (!localStorage.firstChatVisit) {
       setDisplayClaim(true);
@@ -99,7 +91,21 @@ function Chat({ user }) {
     }
 
     getTickets();
+
+    const theme = localStorage.isDark
+      
+    if(theme !== undefined){
+      setIsDark(theme)
+    }else{
+      localStorage.isDark = true
+      setIsDark(true)
+    }
   }, []);
+  
+  
+  useEffect(() => {
+    localStorage.isDark = isDark
+  }, [isDark])
 
   useEffect(() => {
     if (displaySideBar && vw < 900) {
@@ -121,64 +127,6 @@ function Chat({ user }) {
       });
       setTickets(rawTicket);
     });
-  }
-
-  async function getUsers() {
-    // const data = await getDocs(collection(db, "users"));
-    // const users = data.docs.map((doc) => ({ ...doc.data(), docId: doc.id }));
-    onSnapshot(collection(db , 'users'), (data) => {
-      const users = data.docs.map((doc) => ({ ...doc.data(), docId: doc.id }));
-      const newUsers = [];
-      let role1 = 0;
-      let role2 = 0;
-      let role3 = 0;
-      let role4 = 0;
-      let role5 = 0;
-      let role6 = 0;
-      let role7 = 0;
-  
-      users.map((user) => {
-        let priority;
-  
-        if (user.founder) {
-          priority = 1;
-          role1++;
-        } else if (user.admin) {
-          priority = 2;
-          role2++;
-        } else if (user.analyst) {
-          priority = 3;
-          role3++;
-        } else if (user.support) {
-          priority = 4;
-          role4++;
-        } else if (user.booster) {
-          priority = 5;
-          role5++;
-        } else if (
-          user.blue_badge_trader ||
-          user.premium_trader ||
-          user.premium_signals
-        ) {
-          priority = 6;
-          role6++;
-        } else if (user.free_member) {
-          priority = 7;
-          role7++;
-        }
-  
-        newUsers.push({ ...user, userPriority: priority });
-      });
-  
-      usersList !== newUsers && setUsersList(newUsers);
-      setP1(role1);
-      setP2(role2);
-      setP3(role3);
-      setP4(role4);
-      setP5(role5);
-      setP6(role6);
-      setP7(role7);
-    })
   }
 
   async function claimRole(role, claim) {
@@ -238,12 +186,14 @@ function Chat({ user }) {
   return (
     <>
       {user ? (
-        <main className="chat">
+        <main className={`chat ${!isDark && 'light-theme'}`}>
           <Sidebar
             user={user}
             channel={channel}
             displaySideBar={displaySideBar}
             tickets={tickets}
+            isDark={isDark}
+            setIsDark={setIsDark}
           />
           {isAllowed ? (
             (new Date(banDuration) > new Date() || new Date(muteDuration) > new Date()) ? 
@@ -257,6 +207,7 @@ function Chat({ user }) {
             :
             <Channels
               user={user}
+              isDark={isDark}
               channel={channel}
               displayUsersList={displayUsersList}
               setDisplayUsersList={setDisplayUsersList}
@@ -282,6 +233,7 @@ function Chat({ user }) {
           <UsersList
             displayUsersList={displayUsersList}
             users={usersList}
+            currentUser={user}
             setUsers={setUsersList}
             p1={p1}
             p2={p2}
@@ -386,12 +338,7 @@ function Chat({ user }) {
           )}
         </main>
       ) : user !== null ? (
-        <div style={{backgroundColor:'#000000',margin:'0px', padding:'100px' ,borderRadius:'0',width:"100%", minHeight:"100vh" ,display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column'}} className="message--content">
-          <div className="loading-spinner-wrapper" >
-            <FontAwesomeIcon className="loading-spinner" icon='fa fa-spinner' />
-          </div>
-          <p style={{textAlign:'cetner'}}>invest this time to think of your future</p>
-        </div>
+        <Loading />
       ) : (
         window.location.pathname = '/signin'
       )}

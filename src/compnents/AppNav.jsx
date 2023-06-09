@@ -28,7 +28,7 @@ function AppNav({ }) {
           </Link>
         </li>
                 <li className="sidebar-nav--item">
-          <Link to='/marketing' className={`sidebar-nav--item__btn ${channel.includes('marketing') && 'sidebar-nav--item__btn-checked'}`}>
+          <Link to='/signals' className={`sidebar-nav--item__btn ${channel.includes('signals') && 'sidebar-nav--item__btn-checked'}`}>
             <button>
               <FontAwesomeIcon icon='fa fa-chart-line' />
             </button>

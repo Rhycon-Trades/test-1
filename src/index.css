@@ -355,14 +355,13 @@ nav {
   margin-right: 30px;
 }
 
-.user--settings{
+.user--theme{
   background-color: transparent;
 }
 
-.user--settings:hover{
+.user--theme:hover{
   background-color: transparent;
   color: #9e9e9e;
-  transform: rotate(90deg);
 }
 
 .sidebar--channels__items{
@@ -377,6 +376,7 @@ nav {
   font-size: 16px;
   font-weight: 300;
   margin-bottom: 6px;
+  text-transform: capitalize;
 }
 
 .channels__btn{
@@ -524,6 +524,7 @@ nav {
   min-width: 250px;
   max-width: 250px;
   background-color:#242424;
+  z-index: 100;
   padding:30px 20px;
   transition: all 600ms ease;
 }
@@ -1112,6 +1113,7 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  text-transform: capitalize;
 }
 
 .mention-count{
@@ -1232,6 +1234,72 @@ nav {
   font-weight: 700;
 }
 
+.light-theme .sidebar,
+.light-theme .sidebar-nav,
+.light-theme .channel__form-wrapper,
+.light-theme .channel__form,
+.light-theme .channel--bar,
+.light-theme .message--content,
+.light-theme .users-list{
+  background-color: #9e9e9e;
+}
+
+.light-theme .channel{
+  background-color: #ffffff;
+}
+
+.light-theme .creationDate,
+.light-theme .channel__header,
+.light-theme .channel__para{
+  color: #474747;
+}
+
+.light-theme .message--bar{
+  background-color: #474747;
+}
+
+.light-theme .user--profile{
+  background-color: #dadada;
+}
+
+.light-theme .user--profile__block{
+  background-color: #9e9e9e;
+}
+
+.light-theme .user--profile__name,
+.light-theme .channels__header{
+  color: #000000;
+}
+
+.light-theme .sidebar-nav--item__btn button{
+background-color: #fff;
+  color: #606060;
+}
+
+.light-theme .sidebar-nav--item__btn:hover button{
+  background-color: #dadada;
+}
+
+.light-theme .sidebar-nav--item__btn-checked button{
+  background-color: #dadada;
+}
+
+.light-theme .bar__btn:hover{
+  color: #dadada;
+}
+
+.light-theme .bar__btn-selected{
+  color: #dadada;
+}
+
+.light-theme .bar__btn-selected:hover{
+  color: #ffffff;
+}
+
+.light-theme .user--theme:hover{
+  color: #606060;
+}
+
 /*
   Header
 */
@@ -1296,6 +1364,61 @@ header {
   100%{
     background-color: rgb(96, 96, 96 , 0.6);
   }
+}
+
+/*
+  Marketing
+*/
+
+.room{
+  display: flex;
+  min-height: 100vh;
+  background-color: #000;
+}
+
+.marketing--application-wrapper{
+  padding: 30px 50px;
+  width: 100%;
+  height: 100%;
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+
+.marketing--application-wrapper h5{
+  margin-bottom: 18px;
+}
+
+.marketing--application{
+  width: 100%;
+  height: 100%;
+}
+
+.marketing--application__input{
+  resize: none;
+  min-width: 100%;
+  max-height: 300px;
+  height: 300px;
+  outline: none;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  background-color: #9e9e9e;
+  color: #ffffff;
+  padding: 10px;
+}
+
+.marketing--table{
+  width: 100%;
+  background-color: #606060;
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+
+.marketing--table__item{
+  border-bottom: 1px solid #474747;
+  color: #ffffff;
+  padding: 10px;
 }
 
 /*
@@ -2909,8 +3032,8 @@ input[type="submit"]:hover {
   }
 
   .sidebar{
-    max-width: 360px;
-    min-width: 360px;
+    max-width: 260px;
+    min-width: 260px;
   }
 
   .sidebar-invisible{
@@ -3048,6 +3171,11 @@ input[type="submit"]:hover {
 
   .channel--messages{
     overflow-x: hidden;
+  }
+
+  .sidebar{
+    max-width: 220px;
+    min-width: 220px;
   }
 
   .sidebars-wrapper{

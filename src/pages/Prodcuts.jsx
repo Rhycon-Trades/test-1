@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Product from "../ui/Product";
 
-function Prodcuts({ products , cart  ,setCart}) {
+function Prodcuts({ products , cart , user ,setCart}) {
 
   const [items , setItems] = useState(null)
   const [render , setRender] = useState(false)
@@ -61,7 +61,7 @@ function Prodcuts({ products , cart  ,setCart}) {
           </div>
           <div className="products">
             {items != null &&
-              items.map((product) => <Product setCart={setCart} product={product} cart={cart} key={product.id} />)
+              items.map((product) => <Product user={user} setCart={setCart} product={product} cart={cart} key={product.id} />)
             }
           </div>
         </div>

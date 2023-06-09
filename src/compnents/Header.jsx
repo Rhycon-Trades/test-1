@@ -48,7 +48,7 @@ function Header({products}) {
             </div>
             <div className="buy__table--content">
             {
-              (product !== null && checked !== 3) && product.description
+              (product !== null && checked === 1) && product.description
             }
             {
               checked === 3 && (
@@ -75,9 +75,35 @@ function Header({products}) {
                 </>
               )
             }
+             {
+              checked === 2 && (
+                <>
+                <p>If you want to enter the world of Trading, the Blue Badge Trader is the perfect opportunity for you. The plan is designed for people of all skill levels, and you get access to</p>
+                <ul className="buy--list">
+                  <li className="buy--list__item">
+                  Signals 
+                  </li>
+                  <li className="buy--list__item">
+                  Indicator
+                  </li>
+                  <li className="buy--list__item">
+                  The Rhycon trading Manual 
+                  </li>
+                  <li className="buy--list__item">
+                  Access to all the premium channels in the Chat Room, where you can connect with other traders and learn from experienced mentors.
+ But that's not all. As a bonus, you'll receive a custom blue badge role on the server, giving you the chance to showcase your new knowledge and expertise. 
+
+                  </li>
+                  <li className="buy--list__item">
+                  The Blue Badge Trader is a must-have for anyone looking to gain a competitive edge in the world of trading. So why wait? Sign up today and start your journey toward financial success.
+                  </li>
+                </ul>
+                </>
+              )
+            }
             </div>
           </div>
-          <Link className="buy__link" to="/products">
+          <Link className="buy__link" to={`/products/${product && product.nameInUrl}`}>
             <button className="buy__btn">Buy Now</button>
           </Link>
         </div>

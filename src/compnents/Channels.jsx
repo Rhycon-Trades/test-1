@@ -36,6 +36,7 @@ function Channels({
   roles,
   commands,
   tickets,
+  isDark,
 }) {
   const [messages, setMessages] = useState(null);
   const [text, setText] = useState("");
@@ -46,12 +47,12 @@ function Channels({
   const [operationState, setOperationState] = useState(false);
   const [operationMessage, setOperationMessage] = useState("");
   const [emojis, setEmojis] = useState(false);
-  const [polls , setPolls] = useState([])
+  const [polls, setPolls] = useState([]);
   const [newMessage, setNewMessage] = useState();
   const [scrollToBottom, setScrollToBottom] = useState(true);
   const [messageSent, setMessageSent] = useState(true);
   const [replyMessage, setReplyMessage] = useState(null);
-  const [scrollDown , setScrollDown] = useState(true)
+  const [scrollDown, setScrollDown] = useState(true);
   const input = document.getElementById("channel__input");
   const channels = [
     "intro",
@@ -66,7 +67,7 @@ function Channels({
     "invites",
   ];
   const dummy = useRef();
-  const { ref:refItem, inView } = useInView();
+  const { ref: refItem, inView } = useInView();
   let previousMessage = false;
   useEffect(() => {
     const rowData = fetch(
@@ -88,9 +89,9 @@ function Channels({
       .then((data) => setEmojis(data));
   }, []);
 
-  useEffect(() =>{
-    getPolls()
-  },[])
+  useEffect(() => {
+    getPolls();
+  }, []);
 
   useEffect(() => {
     if (messages && scrollToBottom) {
@@ -113,10 +114,8 @@ function Channels({
   }, [newMessage]);
 
   useEffect(() => {
-    
     dummy.current.scrollIntoView();
-    
-  },[scrollDown])
+  }, [scrollDown]);
 
   useEffect(() => {
     if (db) {
@@ -282,8 +281,8 @@ function Channels({
     }
   }
 
-  function moveToView(){
-    setScrollDown(!scrollDown)
+  function moveToView() {
+    setScrollDown(!scrollDown);
   }
 
   async function sendImage(event) {
@@ -476,9 +475,9 @@ function Channels({
           replyTo: null,
           img: false,
         };
-      } else if(type === 'close'){
-        if(channel.includes('ticket')){
-          const target = tickets.find((ticket) => ticket.name === channel)
+      } else if (type === "close") {
+        if (channel.includes("ticket")) {
+          const target = tickets.find((ticket) => ticket.name === channel);
           message = {
             text: `closing ticket`,
             userName: rhyconBot.displayName,
@@ -488,9 +487,9 @@ function Channels({
             channel: channel,
             replyTo: null,
             img: false,
-          }
-          updateDoc(doc(db , 'tickets' , target.docId) , {display:false })
-        }else{
+          };
+          updateDoc(doc(db, "tickets", target.docId), { display: false });
+        } else {
           message = {
             text: `@${user.displayName}, you can't use this command here`,
             userName: rhyconBot.displayName,
@@ -502,40 +501,85 @@ function Channels({
             img: false,
           };
         }
-      }else if(type === 'clear'){
+      } else if (type === "clear") {
         messages.map((item) => {
-          if(item.channel === channel){
-            const docRef = doc(db,'messages',item.id)
-            deleteDoc(docRef)
+          if (item.channel === channel) {
+            const docRef = doc(db, "messages", item.id);
+            deleteDoc(docRef);
           }
-        })
-      }else if(type === 'poll'){
-        const rawCommand = command.split(' "')
-        const header = rawCommand[1].replace('"' , '')
-        const text = rawCommand[2].replace('"' , '')
-        rawCommand.shift()
-        rawCommand.shift()
-        rawCommand.shift()
-        let count = 1
-        let post = {text:text , header:header}
+        });
+      } else if (type === "poll") {
+        const rawCommand = command.split(' "');
+        const header = rawCommand[1].replace('"', "");
+        const text = rawCommand[2].replace('"', "");
+        rawCommand.shift();
+        rawCommand.shift();
+        rawCommand.shift();
+        let count = 1;
+        let post = { text: text, header: header };
         rawCommand.map((el) => {
-          post = {...post , ["option" + count.toString()]:el.replace('"' , "" ) , ["option" + count.toString() + "Count"]:0}
-          count++
-        })
-        
-        addDoc(collection(db , 'polls'),post)
-      }else if(type === 'delete-poll'){
-        const targetHeader = command.replace('/delete-poll ' , '')
-        const target = polls.find((poll) => poll.header === targetHeader)
-        await deleteDoc(doc(db , 'polls' , target.docId))
+          post = {
+            ...post,
+            ["option" + count.toString()]: el.replace('"', ""),
+            ["option" + count.toString() + "Count"]: 0,
+          };
+          count++;
+        });
+
+        addDoc(collection(db, "polls"), post);
+      } else if (type === "delete-poll") {
+        const targetHeader = command.replace("/delete-poll ", "");
+        const target = polls.find((poll) => poll.header === targetHeader);
+        await deleteDoc(doc(db, "polls", target.docId));
+      } else if (type === "marketing-cv") {
+        const targetName = command.replace("/marketing-cv ", "");
+        const target = usersList.find(
+          (el) => el.displayName.replace(" ", "") === targetName
+        );
+        if (user) {
+          if (target.marketing) {
+            message = {
+              text: `@${target.displayName} 's marketing cv is : ${target.marketingCv}`,
+              userName: rhyconBot.displayName,
+              userId: rhyconBot.uid,
+              photoUrl: rhyconBot.photoUrl,
+              createdAt: serverTimestamp(),
+              channel: channel,
+              replyTo: null,
+              img: false,
+            };
+          } else {
+            message = {
+              text: `@${target.displayName} is not a member of the marketing team`,
+              userName: rhyconBot.displayName,
+              userId: rhyconBot.uid,
+              photoUrl: rhyconBot.photoUrl,
+              createdAt: serverTimestamp(),
+              channel: channel,
+              replyTo: null,
+              img: false,
+            };
+          }
+        } else {
+          message = {
+            text: `@${target.displayName} doesn't exist`,
+            userName: rhyconBot.displayName,
+            userId: rhyconBot.uid,
+            photoUrl: rhyconBot.photoUrl,
+            createdAt: serverTimestamp(),
+            channel: channel,
+            replyTo: null,
+            img: false,
+          };
+        }
       }
 
       if (isReturn) {
         return;
       }
-      if(message){
-      addDoc(collection(db, "messages"), message);
-    }
+      if (message) {
+        addDoc(collection(db, "messages"), message);
+      }
     }
   }
 
@@ -552,7 +596,7 @@ function Channels({
         user1: user.displayName,
         uid1: user.uid,
         ticketNum: tickets.length,
-        display:true,
+        display: true,
       };
 
       const message = {
@@ -571,16 +615,16 @@ function Channels({
     }
   }
 
-  async function getPolls(){
-    const unsubscribe = onSnapshot(collection(db , 'polls'), (snapshot) => {
-      const pollsList = []
+  async function getPolls() {
+    const unsubscribe = onSnapshot(collection(db, "polls"), (snapshot) => {
+      const pollsList = [];
       snapshot.forEach((el) => {
-        pollsList.push({...el.data() , docId:el.id})
-      })
-      if(pollsList !== polls){
-        setPolls(pollsList)
+        pollsList.push({ ...el.data(), docId: el.id });
+      });
+      if (pollsList !== polls) {
+        setPolls(pollsList);
       }
-    })
+    });
   }
 
   async function replyTo(message) {
@@ -591,36 +635,35 @@ function Channels({
     return /[0-9]/.test(str);
   }
 
-  async function choosePoll(el){
-    let post = {}
-    if(eval("el." + user.uid) === undefined){
+  async function choosePoll(el) {
+    let post = {};
+    if (eval("el." + user.uid) === undefined) {
       post = {
-        [user.uid]:el.storedIn,
-        [el.storedIn + "Count"]: eval('el.' + el.storedIn+"Count") + 1,
-      }
-    }else{
-      const rowUserEl = eval('el.' + user.uid)
-      const userEl = eval("el." + rowUserEl + "Count")
+        [user.uid]: el.storedIn,
+        [el.storedIn + "Count"]: eval("el." + el.storedIn + "Count") + 1,
+      };
+    } else {
+      const rowUserEl = eval("el." + user.uid);
+      const userEl = eval("el." + rowUserEl + "Count");
       post = {
         [rowUserEl + "Count"]: userEl - 1,
-        [user.uid]:el.storedIn,
-        [el.storedIn + "Count"]: eval('el.' + el.storedIn+"Count") + 1,
-      }
+        [user.uid]: el.storedIn,
+        [el.storedIn + "Count"]: eval("el." + el.storedIn + "Count") + 1,
+      };
     }
-    await updateDoc(doc(db , 'polls' , el.docId), post)
+    await updateDoc(doc(db, "polls", el.docId), post);
   }
 
-  async function deselectPoll(el){
-    const rowUserEl = eval('el.' + user.uid)
-    const userEl = eval("el." + rowUserEl + "Count")
+  async function deselectPoll(el) {
+    const rowUserEl = eval("el." + user.uid);
+    const userEl = eval("el." + rowUserEl + "Count");
 
     const post = {
       [rowUserEl + "Count"]: userEl - 1,
-      [user.uid]: deleteField()
-    }
+      [user.uid]: deleteField(),
+    };
 
-    await updateDoc(doc(db , 'polls' , el.docId), post)
-
+    await updateDoc(doc(db, "polls", el.docId), post);
   }
 
   return (
@@ -736,44 +779,66 @@ function Channels({
             </div>
           )}
 
-          {
-            channel === 'polls' && (
-              <div>
+          {channel === "polls" && (
+            <div>
+              {polls.map((data) => {
+                const options = [];
                 {
-                  polls.map((data) => {
-                    const options = []
-                    {
-                      for(let i = 1 ; eval("data.option" + i.toString()) !== undefined ; i++){
-                        options.push({...data , option:eval("data.option" + i.toString()) , storedIn:'option'+i.toString()})
-                      }
-                    }
-              return <div key={data.docId} style={{marginBottom:'60px'}} className="message--content">
-                 <h5 style={{marginBottom:"10px"}}>{data.header}</h5>
-                 <p>{data.text}</p>
-                 <ul className="claim-roles">
-                   {
-                    options.map((el , _) => {
-                     return <li key={_} className="calim-roles--role">
-                      <p>{el.option}</p>
-                      {eval("el." + user.uid) !== el.storedIn ? <button onClick={() => choosePoll(el)} className="claim-roles__btn claim-roles__btn--claim">
-                        Select
-                      </button> : 
-                      (<button onClick={() => deselectPoll(el)} className="claim-roles__btn claim-roles__btn--remove">Deselect</button>)
-                      }
+                  for (
+                    let i = 1;
+                    eval("data.option" + i.toString()) !== undefined;
+                    i++
+                  ) {
+                    options.push({
+                      ...data,
+                      option: eval("data.option" + i.toString()),
+                      storedIn: "option" + i.toString(),
+                    });
+                  }
+                }
+                return (
+                  <div
+                    key={data.docId}
+                    style={{ marginBottom: "60px" }}
+                    className="message--content"
+                  >
+                    <h5 style={{ marginBottom: "10px" }}>{data.header}</h5>
+                    <p>{data.text}</p>
+                    <ul className="claim-roles">
+                      {options.map((el, _) => {
+                        return (
+                          <li key={_} className="calim-roles--role">
+                            <p>{el.option}</p>
+                            {eval("el." + user.uid) !== el.storedIn ? (
+                              <button
+                                onClick={() => choosePoll(el)}
+                                className="claim-roles__btn claim-roles__btn--claim"
+                              >
+                                Select
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() => deselectPoll(el)}
+                                className="claim-roles__btn claim-roles__btn--remove"
+                              >
+                                Deselect
+                              </button>
+                            )}
 
-                      <p style={{marginLeft:'20px'}}>count: {eval('el.' + el.storedIn + "Count")}</p>
-                      </li>
-                    })
-                   }
-                     </ul>
-                   </div>
-                  })
-                }
+                            <p style={{ marginLeft: "20px" }}>
+                              count: {eval("el." + el.storedIn + "Count")}
+                            </p>
+                          </li>
+                        );
+                      })}
+                    </ul>
                   </div>
-                  )
-                }
-                
-                {channel === "ask" && (
+                );
+              })}
+            </div>
+          )}
+
+          {channel === "ask" && (
             <div className="message--content">
               <h5>Need Help ?!</h5>
               <p style={{ margin: "14px 0" }}>
@@ -791,7 +856,7 @@ function Channels({
             messages.map((message) => {
               const data = (
                 <Message
-                scroll={moveToView}
+                  scroll={moveToView}
                   user={user}
                   userId={message.userId}
                   usersList={usersList}
@@ -802,6 +867,7 @@ function Channels({
                   displaySideBar={displaySideBar}
                   key={message.id}
                   channels={channels}
+                  isDark={isDark}
                 />
               );
               previousMessage = message;
@@ -813,7 +879,11 @@ function Channels({
         </ul>
       </div>
       {(channel !== "claim" &&
-      channel !== "ask" && channel !== "intro" && channel !== "polls" && channel !== "announcements" && channel !== "faq" ) ||
+        channel !== "ask" &&
+        channel !== "intro" &&
+        channel !== "polls" &&
+        channel !== "announcements" &&
+        channel !== "faq") ||
       user.founder ||
       user.admin ? (
         <div className="channel__form-wrapper">

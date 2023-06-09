@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-function Product({ product  , cart}) {
+function Product({ product , user , cart}) {
 
   const [reload , setReload] = useState(false)
 
@@ -41,7 +41,11 @@ function Product({ product  , cart}) {
                     Check Cart
                   </button>{" "}
                 </Link>
-              ) : (
+              ) : eval('user.' + product.role) ? (                <button
+                className="product__btn"
+              >
+                Owned
+              </button>) : (
                 <button
                   onClick={() => getProduct(product)}
                   className="product__btn"

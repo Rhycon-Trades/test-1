@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Profile from "./Profile";
 
-function UserInfo({ user, color , displayUsersList }) {
+function UserInfo({ user, color , displayUsersList , currentUser }) {
   const [displayUser, setDisplayUser] = useState(false);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ function UserInfo({ user, color , displayUsersList }) {
         </p>
       </div>
     </li>
-      {displayUser && <Profile className={'user-info--profile'} user={user} />}
+      {displayUser && <Profile className={'user-info--profile'} currentUser={currentUser} user={user} />}
     </>
   );
 }
