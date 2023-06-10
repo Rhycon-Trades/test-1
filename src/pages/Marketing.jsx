@@ -65,7 +65,7 @@ function Marketing({ user }) {
                                 sales: {user.sales}
                             </li>
                             <li className="marketing--table__item">
-                                credits: {user.credits.toFixed(2)}
+                                credits: {user && user.credits.toFixed(2)}
                             </li>
                         </ul>
                         <ul className="marketing--table">
