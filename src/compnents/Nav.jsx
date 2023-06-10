@@ -20,7 +20,7 @@ function NAv({ user }) {
 
   return (
     <>
-      {(!path.includes("/app") && !path.includes('marketing') && !path.includes('invite') && !path.includes('learn') && !path.includes('signals')) && <nav>
+      {(!path.includes("/app") && !path.includes('marketing') && !path.includes('invite') && !path.includes('learn') && window.location.pathname !== '/signals') && <nav>
         <div className="container navbar">
           <Link to="/" className="logo-wrapper">
             <img src="https://cdn.discordapp.com/attachments/1088531111942037534/1091012283309760552/logo.png" />

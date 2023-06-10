@@ -32,6 +32,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import Chat from "./pages/Chat";
 import Marketing from "./pages/Marketing";
 import Invite from "./pages/Invite";
+import MarketingRedeem from "./pages/MarketingRedeem";
 
 function App() {
   const [testimonials, setTestimonials] = useState(null);
@@ -131,6 +132,29 @@ function App() {
       }
     }
   }, [user]);
+
+  useEffect(() => {
+    if(user && Object.keys(usersList).length > 0 && !window.location.pathname.includes('signin')){
+      const inviterUid = window.localStorage.invited
+      let executed = false
+      if(user.inviter === undefined && inviterUid && user.uid !== inviterUid){
+        if(!executed){
+          executed = true
+        rewardInviter(inviterUid)
+        }
+      }
+      }
+  },[usersList])
+
+  function rewardInviter(inviterUid){
+    updateDoc(doc(db , 'users' , user.docId) , {inviter:inviterUid})
+    const inviter = usersList.find((user) => user.uid === inviterUid)
+    updateDoc(doc(db , 'users' , inviter.docId),{
+      signups:inviter.signups + 1,
+      credits: inviter.credits + 0.1
+    })
+    localStorage.removeItem('invited')
+  }
 
   function updateCart(value) {
     setCart(value);
@@ -286,11 +310,12 @@ function App() {
         <Route
           exact
           path="/cart"
-          element={<Cart setCart={updateCart} cart={cart} user={user} />}
+          element={<Cart setCart={updateCart} usersList={usersList} cart={cart} user={user} />}
         />
         <Route exact path="/marketing" element={<Marketing user={user} />} />
+        <Route exact path='/marketing/redeem' element={<MarketingRedeem user={user} products={products} />} />
         <Route exact path="/terms" element={<Terms />} />
-        <Route exact path="/signin" element={<Signin setUser={setUser} />} />
+        <Route exact path="/signin" element={<Signin usersList={usersList} setUser={setUser} />} />
         <Route
           exact
           path="/invite/:inviteId"

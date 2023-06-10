@@ -12,10 +12,12 @@ function Invite({ user, usersList }) {
     if (user === null && window.localStorage.invited === undefined) {
       if (Object.keys(usersList).length > 0) {
             const inviter = usersList.find((item) => item.uid === inviteId);
-            setInviterName(inviter.displayName);
+            if(inviter.marketing){
+              setInviterName(inviter.displayName);
           if(!executed){
             setExecuted(true)
             rewardInviter(inviter)
+          }
         }
     }
 }else{

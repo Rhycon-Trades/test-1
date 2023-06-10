@@ -4,6 +4,7 @@ import AppNav from "../compnents/AppNav";
 import { addDoc, collection, doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/init";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link } from "react-router-dom";
 
 function Marketing({ user }) {
 
@@ -64,15 +65,18 @@ function Marketing({ user }) {
                                 sales: {user.sales}
                             </li>
                             <li className="marketing--table__item">
-                                credits: {user.credits}
+                                credits: {user.credits.toFixed(2)}
                             </li>
                         </ul>
                         <ul className="marketing--table">
-                               <p style={{color:'#ffffff',display:'flex',justifyContent:'space-between',alignItems:'center'}}> invitaion link: {window.location.origin.toString() + '/invite/' + user.uid} <button className="message--bar__btn" onClick={copyText}><FontAwesomeIcon icon='fa fa-copy' /></button> </p>
+                               <p style={{color:'#ffffff',}}> invitaion link:<br/><br/> <span style={{wordBreak:'break-word'}}>{window.location.origin.toString() + '/invite/' + user.uid} </span> <button className="message--bar__btn marketing--copy" onClick={copyText}><FontAwesomeIcon icon='fa fa-copy' /></button> </p>
                         </ul>
                         <div style={{width:"100%",display:'flex',justifyContent:'flex-end'}}>
-                    <button>Redeem Credits</button>
+                            <Link to='/marketing/redeem'>
+                                <button>Redeem Credits</button>
+                            </Link>
                         </div>
+
                     </div>
                 ) : (
                     <div className="marketing--application-wrapper">
