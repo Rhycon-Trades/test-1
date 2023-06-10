@@ -258,7 +258,7 @@ function App() {
                 stocks: false,
                 forex: false,
                 free_signals: false,
-                marketing: true,
+                marketing: false,
                 free_member: true,
               };
               user !== userInfo && setUser(userInfo);

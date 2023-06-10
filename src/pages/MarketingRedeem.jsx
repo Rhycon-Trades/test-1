@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Operation from '../ui/Operation'
 import { doc, updateDoc } from 'firebase/firestore'
 import { db } from '../firebase/init'
+import Loading from '../ui/Loading'
 
 function MarketingRedeem({ user , products }) {
     const [displayOperation , setDisplayOperation] = useState(false)
@@ -44,7 +45,8 @@ function MarketingRedeem({ user , products }) {
     <main className="room">
         <AppNav />
         {
-            user.marketing ? (
+            user ?
+           ( user.marketing ? (
                 <div className='marketing'>
                 <div className="marketing--nav">
                     <Link to='/marketing'>
@@ -82,7 +84,8 @@ function MarketingRedeem({ user , products }) {
                         Get role
                         </button></Link>
                 </div>
-            )
+        ) 
+        ): user !== null ? <Loading /> : (window.location.href = "/signin")
         }
     </main>
   )
