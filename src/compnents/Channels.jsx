@@ -21,6 +21,7 @@ import { useInView } from "react-intersection-observer";
 import { getDownloadURL, uploadBytes, ref } from "firebase/storage";
 import { v4 } from "uuid";
 import Operation from "../ui/Operation";
+import { Link } from "react-router-dom";
 
 function Channels({
   user,
@@ -1010,6 +1011,13 @@ function Channels({
           message={operationMessage}
         />
       )}
+      { channel.includes('marketing') &&
+                                <Link to='/marketing'>
+                                <button className="marketing--redirect">
+                                    <FontAwesomeIcon icon='fa fa-bullhorn' />
+                                </button>
+                                </Link>
+      }
     </div>
   );
 }

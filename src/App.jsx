@@ -33,6 +33,7 @@ import Chat from "./pages/Chat";
 import Marketing from "./pages/Marketing";
 import Invite from "./pages/Invite";
 import MarketingRedeem from "./pages/MarketingRedeem";
+import Learn from "./pages/Learn";
 
 function App() {
   const [testimonials, setTestimonials] = useState(null);
@@ -321,6 +322,7 @@ function App() {
           path="/invite/:inviteId"
           element={<Invite user={user} usersList={usersList} />}
         />
+        <Route exact path="/learn" element={<Learn user={user} />} />
         <Route
           path="/app/:channel"
           element={

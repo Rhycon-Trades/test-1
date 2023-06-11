@@ -55,28 +55,36 @@ function Marketing({ user }) {
                     <div className="marketing--application-wrapper">
                         <h5>Marketing Stats</h5>
                         <ul className="marketing--table">
-                            <li className="marketing--table__item">
+                            <li className="marketing--table__item" title="number of people whom visited the website using your link">
                                 Visits: {user.visits}
+                                <span className="i">i</span>
                             </li>
-                            <li className="marketing--table__item">
-                                signup's: {user.signups}
+                            <li className="marketing--table__item" title="number of people whom signed up using your link">
+                                Invites: {user.signups}
+                                <span className="i">i</span>
                             </li>
-                            <li className="marketing--table__item">
+                            <li className="marketing--table__item" title="number of people whom baught a product using your link">
                                 sales: {user.sales}
+                                <span className="i">i</span>
                             </li>
-                            <li className="marketing--table__item">
+                            <li className="marketing--table__item" title="1 invite = 0.1c & 1 sale = 40% of the price in credits">
                                 credits: {user && user.credits.toFixed(2)}
+                                <span className="i">i</span>
                             </li>
                         </ul>
                         <ul className="marketing--table">
                                <p style={{color:'#ffffff',}}> invitaion link:<br/><br/> <span style={{wordBreak:'break-word'}}>{window.location.origin.toString() + '/invite/' + user.uid} </span> <button className="message--bar__btn marketing--copy" onClick={copyText}><FontAwesomeIcon icon='fa fa-copy' /></button> </p>
                         </ul>
-                        <div style={{width:"100%",display:'flex',justifyContent:'flex-end'}}>
+                        <div style={{width:"100%", maxWidth:'800px',display:'flex',justifyContent:'flex-end'}}>
                             <Link to='/marketing/redeem'>
                                 <button>Redeem Credits</button>
                             </Link>
                         </div>
-
+                        <Link to='/app/marketing'>
+                        <button className="marketing--redirect">
+                            <FontAwesomeIcon icon='fa fa-message' />
+                        </button>
+                        </Link>
                     </div>
                 ) : (
                     <div className="marketing--application-wrapper">

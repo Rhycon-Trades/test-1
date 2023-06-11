@@ -6,7 +6,7 @@ function UsersList({ currentUser , displayUsersList , users , p1 , p2 , p3 , p4 
   return (
     <div className={`users-list ${!displayUsersList && 'sidebar-invisible'}`}>
     {Object.keys(users).length > 0 &&
-    <div>
+    <div className={!displayUsersList && 'hide-usersList'}>
         {p1 > 0 && <div className="users-list--section">
         <h5 className="users-list__header">
           Founder - {p1}

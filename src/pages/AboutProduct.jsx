@@ -84,7 +84,7 @@ function AboutProduct({ products, cart , user }) {
                     Check Cart
                   </button>{" "}
                 </Link>
-              ) : eval("user." + product.role) ? (                <button
+              ) : user && eval("user." + product.role) ? (<button
                 
                 className="product__button secondary__button"
               >

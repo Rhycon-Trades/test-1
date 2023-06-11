@@ -41,7 +41,7 @@ function Product({ product , user , cart}) {
                     Check Cart
                   </button>{" "}
                 </Link>
-              ) : eval('user.' + product.role) ? (                <button
+              ) : user && eval('user.' + product.role) ? (                <button
                 className="product__btn"
               >
                 Owned
