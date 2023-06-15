@@ -30,10 +30,12 @@ function SignIn({ setUser , usersList }) {
   async function signIn(providerType) {
     if(providerType === "google"){
       provider = new GoogleAuthProvider()
+      provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
     }else if(providerType === "apple"){
       provider = new OAuthProvider('apple.com')
     }else if(providerType === 'facebook'){
       provider= new FacebookAuthProvider()
+      provider.addScope('user_birthday');
     }
 
     await signInWithRedirect(auth, provider)
@@ -67,7 +69,6 @@ function SignIn({ setUser , usersList }) {
           <h3 className="block--header">Welcome to rhycon</h3>
             <div className="block--providers">
               <button onClick={() => signIn('google')} className="block__provider"><FontAwesomeIcon className="block__provider--logo google" icon='fa-brands fa-google'/> Continue with Google</button>
-              <button onClick={() => signIn('apple')} className="block__provider"><FontAwesomeIcon className="block__provider--logo apple" icon='fa-brands fa-apple'/> Continue with Apple</button>
               <button onClick={() => signIn('facebook')} className="block__provider"><FontAwesomeIcon className="block__provider--logo facebook" icon='fa-brands fa-facebook'/> Continue with Facebook</button>
             </div>
         </div>

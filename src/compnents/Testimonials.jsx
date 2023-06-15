@@ -61,7 +61,7 @@ function Testimonials({ testimonials, user }) {
 
   return (
     <>
-      <section id="testimonials">
+      <section style={{backgroundColor:'#f7f7f7'}} id="testimonials">
         <h2 className="section-title">
           Our Customers are&nbsp;<span className="purple">Satisfied</span>{" "}
         </h2>

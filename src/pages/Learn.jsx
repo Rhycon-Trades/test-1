@@ -4,11 +4,15 @@ import AppNav from "../compnents/AppNav";
 import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase/init";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Operation from "../ui/Operation";
 
 function Learn({ user }) {
     const [meetings , setMeetings] = useState([])
     const [displayMeetingCreator , setDisplayMeetingCreator] = useState(false)
     const [isExeclusive , setIsExeclusive] = useState(true)
+    const [displayOperation , setDisplayOperation] = useState(false)
+    const [operationMessage, setOperationMessage] = useState("")
+    const [operationState , setOperationState] = useState(true)
     useEffect(() => {
         getMeetings()
     },[])
@@ -40,6 +44,12 @@ function Learn({ user }) {
       deleteDoc(doc(db , 'meetings' , meeting))
     }
 
+    function failedJoin(){
+      setDisplayOperation(true)
+      setOperationState(false)
+      setOperationMessage("you don't have the blue badge role")
+    }
+
   return (
     <main className="room">
       {user ? (
@@ -66,7 +76,7 @@ function Learn({ user }) {
                     <div className="meeting--btns">
                       {!meeting.execlusive ||user.blue_badge_trader || user.admin || user.founder ? <a target="_blank" href={meeting.link}>
                         <button className="meeting__btn">Join</button>
-                      </a> : <button className="creator__type--btn-selected" style={{cursor:'not-allowed'}}>Join</button>}
+                      </a> : <button onClick={failedJoin} style={{cursor:'not-allowed',color:'#3b3bff'}}>Join</button>}
                       {(user.founder || user.admin) && <button onClick={() => endMeeting(meeting.id)} className="meeting__btn meeting__btn-end">end</button>}
                     </div>
                   </div>
@@ -100,6 +110,8 @@ function Learn({ user }) {
       ) : (
         <Loading />
       )}
+
+      {displayOperation && <Operation message={operationMessage} success={operationState} setOperation={setDisplayOperation}/>}
     </main>
   );
 }

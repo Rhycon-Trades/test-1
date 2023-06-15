@@ -22,6 +22,7 @@ import { getDownloadURL, uploadBytes, ref } from "firebase/storage";
 import { v4 } from "uuid";
 import Operation from "../ui/Operation";
 import { Link } from "react-router-dom";
+import PageNotFound from "../pages/pageNotFound";
 
 function Channels({
   user,
@@ -38,6 +39,8 @@ function Channels({
   commands,
   tickets,
   isDark,
+  channels,
+  doesExist
 }) {
   const [messages, setMessages] = useState(null);
   const [text, setText] = useState("");
@@ -55,18 +58,7 @@ function Channels({
   const [replyMessage, setReplyMessage] = useState(null);
   const [scrollDown, setScrollDown] = useState(true);
   const input = document.getElementById("channel__input");
-  const channels = [
-    "intro",
-    "faq",
-    "annoucements",
-    "results",
-    "general",
-    "begginer",
-    "ask",
-    "claim",
-    "polls",
-    "invites",
-  ];
+
   const dummy = useRef();
   const { ref: refItem, inView } = useInView();
   let previousMessage = false;
@@ -95,27 +87,31 @@ function Channels({
   }, []);
 
   useEffect(() => {
-    if (messages && scrollToBottom) {
+    if (messages && scrollToBottom && doesExist) {
       dummy.current.scrollIntoView();
       setScrollToBottom(false);
     }
 
     if (eval("user." + channel)) {
-      const post = {
-        [channel]: deleteField(),
-      };
-      updateDoc(doc(db, "users", user.docId), post);
+      if(doesExist){
+        const post = {
+          [channel]: deleteField(),
+        };
+        updateDoc(doc(db, "users", user.docId), post);
+      }
     }
   }, [messages]);
 
   useEffect(() => {
-    if (newMessage && (newMessage.userId === user.uid || inView)) {
+    if (newMessage && doesExist && (newMessage.userId === user.uid || inView)) {
       dummy.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [newMessage]);
 
   useEffect(() => {
+    if(doesExist){
     dummy.current.scrollIntoView();
+    }
   }, [scrollDown]);
 
   useEffect(() => {
@@ -665,360 +661,363 @@ function Channels({
     };
 
     await updateDoc(doc(db, "polls", el.docId), post);
-  }
+  }  
 
   return (
-    <div id="channel" className="channel">
-      <div className="channel--bar">
-        <button
-          onClick={() => setDisplaySideBar(!displaySideBar)}
-          className={`bar__btn ${!displaySideBar && "bar__btn-selected"}`}
-        >
-          <FontAwesomeIcon icon="fa fa-bars" />
-          {user.intro ||
-            user.faq ||
-            user.announcements ||
-            user.results ||
-            user.general ||
-            user.begginer ||
-            user.ask ||
-            user.cliam ||
-            user.polls ||
-            (user.invites && <span className="bar__btn--dot"></span>)}
-        </button>
-        <p className="bar__header">#{channel}</p>
-        <button
-          onClick={() => setDisplayUsersList(!displayUsersList)}
-          className={`bar__btn ${!displayUsersList && "bar__btn-selected"}`}
-        >
-          <FontAwesomeIcon icon="fa fa-user" />
-        </button>
-      </div>
-      <div className="channel--messages">
-        <div className="channel--intro">
-          <h2 className="channel__header">Welcome to {channel}</h2>
-          <p className="channel__para">this is the start of this channel</p>
-        </div>
-        <ul className="channel--messages-wrapper">
-          {channel === "claim" && (
-            <div className="message--content">
-              <h5>Claim Roles:</h5>
-              <ul className="claim-roles">
-                <li className="calim-roles--role">
-                  <p>Crypto</p>{" "}
-                  {!user.crypto ? (
-                    <button
-                      onClick={() => claimRole("crypto", true)}
-                      className="claim-roles__btn claim-roles__btn--claim"
-                    >
-                      claim
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => claimRole("crypto", false)}
-                      className="claim-roles__btn claim-roles__btn--remove"
-                    >
-                      remove
-                    </button>
-                  )}
-                </li>
-                <li className="calim-roles--role">
-                  <p>Stocks</p>{" "}
-                  {!user.stocks ? (
-                    <button
-                      onClick={() => claimRole("stocks", true)}
-                      className="claim-roles__btn claim-roles__btn--claim"
-                    >
-                      claim
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => claimRole("stocks", false)}
-                      className="claim-roles__btn claim-roles__btn--remove"
-                    >
-                      remove
-                    </button>
-                  )}
-                </li>
-                <li className="calim-roles--role">
-                  <p>Forex</p>{" "}
-                  {!user.forex ? (
-                    <button
-                      onClick={() => claimRole("forex", true)}
-                      className="claim-roles__btn claim-roles__btn--claim"
-                    >
-                      claim
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => claimRole("forex", false)}
-                      className="claim-roles__btn claim-roles__btn--remove"
-                    >
-                      remove
-                    </button>
-                  )}
-                </li>
-                <li className="calim-roles--role">
-                  <p>Free Signals</p>{" "}
-                  {!user.free_signals ? (
-                    <button
-                      onClick={() => claimRole("free_signals", true)}
-                      className="claim-roles__btn claim-roles__btn--claim"
-                    >
-                      claim
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => claimRole("free_signals", false)}
-                      className="claim-roles__btn claim-roles__btn--remove"
-                    >
-                      remove
-                    </button>
-                  )}
-                </li>
-              </ul>
+        <div id="channel" className="channel">
+          <div className="channel--bar">
+            <button
+              onClick={() => setDisplaySideBar(!displaySideBar)}
+              className={`bar__btn ${!displaySideBar && "bar__btn-selected"}`}
+            >
+              <FontAwesomeIcon icon="fa fa-bars" />
+              {user.intro ||
+                user.faq ||
+                user.announcements ||
+                user.results ||
+                user.general ||
+                user.begginer ||
+                user.ask ||
+                user.cliam ||
+                user.polls ||
+                (user.invites && <span className="bar__btn--dot"></span>)}
+            </button>
+            <p className="bar__header">#{channel}</p>
+            <button
+              onClick={() => setDisplayUsersList(!displayUsersList)}
+              className={`bar__btn ${!displayUsersList && "bar__btn-selected"}`}
+            >
+              <FontAwesomeIcon icon="fa fa-user" />
+            </button>
+          </div>
+          <div className="channel--messages">
+            <div className="channel--intro">
+              <h2 className="channel__header">Welcome to {channel}</h2>
+              <p className="channel__para">this is the start of this channel</p>
             </div>
-          )}
+            <ul className="channel--messages-wrapper">
+              {channel === "claim" && (
+                <div className="message--content">
+                  <h5>Claim Roles:</h5>
+                  <ul className="claim-roles">
+                    <li className="calim-roles--role">
+                      <p>Crypto</p>{" "}
+                      {!user.crypto ? (
+                        <button
+                          onClick={() => claimRole("crypto", true)}
+                          className="claim-roles__btn claim-roles__btn--claim"
+                        >
+                          claim
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => claimRole("crypto", false)}
+                          className="claim-roles__btn claim-roles__btn--remove"
+                        >
+                          remove
+                        </button>
+                      )}
+                    </li>
+                    <li className="calim-roles--role">
+                      <p>Stocks</p>{" "}
+                      {!user.stocks ? (
+                        <button
+                          onClick={() => claimRole("stocks", true)}
+                          className="claim-roles__btn claim-roles__btn--claim"
+                        >
+                          claim
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => claimRole("stocks", false)}
+                          className="claim-roles__btn claim-roles__btn--remove"
+                        >
+                          remove
+                        </button>
+                      )}
+                    </li>
+                    <li className="calim-roles--role">
+                      <p>Forex</p>{" "}
+                      {!user.forex ? (
+                        <button
+                          onClick={() => claimRole("forex", true)}
+                          className="claim-roles__btn claim-roles__btn--claim"
+                        >
+                          claim
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => claimRole("forex", false)}
+                          className="claim-roles__btn claim-roles__btn--remove"
+                        >
+                          remove
+                        </button>
+                      )}
+                    </li>
+                    <li className="calim-roles--role">
+                      <p>Free Signals</p>{" "}
+                      {!user.free_signals ? (
+                        <button
+                          onClick={() => claimRole("free_signals", true)}
+                          className="claim-roles__btn claim-roles__btn--claim"
+                        >
+                          claim
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => claimRole("free_signals", false)}
+                          className="claim-roles__btn claim-roles__btn--remove"
+                        >
+                          remove
+                        </button>
+                      )}
+                    </li>
+                  </ul>
+                </div>
+              )}
 
-          {channel === "polls" && (
-            <div>
-              {polls.map((data) => {
-                const options = [];
-                {
-                  for (
-                    let i = 1;
-                    eval("data.option" + i.toString()) !== undefined;
-                    i++
-                  ) {
-                    options.push({
-                      ...data,
-                      option: eval("data.option" + i.toString()),
-                      storedIn: "option" + i.toString(),
-                    });
-                  }
-                }
-                return (
-                  <div
-                    key={data.docId}
-                    style={{ marginBottom: "60px" }}
-                    className="message--content"
-                  >
-                    <h5 style={{ marginBottom: "10px" }}>{data.header}</h5>
-                    <p>{data.text}</p>
-                    <ul className="claim-roles">
-                      {options.map((el, _) => {
-                        return (
-                          <li key={_} className="calim-roles--role">
-                            <p>{el.option}</p>
-                            {eval("el." + user.uid) !== el.storedIn ? (
-                              <button
-                                onClick={() => choosePoll(el)}
-                                className="claim-roles__btn claim-roles__btn--claim"
-                              >
-                                Select
-                              </button>
-                            ) : (
-                              <button
-                                onClick={() => deselectPoll(el)}
-                                className="claim-roles__btn claim-roles__btn--remove"
-                              >
-                                Deselect
-                              </button>
-                            )}
+              {channel === "polls" && (
+                <div>
+                  {polls.map((data) => {
+                    const options = [];
+                    {
+                      for (
+                        let i = 1;
+                        eval("data.option" + i.toString()) !== undefined;
+                        i++
+                      ) {
+                        options.push({
+                          ...data,
+                          option: eval("data.option" + i.toString()),
+                          storedIn: "option" + i.toString(),
+                        });
+                      }
+                    }
+                    return (
+                      <div
+                        key={data.docId}
+                        style={{ marginBottom: "60px" }}
+                        className="message--content"
+                      >
+                        <h5 style={{ marginBottom: "10px" }}>{data.header}</h5>
+                        <p>{data.text}</p>
+                        <ul className="claim-roles">
+                          {options.map((el, _) => {
+                            return (
+                              <li key={_} className="calim-roles--role">
+                                <p>{el.option}</p>
+                                {eval("el." + user.uid) !== el.storedIn ? (
+                                  <button
+                                    onClick={() => choosePoll(el)}
+                                    className="claim-roles__btn claim-roles__btn--claim"
+                                  >
+                                    Select
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={() => deselectPoll(el)}
+                                    className="claim-roles__btn claim-roles__btn--remove"
+                                  >
+                                    Deselect
+                                  </button>
+                                )}
 
-                            <p style={{ marginLeft: "20px" }}>
-                              count: {eval("el." + el.storedIn + "Count")}
+                                <p style={{ marginLeft: "20px" }}>
+                                  count: {eval("el." + el.storedIn + "Count")}
+                                </p>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {channel === "ask" && (
+                <div className="message--content">
+                  <h5>Need Help ?!</h5>
+                  <p style={{ margin: "14px 0" }}>
+                    {" "}
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                    Molestias veniam asperiores laborum hic maxime dolor
+                    repudiandae aut velit iure ducimus possimus, est sed
+                    consequuntur, quas blanditiis neque! Dolorum, numquam
+                    tempora?
+                  </p>
+                  <button onClick={openTicket}>open a ticket</button>
+                </div>
+              )}
+
+              {messages &&
+                messages.map((message) => {
+                  const data = (
+                    <Message
+                      scroll={moveToView}
+                      user={user}
+                      userId={message.userId}
+                      usersList={usersList}
+                      message={message}
+                      replyTo={replyTo}
+                      emojis={emojis}
+                      previousMessage={previousMessage}
+                      displaySideBar={displaySideBar}
+                      key={message.id}
+                      channels={channels}
+                      isDark={isDark}
+                    />
+                  );
+                  previousMessage = message;
+                  return data;
+                })}
+              <div ref={dummy}>
+                <div ref={refItem}></div>
+              </div>
+            </ul>
+          </div>
+          {(channel !== "claim" &&
+            channel !== "ask" &&
+            channel !== "intro" &&
+            channel !== "polls" &&
+            channel !== "announcements" &&
+            channel !== "faq") ||
+          user.founder ||
+          user.admin ? (
+            <div className="channel__form-wrapper">
+              <label for="actual-btn" className="form--img">
+                <FontAwesomeIcon icon={"fa fa-plus"} />
+              </label>
+              <input
+                onChange={(event) => sendImage(event)}
+                id="actual-btn"
+                type="file"
+                accept="image/*"
+                hidden
+              />
+              <form
+                style={{ maxWidth: "100%", width: "100%" }}
+                onSubmit={(event) => sendMessage(event)}
+                className="channel__form"
+              >
+                <input
+                  autoComplete="off"
+                  placeholder="Message"
+                  type="text"
+                  id="channel__input"
+                  className="channel__input"
+                  onChange={(event) => setText(event.target.value)}
+                  value={text}
+                />
+                <button type="submit" className="channel__submit">
+                  <FontAwesomeIcon icon="fa fa-paper-plane" />
+                </button>
+                {replyMessage !== null && (
+                  <div className="channel--reply">
+                    <p className="channel--reply__text">
+                      Replying to {replyMessage.userName}
+                    </p>
+                    <button
+                      onClick={() => {
+                        setReplyMessage(null);
+                      }}
+                      className="channel--reply__cancel"
+                    >
+                      <FontAwesomeIcon icon="fa fa-xmark" />
+                    </button>
+                  </div>
+                )}
+                {displayAtMenu && (
+                  <div className="channel--reply channel--menu">
+                    <ul className="channel--menu__users">
+                      {roles.map((role) => (
+                        <li
+                          onClick={() => setText(text + role)}
+                          key={role}
+                          className="menu__user"
+                        >
+                          <p className="menu__user--name">{"@" + role}</p>
+                        </li>
+                      ))}
+                      {usersList &&
+                        usersList.map((item) => (
+                          <li
+                            onClick={() => setText(text + item.displayName)}
+                            key={item.uid}
+                            className="menu__user"
+                          >
+                            <figure className="menu__user--img">
+                              <img src={item.photoUrl} />
+                            </figure>
+                            <p className="menu__user--name">
+                              {item.displayName}
                             </p>
+                          </li>
+                        ))}
+                    </ul>
+                  </div>
+                )}
+
+                {displayCommandsMenu && (
+                  <div className="channel--reply channel--menu">
+                    <ul className="channel--menu__users">
+                      {commands.map((item, _) => {
+                        return (
+                          <li
+                            key={_}
+                            onClick={() => setText(text + item)}
+                            className="menu__user"
+                          >
+                            <p className="menu__user--name">/ {item}</p>
                           </li>
                         );
                       })}
                     </ul>
                   </div>
-                );
-              })}
+                )}
+
+                {displayChannelMenu && (
+                  <div className="channel--reply channel--menu">
+                    <ul className="channel--menu__users">
+                      {channels.map((item, _) => {
+                        return (
+                          <li
+                            key={_}
+                            onClick={() => setText(text + item)}
+                            className="menu__user"
+                          >
+                            <p className="menu__user--name"># {item}</p>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                )}
+              </form>
+            </div>
+          ) : (
+            <div className="channel__form-wrapper">
+              <div className="channel__input" style={{ cursor: "not-allowed" }}>
+                You don't have permission
+              </div>
             </div>
           )}
 
-          {channel === "ask" && (
-            <div className="message--content">
-              <h5>Need Help ?!</h5>
-              <p style={{ margin: "14px 0" }}>
-                {" "}
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Molestias veniam asperiores laborum hic maxime dolor repudiandae
-                aut velit iure ducimus possimus, est sed consequuntur, quas
-                blanditiis neque! Dolorum, numquam tempora?
-              </p>
-              <button onClick={openTicket}>open a ticket</button>
-            </div>
-          )}
-
-          {messages &&
-            messages.map((message) => {
-              const data = (
-                <Message
-                  scroll={moveToView}
-                  user={user}
-                  userId={message.userId}
-                  usersList={usersList}
-                  message={message}
-                  replyTo={replyTo}
-                  emojis={emojis}
-                  previousMessage={previousMessage}
-                  displaySideBar={displaySideBar}
-                  key={message.id}
-                  channels={channels}
-                  isDark={isDark}
-                />
-              );
-              previousMessage = message;
-              return data;
-            })}
-          <div ref={dummy}>
-            <div ref={refItem}></div>
-          </div>
-        </ul>
-      </div>
-      {(channel !== "claim" &&
-        channel !== "ask" &&
-        channel !== "intro" &&
-        channel !== "polls" &&
-        channel !== "announcements" &&
-        channel !== "faq") ||
-      user.founder ||
-      user.admin ? (
-        <div className="channel__form-wrapper">
-          <label for="actual-btn" className="form--img">
-            <FontAwesomeIcon icon={"fa fa-plus"} />
-          </label>
-          <input
-            onChange={(event) => sendImage(event)}
-            id="actual-btn"
-            type="file"
-            accept="image/*"
-            hidden
-          />
-          <form
-            style={{ maxWidth: "100%", width: "100%" }}
-            onSubmit={(event) => sendMessage(event)}
-            className="channel__form"
-          >
-            <input
-              autoComplete="off"
-              placeholder="Message"
-              type="text"
-              id="channel__input"
-              className="channel__input"
-              onChange={(event) => setText(event.target.value)}
-              value={text}
+          {displayOperation && (
+            <Operation
+              setOperation={setDisplayOperation}
+              success={operationState}
+              message={operationMessage}
             />
-            <button type="submit" className="channel__submit">
-              <FontAwesomeIcon icon="fa fa-paper-plane" />
-            </button>
-            {replyMessage !== null && (
-              <div className="channel--reply">
-                <p className="channel--reply__text">
-                  Replying to {replyMessage.userName}
-                </p>
-                <button
-                  onClick={() => {
-                    setReplyMessage(null);
-                  }}
-                  className="channel--reply__cancel"
-                >
-                  <FontAwesomeIcon icon="fa fa-xmark" />
-                </button>
-              </div>
-            )}
-            {displayAtMenu && (
-              <div className="channel--reply channel--menu">
-                <ul className="channel--menu__users">
-                  {roles.map((role) => (
-                    <li
-                      onClick={() => setText(text + role)}
-                      key={role}
-                      className="menu__user"
-                    >
-                      <p className="menu__user--name">{"@" + role}</p>
-                    </li>
-                  ))}
-                  {usersList &&
-                    usersList.map((item) => (
-                      <li
-                        onClick={() => setText(text + item.displayName)}
-                        key={item.uid}
-                        className="menu__user"
-                      >
-                        <figure className="menu__user--img">
-                          <img src={item.photoUrl} />
-                        </figure>
-                        <p className="menu__user--name">{item.displayName}</p>
-                      </li>
-                    ))}
-                </ul>
-              </div>
-            )}
-
-            {displayCommandsMenu && (
-              <div className="channel--reply channel--menu">
-                <ul className="channel--menu__users">
-                  {commands.map((item, _) => {
-                    return (
-                      <li
-                        key={_}
-                        onClick={() => setText(text + item)}
-                        className="menu__user"
-                      >
-                        <p className="menu__user--name">/ {item}</p>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            )}
-
-            {displayChannelMenu && (
-              <div className="channel--reply channel--menu">
-                <ul className="channel--menu__users">
-                  {channels.map((item, _) => {
-                    return (
-                      <li
-                        key={_}
-                        onClick={() => setText(text + item)}
-                        className="menu__user"
-                      >
-                        <p className="menu__user--name"># {item}</p>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            )}
-          </form>
+          )}
+          {channel.includes("marketing") && (
+            <Link to="/marketing">
+              <button className="marketing--redirect">
+                <FontAwesomeIcon icon="fa fa-bullhorn" />
+              </button>
+            </Link>
+          )}
         </div>
-      ) : (
-        <div className="channel__form-wrapper">
-          <div className="channel__input" style={{ cursor: "not-allowed" }}>
-            You don't have permission
-          </div>
-        </div>
-      )}
-
-      {displayOperation && (
-        <Operation
-          setOperation={setDisplayOperation}
-          success={operationState}
-          message={operationMessage}
-        />
-      )}
-      { channel.includes('marketing') &&
-                                <Link to='/marketing'>
-                                <button className="marketing--redirect">
-                                    <FontAwesomeIcon icon='fa fa-bullhorn' />
-                                </button>
-                                </Link>
-      }
-    </div>
   );
 }
 

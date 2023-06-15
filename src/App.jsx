@@ -34,6 +34,8 @@ import Marketing from "./pages/Marketing";
 import Invite from "./pages/Invite";
 import MarketingRedeem from "./pages/MarketingRedeem";
 import Learn from "./pages/Learn";
+import PageNotFound from "./pages/pageNotFound";
+import SignalsRoom from "./pages/SignalsRoom";
 
 function App() {
   const [testimonials, setTestimonials] = useState(null);
@@ -340,6 +342,8 @@ function App() {
             />
           }
         />
+        <Route path="/signals" element={<SignalsRoom user={user} />} />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
       {popup && <PopUp closePopup={closePopup} />}
       <Footer />

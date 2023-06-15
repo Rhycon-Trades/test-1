@@ -80,7 +80,7 @@ function Marketing({ user }) {
                                 <button>Redeem Credits</button>
                             </Link>
                         </div>
-                        <Link to='/app/marketing'>
+                        <Link to='/app/marketing_chat'>
                         <button className="marketing--redirect">
                             <FontAwesomeIcon icon='fa fa-message' />
                         </button>

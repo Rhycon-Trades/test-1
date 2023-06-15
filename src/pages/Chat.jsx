@@ -23,6 +23,7 @@ function Chat({ user , usersList , p1 , p2 , p3 ,p4 ,p5 ,p6 ,p7 ,setUsersList })
   const [displayUsersList, setDisplayUsersList] = useState(false);
   const [tickets, setTickets] = useState([]);
   const [isDark , setIsDark] = useState()
+  const [doesExist, setDoesExist] = useState(false)
   const badWords = [
     "cum",
     "fuck",
@@ -72,6 +73,24 @@ function Chat({ user , usersList , p1 , p2 , p3 ,p4 ,p5 ,p6 ,p7 ,setUsersList })
     "stocks",
     "support",
   ];
+  const channels = [
+    "intro",
+    "faq",
+    "annoucements",
+    "results",
+    "general",
+    "begginer",
+    "crypto_channel",
+    "premium",
+    "forex_channel",
+    "stocks_channel",
+    "free_signals_channel",
+    "marketing_chat",
+    "ask",
+    "claim",
+    "polls",
+    "staff",
+  ];
   const rhyconBot = {
     displayName: "rhycon bot",
     uid: "rhycon-bot",
@@ -102,6 +121,17 @@ function Chat({ user , usersList , p1 , p2 , p3 ,p4 ,p5 ,p6 ,p7 ,setUsersList })
     }
   }, []);
   
+  useEffect(() => {
+    if(!channel.includes('ticket')){
+    channels.map((item) => {
+      item === channel && setDoesExist(true)
+    })
+  }else{
+    tickets && tickets.forEach((ticket) => {
+      ticket.name === channel && setDoesExist(true)
+    })
+  }
+  }, [tickets] [channel])
   
   useEffect(() => {
     localStorage.isDark = isDark
@@ -171,6 +201,12 @@ function Chat({ user , usersList , p1 , p2 , p3 ,p4 ,p5 ,p6 ,p7 ,setUsersList })
     }
   }, [user]);
 
+  useEffect(() => {
+    if(!doesExist || !isAllowed){
+      setDisplaySideBar(false)
+    }
+  }, [] , [doesExist] , [isAllowed])
+
   const [banDuration , setBanDuration] = useState(false)
   const [muteDuration , setMuteDuration] = useState(false)
 
@@ -195,7 +231,7 @@ function Chat({ user , usersList , p1 , p2 , p3 ,p4 ,p5 ,p6 ,p7 ,setUsersList })
             isDark={isDark}
             setIsDark={setIsDark}
           />
-          {isAllowed ? (
+          {isAllowed && doesExist ? (
             (new Date(banDuration) > new Date() || new Date(muteDuration) > new Date()) ? 
             (     <div style={{backgroundColor:'#000000',margin:'0px', padding:'100px' ,borderRadius:'0',width:"100%",display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column'}} className="message--content">
             <h5> You don't have access</h5>
@@ -220,13 +256,14 @@ function Chat({ user , usersList , p1 , p2 , p3 ,p4 ,p5 ,p6 ,p7 ,setUsersList })
               roles={roles}
               commands={commands}
               tickets={tickets}
+              channels={channels}
             />
           ) : (
             <div style={{backgroundColor:'#000000',margin:'0px',borderRadius:'0',width:"100%",display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column'}} className="message--content">
-            <h5> You don't have access</h5>
+            <h5> {!doesExist ? "Channel Not Found" : "You don't have access"}</h5>
             <p style={{ margin: "14px 0" , textAlign:'center'}}>
               {" "}
-              you dont have the permission to read or write in this channel
+              {!doesExist ? "this channel have been removed or doesn't exist" : " you dont have the permission to read or write in this channel"}
             </p>
           </div>
           )}
