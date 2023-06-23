@@ -840,11 +840,8 @@ function Channels({
                   <h5>Need Help ?!</h5>
                   <p style={{ margin: "14px 0" }}>
                     {" "}
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                    Molestias veniam asperiores laborum hic maxime dolor
-                    repudiandae aut velit iure ducimus possimus, est sed
-                    consequuntur, quas blanditiis neque! Dolorum, numquam
-                    tempora?
+                    At Rhycon we are happy to help all traders new and even the experienced.<br/>
+                    Open a ticket below to talk with a member of our staff.
                   </p>
                   <button onClick={openTicket}>open a ticket</button>
                 </div>

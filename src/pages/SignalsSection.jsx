@@ -26,8 +26,8 @@ function SignalsSection() {
         <button className='features__btn'>Sign Up</button>
     </Link>
     </div>
-    <figure className='feature--img'>
-        <img src="" alt="" />
+    <figure className='feature--img chatsignals--img'>
+        <img src="https://media.discordapp.net/attachments/1116431288132444160/1118625770844196894/IMG_1986.png" alt="" />
     </figure>
     </main>
   )

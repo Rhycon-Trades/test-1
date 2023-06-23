@@ -14,7 +14,7 @@ function CheckOut({ cart , totalPrice , user , usersList , setCart}) {
     <PayPalScriptProvider
       options={{
         "client-id":
-          "AXA0RnGh9y8cjy8a5daWd96J2DVHFo4b6GcGaxAK2kWt2hfZPmQV31djVjDzSB1iC7Il756w2OONEqdk",
+          "AbrRB-9kBcVsxlhcdugHgzdvozBwRipGBsnQdq1CvGVN5My_6AykC2NbkYnVN_SiDKfJK6A8HvqJ5ubB",
       }}
     >
       <PayPalButtons

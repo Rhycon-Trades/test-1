@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDocs,
   updateDoc,
@@ -101,17 +102,26 @@ function SignalsRoom({ user }) {
                 <p>{signal.profit}%</p>
               </div>
               {(user.founder || user.analyst) && (
-                <button
-                  onClick={() => moveMark(signal.id)}
-                  className="signals--card__block-finish"
-                >
-                  <FontAwesomeIcon icon="fa fa-xmark" />
-                </button>
+                <>
+                  <button
+                    onClick={() => moveMark(signal.id)}
+                    className="signals--card__block-finish"
+                  >
+                    <FontAwesomeIcon icon="fa fa-xmark" />
+                  </button>
+                  <button
+                    style={{ color: "red", right: "34px", top: "11px" }}
+                    onClick={() => deleteDoc(doc(db, "signals", signal.id))}
+                    className="popup--mark"
+                  >
+                    <FontAwesomeIcon icon="fa fa-trash" />
+                  </button>
+                </>
               )}
             </div>
           ))
         ) : (
-          <p>no data was found</p>
+          <p style={{display:'flex',alignItems:'center'}}>no data was found</p>
         )}
 
         {(user.founder || user.analyst) && (
@@ -147,23 +157,47 @@ function SignalsRoom({ user }) {
         <div className="signals--history__wrapper">
           {signalsHistory === false ? (
             <>
-            <div className="signal-history" style={{height:'75px'}}></div>
-            <div className="signal-history" style={{height:'75px'}}></div>
+              <div className="signal-history" style={{ height: "75px" }}></div>
+              <div className="signal-history" style={{ height: "75px" }}></div>
             </>
           ) : Object.keys(signalsHistory).length > 0 ? (
             signalsHistory.map((signal) => {
               const date = new Date(signal.data.seconds * 1000).toUTCString();
               return (
-                <div className="signal-history">
-                  <div className="signal-history--block" style={{maxWidth:'20%'}}><h5 className="history--block__header">Time</h5><p>{date.toString()}</p></div>
-                  <div className="signal-history--block"><h5 className="history--block__header">Symbol</h5><p>{signal.name}</p></div>
-                  <div className="signal-history--block"><h5 className="history--block__header">position</h5><p>{signal.position}</p></div>
-                  <div className="signal-history--block"><h5 className="history--block__header">P&L</h5><p>{signal.pl}%</p></div>
+                <div
+                  className="signal-history"
+                  style={{ position: "relative" }}
+                >
+                  <div
+                    className="signal-history--block"
+                    style={{ maxWidth: "20%" }}
+                  >
+                    <h5 className="history--block__header">Time</h5>
+                    <p>{date.toString()}</p>
+                  </div>
+                  <div className="signal-history--block">
+                    <h5 className="history--block__header">Symbol</h5>
+                    <p>{signal.name}</p>
+                  </div>
+                  <div className="signal-history--block">
+                    <h5 className="history--block__header">position</h5>
+                    <p>{signal.position}</p>
+                  </div>
+                  <div className="signal-history--block">
+                    <h5 className="history--block__header">P&L</h5>
+                    <p>{signal.pl}%</p>
+                  </div>
+                  <button
+                    onClick={() => deleteDoc(doc(db, "signals", signal.id))}
+                    className="popup--mark" style={{color:'red'}}
+                  > 
+                    <FontAwesomeIcon icon="fa fa-trash" />
+                  </button>
                 </div>
               );
             })
           ) : (
-            <p>no data was found</p>
+            <p style={{width:'100%',display:"flex",justifyContent:'center'}}>no data was found</p>
           )}
         </div>
       </div>

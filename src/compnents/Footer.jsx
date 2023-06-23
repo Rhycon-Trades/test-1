@@ -1,9 +1,37 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { db } from "../firebase/init";
+import Operation from "../ui/Operation";
 
 function Footer() {
   const path = useLocation().pathname.toString()
+
+  const [displayOperation , setDisplayOperation] = useState(false)
+  const [operationMessage , setOperationMessage] = useState('')
+  const [operationState , setOperationState] = useState(true)
+  
+  async function addEmail(event){
+    event.preventDefault()
+    const ref = query(
+        collection(db, "mailingList"),
+        where("email", "==", event.target[0].value)
+      );
+        const data = await getDocs(ref)
+        const posts = await data.docs.map((doc) => ({...doc.data()}))
+        if(Object.keys(posts).length === 0){
+            const email = {email:event.target[0].value}
+            addDoc(collection(db , 'mailingList'),email)
+            setDisplayOperation(true)
+            setOperationMessage("this email is now a member of our mailing list")
+            setOperationState(true)
+        }else{
+            setDisplayOperation(true)
+            setOperationMessage('This email is already used')
+            setOperationState(false)
+        }
+}
   return (
     <>
     {(!path.includes("/app") && !path.includes('marketing') && !path.includes('invite') && !path.includes('learn') && window.location.pathname !== '/signals') && <footer>
@@ -81,8 +109,8 @@ function Footer() {
           </div>
           <div className="footer--newsletter">
             <h5>Sign up for our newsletter</h5>
-            <form action="">
-              <input type="email" placeholder="enter your email" name="email" />
+            <form onSubmit={(event) => addEmail(event)}>
+              <input type="email" required placeholder="enter your email" name="email" />
               <input type="submit" value="Submit" />
             </form>
           </div>
@@ -96,6 +124,9 @@ function Footer() {
           </button>
         </div>
       </div>
+      {
+        displayOperation && <Operation message={operationMessage} setOperation={setDisplayOperation} success={operationState} />
+      }
     </footer>}
     </>
   );

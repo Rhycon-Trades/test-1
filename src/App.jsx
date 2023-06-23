@@ -237,6 +237,8 @@ function App() {
             if (Object.keys(userData).length > 0) {
               setUser(userData[0]);
             } else {
+              let today = new Date()
+              today.setDate(today.getDate() + 7)
               const userInfo = {
                 uid: appUser.uid,
                 displayName: appUser.displayName,
@@ -254,7 +256,8 @@ function App() {
                 analyst: false,
                 support: false,
                 blue_badge_trader: false,
-                premium_signals: false,
+                premium_signals: true,
+                signals_duration:today,
                 premium_trader: false,
                 booster: false,
                 crypto: false,

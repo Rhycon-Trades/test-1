@@ -527,6 +527,8 @@ nav {
 .users-list{
   min-width: 250px;
   max-width: 250px;
+  height: 100vh;
+  overflow-y: auto;
   background-color:#242424;
   z-index: 100;
   padding:30px 20px;
@@ -1830,6 +1832,11 @@ align-items: center;
   margin-left: 40px;
 }
 
+.chatsignals--img{
+  max-width: 300px;
+  margin-left: 20px;
+}
+
 .features__btn {
   margin: 14px 0;
   border-radius: 100px;
@@ -2760,7 +2767,7 @@ width: max-content;
 .popup--mark{
   position: absolute;
   font-size: 18px;
-  top: 8px ;
+  top: 8px;
   right: 8px;
   color: #0000fe;
   cursor: pointer;
@@ -3098,6 +3105,10 @@ input[type="submit"]:hover {
     display: none;
   }
 
+  .chatsignals--img{
+    display: block;
+  }
+
   .aboutProduct-container {
     display: flex;
     flex-direction: column;
@@ -3170,6 +3181,10 @@ input[type="submit"]:hover {
 
   .products {
     grid-template-columns: repeat(1, 100%);
+  }
+
+  .chatsignals--img{
+    display: none;
   }
 
   .feature {
